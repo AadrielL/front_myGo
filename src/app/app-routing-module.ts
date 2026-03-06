@@ -1,41 +1,37 @@
-  import { NgModule } from '@angular/core';
-  import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-  // Imports dos Componentes
-  import { DashboardComponent } from './pages/dashboard/dashboard.component';
-  import { LoginComponent } from './pages/login/login.component';
-  import { RegisterComponent } from './pages/login/register/register.component';
-  import { QuizComponent } from './shared/quiz/quiz.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/login/register/register.component';
+import { QuizComponent } from './shared/quiz/quiz.component';
+import { LevantamentoComponent } from './pages/levantamento/levantamento.component'; // ADICIONADO
+import { authGuard } from './core/guards/auth.guard';
 
-  // Import do Guard
-  import { authGuard } from './core/guards/auth.guard';
+const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { 
+    path: 'dashboard', 
+    component: DashboardComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'quiz', 
+    component: QuizComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'levantamento', // ADICIONADO
+    component: LevantamentoComponent, 
+    canActivate: [authGuard] 
+  },
+  { path: '**', redirectTo: '/dashboard' }
+];
 
-  const routes: Routes = [
-    // Rota inicial: Se não estiver logado, o Guard mandará para o Login
-    { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-
-    // Rotas Públicas
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-
-    // Rotas Protegidas (Precisa estar logado)
-    { 
-      path: 'dashboard', 
-      component: DashboardComponent, 
-      canActivate: [authGuard] 
-    },
-    { 
-      path: 'quiz', 
-      component: QuizComponent, 
-      canActivate: [authGuard] 
-    },
-    
-    // Rota de fallback (Redireciona qualquer erro para o dashboard)
-    { path: '**', redirectTo: '/dashboard' }
-  ];
-
-  @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
-  })
-  export class AppRoutingModule { }
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
