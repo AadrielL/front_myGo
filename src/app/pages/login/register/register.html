@@ -1,0 +1,18 @@
+<div style="text-align: center; margin-top: 50px;">
+  <h2>Criar Conta MyGo</h2>
+  <form (submit)="onRegister()" style="display: inline-block; text-align: left;">
+    <input type="text" [(ngModel)]="name" name="name" placeholder="Nome Completo" required><br><br>
+    <input type="email" [(ngModel)]="email" name="email" placeholder="E-mail" required><br><br>
+    <input type="password" [(ngModel)]="password" name="password" placeholder="Senha" required><br><br>
+    
+    <label>Tipo de Conta:</label><br>
+    <select [(ngModel)]="role" name="role">
+      <option value="VISITANTE">Visitante (1 cálculo/dia)</option>
+      <option value="ADMIN">Admin (Acesso Total)</option>
+    </select><br><br>
+
+    <button type="submit">Cadastrar</button>
+  </form>
+  <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+  <p><a routerLink="/login">Já tem conta? Faça login</a></p>
+</div>

@@ -1,0 +1,93 @@
+<div class="app-shell">
+  <header class="main-header">
+    <div class="header-content">
+      <div class="user-info">
+        <div class="avatar-circle"><span class="material-icons">person</span></div>
+        <div class="welcome-text">
+          <small>{{ userRole === 'ADMIN' ? 'Painel Administrativo' : 'Painel do Cliente' }}</small>
+          <h1>Olá, {{ userName.split(' ')[0] }}</h1>
+        </div>
+      </div>
+      <div class="actions-top">
+        <button class="icon-btn"><span class="material-icons">notifications_none</span></button>
+        <button class="icon-btn" (click)="logout()"><span class="material-icons">logout</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <ng-container *ngIf="userRole === 'ADMIN'">
+      <section class="stats-row">
+        <div class="stat-card">
+          <small>Estimativa Mensal</small>
+          <h2>R$ 8.450,00</h2>
+          <span class="trend up">+12% vs mês anterior</span>
+        </div>
+        <div class="stat-card">
+          <small>Projeção Anual</small>
+          <h2>R$ 102.400,00</h2>
+          <span class="trend">Meta: 85% atingida</span>
+        </div>
+        <div class="stat-card">
+          <small>Orçamentos Pendentes</small>
+          <h2>14</h2>
+          <span class="trend">R$ 3.200 em análise</span>
+        </div>
+      </section>
+
+      <section class="chart-container">
+        <div class="chart-header">
+          <h3>Fluxo de Orçamentos Realizados</h3>
+          <select><option>Últimos 7 dias</option></select>
+        </div>
+        <div class="chart-visual">
+          <div class="bar" style="height: 30%"></div>
+          <div class="bar" style="height: 55%"></div>
+          <div class="bar" style="height: 85%"></div>
+          <div class="bar" style="height: 45%"></div>
+          <div class="bar" style="height: 90%"></div>
+          <div class="bar" style="height: 70%"></div>
+          <div class="bar" style="height: 100%"></div>
+        </div>
+      </section>
+    </ng-container>
+
+    <section class="services-grid">
+      <div class="service-card blue-variant" (click)="irParaCalculo()">
+        <div class="card-icon"><span class="material-icons">bolt</span></div>
+        <div class="card-body">
+          <h3>Dimensionamento</h3>
+          <p>Cálculo técnico de bitolas e disjuntores (NBR 5410).</p>
+        </div>
+        <button class="card-action">Acessar <span class="material-icons">arrow_forward</span></button>
+      </div>
+
+      <div class="service-card" *ngIf="userRole === 'ADMIN'">
+        <div class="card-icon"><span class="material-icons">payments</span></div>
+        <div class="card-body">
+          <h3>Configurar Preços</h3>
+          <p>Controle os valores de insumos e mão de obra da API.</p>
+        </div>
+        <button class="card-action">Ajustar <span class="material-icons">settings_applications</span></button>
+      </div>
+
+      <div class="service-card" (click)="irParaHistorico()">
+        <div class="card-icon"><span class="material-icons">history</span></div>
+        <div class="card-body">
+          <h3>Histórico</h3>
+          <p>Acesse orçamentos datados e relatórios antigos.</p>
+        </div>
+        <button class="card-action">Consultar <span class="material-icons">history_edu</span></button>
+      </div>
+
+      <div class="service-card">
+        <div class="card-icon"><span class="material-icons">groups</span></div>
+        <div class="card-body">
+          <h3>Eletricistas</h3>
+          <p>Rede de profissionais qualificados na região.</p>
+        </div>
+        <button class="card-action">Ver Lista <span class="material-icons">chevron_right</span></button>
+      </div>
+    </section>
+  </main>
+</div>
