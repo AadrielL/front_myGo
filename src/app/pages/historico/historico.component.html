@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><span class="material-icons">history</span> {{ userRole === 'ADMIN' ? 'Gerenciar Orçamentos' : 'Meus Orçamentos' }}</h2>
+    <button class="btn btn-secondary" (click)="voltar()">Voltar</button>
+  </div>
+
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover bg-white mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>Cliente</th>
+          <th>Data</th>
+          <th>Valor Estimado</th>
+          <th>Status</th>
+          <th *ngIf="userRole === 'ADMIN'">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let orc of listaOrcamentos">
+          <td>{{ orc.clienteNome }}</td>
+          <td>{{ orc.dataCriacao | date:'dd/MM/yyyy' }}</td>
+          <td>{{ orc.valorTotal | currency:'BRL' }}</td>
+          <td>
+            <span class="badge" [ngClass]="orc.status === 'ACEITO' ? 'bg-success' : 'bg-warning text-dark'">
+              {{ orc.status }}
+            </span>
+          </td>
+          <td *ngIf="userRole === 'ADMIN'">
+            <button class="btn btn-sm btn-outline-success me-1" (click)="alterarStatus(orc.id, 'ACEITO')">Aceitar</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="alterarStatus(orc.id, 'RECUSADO')">Recusar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

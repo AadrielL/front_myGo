@@ -1,40 +1,39 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ApiService {
-  // Ajustado para o endpoint real do seu Java: /v1/orcamentos
   private readonly URL_BASE = 'http://localhost:8081/v1/orcamentos';
+  private readonly URL_ADMIN = 'http://localhost:8081/v1/admin';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
+
+  private getHeaders() {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'X-User-Role': this.authService.getUserRole(),
+      'X-Tenant-ID': this.authService.getTenantId()
+    });
+  }
+
+  getServicosExtras(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URL_ADMIN}/servicos-extras`, { headers: this.getHeaders() });
+  }
 
   gerarOrcamento(dados: any): Observable<any> {
-    const token = localStorage.getItem('token');
-    const email = localStorage.getItem('userEmail') || 'tecnico@teste.com';
-    const role = localStorage.getItem('userRole') || 'ADMIN';
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'X-User-Role': role,
-      'X-Tenant-ID': email
-    });
-    
-    return this.http.post(`${this.URL_BASE}/gerar-quiz`, dados, { headers });
+    return this.http.post(`${this.URL_BASE}/gerar-quiz`, dados, { headers: this.getHeaders() });
   }
 
   getHistorico(): Observable<any[]> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any[]>(`${this.URL_BASE}/meus-orcamentos`, { headers });
+    const role = this.authService.getUserRole().toUpperCase();
+    // Se for ADMIN, busca todos. Se não, busca só os "meus"
+    const endpoint = role === 'ADMIN' ? `${this.URL_BASE}/todos` : `${this.URL_BASE}/meus-orcamentos`;
+    return this.http.get<any[]>(endpoint, { headers: this.getHeaders() });
   }
 
-  // Novo método para carregar os serviços customizados do seu novo Controller
-  getServicosExtras(): Observable<any[]> {
-    const email = localStorage.getItem('userEmail') || 'tecnico@teste.com';
-    const headers = new HttpHeaders().set('X-Tenant-ID', email);
-    return this.http.get<any[]>(`http://localhost:8081/v1/admin/servicos-extras`, { headers });
+  updatePrecos(config: any): Observable<any> {
+    return this.http.put(`${this.URL_ADMIN}/config-precos`, config, { headers: this.getHeaders() });
   }
 }

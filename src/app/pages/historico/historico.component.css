@@ -1,0 +1,27 @@
+.container {
+  padding-top: 2rem;
+}
+
+.table-responsive {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  margin-top: 2rem;
+}
+
+.table thead th {
+  background: #212529;
+  color: white;
+  border: none;
+  padding: 1.2rem;
+}
+
+.table td {
+  padding: 1.2rem;
+  vertical-align: middle;
+}
+
+.badge {
+  padding: 0.6rem 1rem;
+  border-radius: 50px;
+}

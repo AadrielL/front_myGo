@@ -1,0 +1,25 @@
+<div class="container mt-4" style="max-width: 600px;">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Ajuste de Insumos e Mão de Obra</h4>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <label>Valor Metro Cabo (2.5mm)</label>
+        <input type="number" class="form-control" [(ngModel)]="config.valorMetroCabo25">
+      </div>
+      <div class="mb-3">
+        <label>Valor Mão de Obra (por Ponto)</label>
+        <input type="number" class="form-control" [(ngModel)]="config.valorPontoEletrico">
+      </div>
+      <div class="mb-3">
+        <label>Diária Base Ajudante</label>
+        <input type="number" class="form-control" [(ngModel)]="config.diariaAjudante">
+      </div>
+      <hr>
+      <button class="btn btn-success w-100" (click)="salvarPrecos()">
+        Salvar Novas Configurações
+      </button>
+    </div>
+  </div>
+</div>

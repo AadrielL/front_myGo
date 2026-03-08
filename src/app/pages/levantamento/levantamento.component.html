@@ -1,0 +1,48 @@
+<div class="quiz-screen">
+  
+  <div class="quiz-card-wrapper" *ngIf="!exibirSucesso">
+    <h2>Divisão da Residência</h2>
+    <p>Para um cálculo preciso de cabos e eletrodutos, informe a quantidade de cômodos:</p>
+
+    <form [formGroup]="materialForm">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Quartos</label>
+          <input type="number" formControlName="qtdQuartos">
+        </div>
+        <div class="form-field">
+          <label>Banheiros</label>
+          <input type="number" formControlName="qtdBanheiros">
+        </div>
+        <div class="form-field">
+          <label>Cozinhas</label>
+          <input type="number" formControlName="qtdCozinhas">
+        </div>
+        <div class="form-field">
+          <label>Salas</label>
+          <input type="number" formControlName="qtdSalas">
+        </div>
+      </div>
+
+      <div class="button-row" style="margin-top: 30px; display: flex; justify-content: space-between;">
+        <button type="button" class="btn-sec" (click)="router.navigate(['/dashboard'])">Cancelar</button>
+        <button type="button" class="btn-success" (click)="confirmarLevantamento()" [disabled]="loading">
+          {{ loading ? 'Processando...' : 'Finalizar Levantamento' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="quiz-card-wrapper" *ngIf="exibirSucesso" style="text-align: center;">
+    <h2 style="color: #28a745;">✅ Enviado com Sucesso!</h2>
+    <p [innerHTML]="mensagemDinamica" style="margin: 20px 0;"></p>
+    
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <a [href]="linkWhats" target="_blank" class="btn-success" style="text-decoration: none; background: #25d366;">
+        Chamar no WhatsApp
+      </a>
+      <button class="btn-sec" (click)="router.navigate(['/dashboard'])">Voltar ao Início</button>
+    </div>
+  </div>
+
+</div>

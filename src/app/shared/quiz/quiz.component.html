@@ -1,7 +1,7 @@
 <div class="quiz-screen">
   <div class="loading-state" *ngIf="loading">
     <div class="spinner"></div>
-    <p>Calculando com base nas normas técnicas...</p>
+    <p>Calculando com base nas normas técnicas e margens de segurança...</p>
   </div>
 
   <div class="quiz-card-wrapper" *ngIf="!loading">
@@ -13,7 +13,10 @@
           <label>Nome do Cliente/Obra</label>
           <input type="text" formControlName="nomeCliente">
         </div>
-        <button type="button" class="btn-primary" (click)="nextStep()">Continuar</button>
+        <div class="button-row">
+          <button type="button" class="btn-sec" (click)="router.navigate(['/dashboard'])">Sair</button>
+          <button type="button" class="btn-primary" (click)="nextStep()">Continuar</button>
+        </div>
       </div>
 
       <div class="step-container" *ngIf="step === 2">
@@ -28,17 +31,24 @@
             <input type="number" formControlName="qtdPontosEletrica">
           </div>
         </div>
+        
         <div class="form-field">
-         <label>Tipo de Serviço</label>
+          <label>Tipo de Serviço</label>
           <select formControlName="tipoServico">
-           <option value="NOVA">Instalação Nova (Padrão)</option>
-           <option value="REFORMA">Reforma / Manutenção Geral</option>
+            <option value="NOVA">Instalação Nova</option>
+            <option value="REFORMA">Reforma / Manutenção</option>
           </select>
-       </div>
- 
-        <div class="form-field">
-          <label>Distância: Poste ao Quadro (metros)</label>
-          <input type="number" formControlName="distanciaQuadroPoste" placeholder="Ex: 15">
+        </div>
+
+        <div class="input-row">
+          <div class="form-field">
+            <label>Distância Poste ao Quadro (m)</label>
+            <input type="number" formControlName="distanciaQuadroPoste">
+          </div>
+          <div class="form-field">
+            <label>Diária Ajudante (R$)</label>
+            <input type="number" formControlName="diariaAjudante" readonly style="background: #f3f6f9; cursor: not-allowed;">
+          </div>
         </div>
 
         <div class="button-row">
@@ -110,12 +120,32 @@
 
       <div class="step-container" *ngIf="step === 5">
         <div class="price-tag">
-          <h3>Total Estimado</h3>
+          <small>Total Estimado da Obra</small>
           <p class="price">
-            R$ {{ (resultado?.valorTotalMaoDeObra || resultado?.valorTotal || 0) | number:'1.2-2' }}
+            R$ {{ (resultado?.valorTotalMaoDeObra + resultado?.custoLogistica) | number:'1.2-2' }}
           </p>
         </div>
-        <button type="button" class="btn-primary mt-4" (click)="step = 1; quizForm.reset(); resultado = null">
+
+        <div class="breakdown-box" style="margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span>Mão de Obra Técnica:</span>
+            <strong>R$ {{ resultado?.valorTotalMaoDeObra | number:'1.2-2' }}</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Logística e Ajudantes:</span>
+            <strong>R$ {{ resultado?.custoLogistica | number:'1.2-2' }}</strong>
+          </div>
+        </div>
+
+        <div class="choice-container" style="margin-top: 20px;">
+          <h3 style="font-size: 1rem; margin-bottom: 10px;">Deseja fazer o levantamento de materiais?</h3>
+          <div class="button-row">
+            <button type="button" class="btn-primary" (click)="irParaMaterial()">Via Site (Grátis)</button>
+            <button type="button" class="btn-sec" (click)="agendarVisita()">Visita Técnica</button>
+          </div>
+        </div>
+
+        <button type="button" class="btn-sec" style="width: 100%; margin-top: 15px;" (click)="step = 1; quizForm.reset({diariaAjudante: 120.0}); resultado = null">
           Novo Orçamento
         </button>
       </div>

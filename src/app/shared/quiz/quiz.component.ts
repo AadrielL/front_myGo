@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ApiService } from '../../core/service/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quiz',
@@ -22,7 +23,8 @@ export class QuizComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private apiService: ApiService,
-    private cdr: ChangeDetectorRef 
+    private cdr: ChangeDetectorRef,
+    public router: Router // Alterado para public para usar no HTML
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +76,23 @@ export class QuizComponent implements OnInit {
   nextStep() { if (this.step < 5) this.step++; }
   prevStep() { if (this.step > 1) this.step--; }
 
+  // Função para levar ao levantamento de materiais via site
+  irParaMaterial() {
+    const dadosParaTransporte = {
+      clienteNome: this.quizForm.value.nomeCliente,
+      metragemM2: this.quizForm.value.metragemM2,
+      qtdChuveiros: this.quizForm.value.qtdChuveiro,
+      incluirArCondicionado: this.quizForm.value.qtdArCondicionado > 0
+    };
+    this.router.navigate(['/levantamento'], { state: { dadosQuiz: dadosParaTransporte } });
+  }
+
+  // Função para visita técnica pessoal
+  agendarVisita() {
+    alert('Solicitação de visita técnica enviada! Valor: R$ 150,00. Entraremos em contato.');
+    this.router.navigate(['/dashboard']);
+  }
+
   finalizarOrcamento() {
     if (this.quizForm.invalid) {
       alert('Preencha os campos obrigatórios.');
@@ -83,7 +102,6 @@ export class QuizComponent implements OnInit {
     this.loading = true;
     const formValue = this.quizForm.value;
 
-    // Montando lista de adicionais conforme o DTO do Java
     const adicionais = [];
     if (formValue.qtdCameras > 0) adicionais.push({ tipo: 'CAMERA', quantidade: formValue.qtdCameras, metrosLineares: 0 });
     if (formValue.qtdMotores > 0) adicionais.push({ tipo: 'MOTOR', quantidade: formValue.qtdMotores, metrosLineares: 0 });
@@ -99,7 +117,6 @@ export class QuizComponent implements OnInit {
       }
     });
 
-    // Enviamos os dados. A complexidade e margem de dias serão definidas pelo Java via metragem.
     const payload = { 
       ...formValue, 
       adicionais 
@@ -107,7 +124,7 @@ export class QuizComponent implements OnInit {
 
     this.apiService.gerarOrcamento(payload).subscribe({
       next: (res) => {
-        this.resultado = res; // Contém valorTotalMaoDeObra, custoLogistica e listaMateriais
+        this.resultado = res;
         this.loading = false;
         this.step = 5;
         this.cdr.detectChanges();
