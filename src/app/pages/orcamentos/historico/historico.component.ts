@@ -42,6 +42,12 @@ export class HistoricoComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
+  // Adicione este método no seu HistoricoComponent
+  capturarParaLevantamento(id: string) {
+    // Navega para a tela de levantamento passando o ID do orçamento
+    this.router.navigate(['/levantamento'], { queryParams: { orcamentoId: id } });
+  }
+
   // ADICIONADO: Função que os botões "Aceitar/Recusar" do HTML chamam
   alterarStatus(id: any, novoStatus: string) {
     console.log(`Alterando status do orçamento ${id} para ${novoStatus}`);

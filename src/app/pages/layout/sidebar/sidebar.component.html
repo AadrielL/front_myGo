@@ -1,33 +1,49 @@
- <aside class="sidebar" [class.collapsed]="isCollapsed">
-  <div class="sidebar-header">
-    <div class="logo-container" *ngIf="!isCollapsed">
-      <span class="material-icons logo-icon">bolt</span>
-      <span class="logo-text">MyGo</span>
-    </div>
-    <button class="toggle-btn" (click)="toggleSidebar()">
-      <span class="material-icons">{{ isCollapsed ? 'menu' : 'menu_open' }}</span>
-    </button>
+<nav class="sidebar">
+  <div class="logo-area">
+    <span class="logo-text">MYGO <strong>ELÉTRICA</strong></span>
   </div>
+  
+  <ul class="nav-links">
+    <li>
+      <a routerLink="/dashboard-main" routerLinkActive="active">
+        <span class="material-icons">dashboard</span> Início
+      </a>
+    </li>
+    
+    <li>
+      <a routerLink="/historico" routerLinkActive="active">
+        <span class="material-icons">history</span> Histórico
+      </a>
+    </li>
 
-  <nav class="sidebar-nav">
-    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-      <span class="material-icons">dashboard</span>
-      <span class="nav-text" *ngIf="!isCollapsed">Visão Geral</span>
-    </a>
-    <a routerLink="/quiz" routerLinkActive="active" class="nav-item">
-      <span class="material-icons">bolt</span>
-      <span class="nav-text" *ngIf="!isCollapsed">Novo Projeto</span>
-    </a>
-    <a routerLink="/historico" routerLinkActive="active" class="nav-item">
-      <span class="material-icons">history</span>
-      <span class="nav-text" *ngIf="!isCollapsed">Histórico</span>
-    </a>
-  </nav>
+    <li *ngIf="userRole === 'USER'">
+      <a routerLink="/quiz" routerLinkActive="active">
+        <span class="material-icons">calculate</span> Gerar Valor de Serviço
+      </a>
+    </li>
+
+    <li *ngIf="userRole === 'ADMIN'">
+      <a routerLink="/reports" routerLinkActive="active">
+        <span class="material-icons">bar_chart</span> Relatórios de Gestão
+      </a>
+    </li>
+    
+    <li *ngIf="userRole === 'ADMIN'">
+      <a routerLink="/levantamento" routerLinkActive="active">
+        <span class="material-icons">assignment</span> Novo Levantamento
+      </a>
+    </li>
+
+    <li *ngIf="userRole === 'ADMIN'">
+      <a routerLink="/config-precos" routerLinkActive="active">
+        <span class="material-icons">settings</span> Tabela de Preços
+      </a>
+    </li>
+  </ul>
 
   <div class="sidebar-footer">
-    <button (click)="logout()" class="nav-item logout-btn">
-      <span class="material-icons">logout</span>
-      <span class="nav-text" *ngIf="!isCollapsed">Sair</span>
+    <button class="btn-logout" (click)="logout()">
+      <span class="material-icons">logout</span> Sair
     </button>
   </div>
-</aside>
+</nav>

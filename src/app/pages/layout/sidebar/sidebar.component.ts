@@ -1,24 +1,24 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css'],
-  standalone: false
+  styleUrls: ['./sidebar.component.css'] ,
+    standalone: false
+
 })
-export class SidebarComponent {
-  isCollapsed = false;
-  @Output() toggleEvent = new EventEmitter<boolean>();
+export class SidebarComponent implements OnInit {
+  userRole: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService) {}
 
-  toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
-    this.toggleEvent.emit(this.isCollapsed);
+  ngOnInit(): void {
+    this.userRole = this.authService.getUserRole();
   }
 
   logout() {
-    this.router.navigate(['/login']);
+    this.authService.logout();
+    window.location.reload();
   }
 }

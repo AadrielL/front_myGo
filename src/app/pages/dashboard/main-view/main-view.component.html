@@ -1,28 +1,31 @@
-<section class="main-container">
-  <h2 class="section-title">Ações Rápidas</h2>
-  <div class="services-grid">
-    <div class="service-card" (click)="irPara('quiz')">
-      <div class="icon-box blue"><span class="material-icons">bolt</span></div>
-      <div class="info">
-        <h3>Dimensionamento</h3>
-        <p>Cálculos NBR 5410 rápidos e precisos.</p>
-      </div>
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="welcome-text">
+      <h1>Bem-vindo, {{ userName }}</h1>
+      <p>Gerencie seus orçamentos e projetos de forma simplificada.</p>
+    </div>
+    <button *ngIf="userRole === 'ADMIN'" class="btn-reports-primary" (click)="navegar('reports')">
+      <span class="material-icons">analytics</span> Ver Relatórios Admin
+    </button>
+  </header>
+
+  <div class="quick-actions">
+    <div class="action-card" (click)="navegar('quiz')">
+      <div class="icon-box blue"><span class="material-icons">add_task</span></div>
+      <h3>Novo Orçamento</h3>
+      <p>Inicie um dimensionamento baseado na NBR 5410.</p>
     </div>
 
-    <div class="service-card" (click)="irPara('historico')">
-      <div class="icon-box green"><span class="material-icons">description</span></div>
-      <div class="info">
-        <h3>Meus Projetos</h3>
-        <p>Histórico completo de orçamentos.</p>
-      </div>
+    <div class="action-card" (click)="navegar('historico')">
+      <div class="icon-box green"><span class="material-icons">history</span></div>
+      <h3>Histórico</h3>
+      <p>Consulte orçamentos e cálculos anteriores.</p>
     </div>
 
-    <div class="service-card" *ngIf="userRole === 'ADMIN'" (click)="irPara('config-precos')">
-      <div class="icon-box orange"><span class="material-icons">settings</span></div>
-      <div class="info">
-        <h3>Gestão de Preços</h3>
-        <p>Margens e valores de insumos.</p>
-      </div>
+    <div *ngIf="userRole === 'ADMIN'" class="action-card" (click)="navegar('levantamento')">
+      <div class="icon-box orange"><span class="material-icons">inventory</span></div>
+      <h3>Levantamento de Materiais</h3>
+      <p>Gere a lista técnica para o cliente.</p>
     </div>
   </div>
-</section>
+</div>

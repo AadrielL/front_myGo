@@ -26,6 +26,7 @@
             </span>
           </td>
           <td *ngIf="userRole === 'ADMIN'">
+            <button (click)="capturarParaLevantamento(orc.id)">Gerar Materiais</button>
             <button class="btn btn-sm btn-outline-success me-1" (click)="alterarStatus(orc.id, 'ACEITO')">Aceitar</button>
             <button class="btn btn-sm btn-outline-danger" (click)="alterarStatus(orc.id, 'RECUSADO')">Recusar</button>
           </td>

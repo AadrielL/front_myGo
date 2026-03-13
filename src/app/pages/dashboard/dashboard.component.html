@@ -1,36 +1,7 @@
-<div class="dashboard-container">
-  <header class="dashboard-header">
-    <div class="welcome-text">
-      <h1>Bem-vindo, {{ userName }}</h1>
-      <p>Gerencie seus orçamentos e projetos.</p>
-    </div>
-    <button class="btn-reports-primary" (click)="navegar('reports')">
-      <span class="material-icons">analytics</span> Ver Relatórios
-    </button>
-  </header>
+<div class="dashboard-layout">
+  <app-sidebar></app-sidebar>
 
-  <div class="quick-actions">
-    <div class="action-card" (click)="navegar('quiz')">
-      <div class="icon-box blue"><span class="material-icons">add_task</span></div>
-      <h3>Novo Orçamento</h3>
-      <p>Inicie um dimensionamento baseado na NBR 5410.</p>
-    </div>
-    <div class="action-card" (click)="navegar('historico')">
-      <div class="icon-box green"><span class="material-icons">history</span></div>
-      <h3>Histórico</h3>
-      <p>Consulte orçamentos gerados anteriormente.</p>
-    </div>
-  </div>
-
-  <div class="stats-overview" *ngIf="stats">
-    <div class="stat-item">
-      <span class="stat-value">{{ stats.totalOrcamentos || 0 }}</span>
-      <span class="stat-label">Total Orçamentos</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-value">{{ stats.taxaConversao }}%</span>
-      <span class="stat-label">Conversão</span>
-    </div>
-  </div>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
 </div>

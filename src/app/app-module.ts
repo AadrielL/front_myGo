@@ -5,14 +5,12 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, DatePipe } from '@angular/common';
 
-import { AppRoutingModule } from './app-routing-module';
+import { AppRoutingModule } from './app-routing-module'; // Verifique se o nome é exatamente esse
 import { AppComponent } from './app.component';
 
-// Componentes de Autenticação
+// Componentes
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/login/register/register.component';
-
-// Componentes do Dashboard e Layout
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MainViewComponent } from './pages/dashboard/main-view/main-view.component';
 import { ReportsViewComponent } from './pages/dashboard/reports-view/reports-view.component';

@@ -5,19 +5,21 @@ import { AuthService } from '../../../core/service/auth.service';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
-  standalone: false // Padrão para o seu AppModule
+    standalone: false
+
 })
-export class MainViewComponent implements OnInit { // Verifique se tem o 'export' aqui!
+export class MainViewComponent implements OnInit {
   userRole: string = '';
+  userName: string = '';
 
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    const role = this.authService.getUserRole();
-    this.userRole = role ? role.toUpperCase().trim() : 'USER';
+    this.userRole = this.authService.getUserRole().toUpperCase();
+    this.userName = this.authService.getUserName();
   }
 
-  irPara(rota: string) {
+  navegar(rota: string) {
     this.router.navigate([`/${rota}`]);
   }
 }
