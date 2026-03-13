@@ -1,1 +1,7 @@
+<div class="dashboard-layout">
+  <app-sidebar (toggleEvent)="isSidebarCollapsed = $event"></app-sidebar>
+
+  <main class="main-content" [class.collapsed]="isSidebarCollapsed">
     <router-outlet></router-outlet>
+  </main>
+</div>

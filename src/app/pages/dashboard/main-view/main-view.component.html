@@ -1,0 +1,28 @@
+<section class="main-container">
+  <h2 class="section-title">Ações Rápidas</h2>
+  <div class="services-grid">
+    <div class="service-card" (click)="irPara('quiz')">
+      <div class="icon-box blue"><span class="material-icons">bolt</span></div>
+      <div class="info">
+        <h3>Dimensionamento</h3>
+        <p>Cálculos NBR 5410 rápidos e precisos.</p>
+      </div>
+    </div>
+
+    <div class="service-card" (click)="irPara('historico')">
+      <div class="icon-box green"><span class="material-icons">description</span></div>
+      <div class="info">
+        <h3>Meus Projetos</h3>
+        <p>Histórico completo de orçamentos.</p>
+      </div>
+    </div>
+
+    <div class="service-card" *ngIf="userRole === 'ADMIN'" (click)="irPara('config-precos')">
+      <div class="icon-box orange"><span class="material-icons">settings</span></div>
+      <div class="info">
+        <h3>Gestão de Preços</h3>
+        <p>Margens e valores de insumos.</p>
+      </div>
+    </div>
+  </div>
+</section>

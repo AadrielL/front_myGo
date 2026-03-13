@@ -32,32 +32,30 @@ export class AuthService {
 
   private saveSession(res: any): void {
     if (res.token) localStorage.setItem('token', res.token);
+    // Garantimos que a role seja sempre salva em CAIXA ALTA para evitar erros no Guard
     if (res.role) localStorage.setItem('userRole', res.role.toUpperCase());
     if (res.name) localStorage.setItem('userName', res.name);
     if (res.email) localStorage.setItem('userEmail', res.email);
   }
 
-  // Resolve o erro no material.service.ts
-  getTenantId(): string {
-    return localStorage.getItem('userEmail') || 'default_tenant';
-  }
-
-  // Resolve o erro no dashboard.component.ts
-  getUserName(): string { 
-    return localStorage.getItem('userName') || 'Eletricista'; 
+  // ESSENCIAL: Este é o método que o seu auth.guard.ts está chamando
+  isAuthenticated(): boolean { 
+    return !!localStorage.getItem('token'); 
   }
 
   getUserRole(): string { 
     return localStorage.getItem('userRole') || 'VISITANTE'; 
   }
 
-  // Resolve o erro no dashboard.component.ts
-  logout(): void { 
-    localStorage.clear(); 
+  getTenantId(): string {
+    return localStorage.getItem('userEmail') || 'default_tenant';
   }
 
-  // Resolve o erro no auth.guard.ts
-  isLoggedIn(): boolean { 
-    return !!localStorage.getItem('token'); 
+  getUserName(): string { 
+    return localStorage.getItem('userName') || 'Eletricista'; 
+  }
+
+  logout(): void { 
+    localStorage.clear(); 
   }
 }

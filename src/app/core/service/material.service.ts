@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MaterialService {
-  private readonly API = 'http://localhost:8082/api/materiais';
+  // Verifique se a porta 8883 é a do seu microserviço de materiais
+  private apiUrl = 'http://localhost:8082/api/v1/materiais'; 
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient) {}
 
-  gerarLevantamento(dados: any): Observable<any> {
-    // Pegamos o tenantId do eletricista logado para isolar os dados
-    const tenantId = this.authService.getTenantId() || 'default';
-    const headers = new HttpHeaders().set('X-Tenant-ID', tenantId);
-    
-    return this.http.post(`${this.API}/gerar`, dados, { headers });
+  // Este é o método que o seu LevantamentoComponent.ts está chamando
+  gerarLevantamento(payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/gerar`, payload);
+  }
+
+  // Aproveite e verifique se este método também existe para o Histórico
+  getDetalhesMaterial(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/detalhes/${id}`);
   }
 }

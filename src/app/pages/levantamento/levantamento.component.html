@@ -1,48 +1,41 @@
-<div class="quiz-screen">
-  
-  <div class="quiz-card-wrapper" *ngIf="!exibirSucesso">
-    <h2>Divisão da Residência</h2>
-    <p>Para um cálculo preciso de cabos e eletrodutos, informe a quantidade de cômodos:</p>
+<div class="dashboard-container">
+  <div class="action-card">
+    <header class="mb-4">
+      <h2>Levantamento por Cômodo: {{ cliente }}</h2>
+      <p>O sistema irá calcular a fiação e dispositivos com base nestas quantidades.</p>
+    </header>
 
-    <form [formGroup]="materialForm">
-      <div class="form-grid">
-        <div class="form-field">
-          <label>Quartos</label>
-          <input type="number" formControlName="qtdQuartos">
+    <form [formGroup]="levantamentoForm" (ngSubmit)="finalizar()">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Quartos</label>
+          <input type="number" formControlName="qtdQuartos" class="form-control">
         </div>
-        <div class="form-field">
-          <label>Banheiros</label>
-          <input type="number" formControlName="qtdBanheiros">
+        <div class="col-md-3">
+          <label class="form-label">Salas</label>
+          <input type="number" formControlName="qtdSalas" class="form-control">
         </div>
-        <div class="form-field">
-          <label>Cozinhas</label>
-          <input type="number" formControlName="qtdCozinhas">
+        <div class="col-md-3">
+          <label class="form-label">Cozinhas</label>
+          <input type="number" formControlName="qtdCozinhas" class="form-control">
         </div>
-        <div class="form-field">
-          <label>Salas</label>
-          <input type="number" formControlName="qtdSalas">
+        <div class="col-md-3">
+          <label class="form-label">Banheiros</label>
+          <input type="number" formControlName="qtdBanheiros" class="form-control">
         </div>
       </div>
 
-      <div class="button-row" style="margin-top: 30px; display: flex; justify-content: space-between;">
-        <button type="button" class="btn-sec" (click)="router.navigate(['/dashboard'])">Cancelar</button>
-        <button type="button" class="btn-success" (click)="confirmarLevantamento()" [disabled]="loading">
-          {{ loading ? 'Processando...' : 'Finalizar Levantamento' }}
+      <div class="mt-4">
+        <label class="form-label">Observações Técnicas</label>
+        <textarea formControlName="observacoestécnicas" class="form-control" rows="3"></textarea>
+      </div>
+
+      <div class="mt-4 d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" routerLink="/quiz">Voltar</button>
+        <button type="submit" class="btn-reports-primary" [disabled]="levantamentoForm.invalid">
+          Gerar Lista de Materiais
         </button>
       </div>
     </form>
   </div>
-
-  <div class="quiz-card-wrapper" *ngIf="exibirSucesso" style="text-align: center;">
-    <h2 style="color: #28a745;">✅ Enviado com Sucesso!</h2>
-    <p [innerHTML]="mensagemDinamica" style="margin: 20px 0;"></p>
-    
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-      <a [href]="linkWhats" target="_blank" class="btn-success" style="text-decoration: none; background: #25d366;">
-        Chamar no WhatsApp
-      </a>
-      <button class="btn-sec" (click)="router.navigate(['/dashboard'])">Voltar ao Início</button>
-    </div>
-  </div>
-
 </div>

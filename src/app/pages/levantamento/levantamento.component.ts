@@ -1,85 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MaterialService } from '../../core/service/material.service';
-import { AuthService } from '../../core/service/auth.service';
-
 @Component({
   selector: 'app-levantamento',
   templateUrl: './levantamento.component.html',
-  styleUrls: ['./levantamento.component.css'], // Certifique-se que esta linha existe
-  standalone: false
+  styleUrls: ['./levantamento.component.css'],
+  standalone: false // Garantindo que não dê erro de compilação no seu AppModule
 })
 export class LevantamentoComponent implements OnInit {
-  materialForm!: FormGroup;
-  dadosQuizPreco: any;
-  loading: boolean = false;
-  
-  exibirSucesso: boolean = false;
-  mensagemDinamica: string = '';
-  linkWhats: string = '';
-  userRole: string = '';
+  levantamentoForm!: FormGroup;
+  cliente: string = '';
+  dadosQuiz: any;
 
   constructor(
     private fb: FormBuilder,
-    public router: Router,
     private materialService: MaterialService,
-    private authService: AuthService 
-  ) {
-    const nav = this.router.getCurrentNavigation();
-    this.dadosQuizPreco = nav?.extras.state?.['dadosQuiz'];
-  }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    if (!this.dadosQuizPreco) {
+    // Recupera os dados do Quiz anterior
+    const storedData = localStorage.getItem('payload_quiz');
+    if (!storedData) {
       this.router.navigate(['/quiz']);
       return;
     }
 
-    this.userRole = this.authService.getUserRole() || 'VISITANTE';
+    this.dadosQuiz = JSON.parse(storedData);
+    this.cliente = this.dadosQuiz.nomeCliente;
 
-    this.materialForm = this.fb.group({
-      qtdQuartos: [1, [Validators.required, Validators.min(0)]],
-      qtdBanheiros: [1, [Validators.required, Validators.min(1)]],
-      qtdCozinhas: [1, [Validators.required, Validators.min(1)]],
-      qtdSalas: [1, [Validators.required, Validators.min(0)]]
+    this.levantamentoForm = this.fb.group({
+      // Campos exatos para o seu microserviço de materiais
+      clienteNome: [this.cliente, Validators.required],
+      qtdQuartos: [0, [Validators.required, Validators.min(0)]],
+      qtdSalas: [0, [Validators.required, Validators.min(0)]],
+      qtdCozinhas: [0, [Validators.required, Validators.min(0)]],
+      qtdBanheiros: [0, [Validators.required, Validators.min(0)]],
+      areaTotalM2: [this.dadosQuiz.metragemM2 || 0],
+      observacoestécnicas: ['']
     });
   }
 
-  confirmarLevantamento() {
-    this.loading = true; // Ativa o botão "Processando..."
-    
-    const payload = {
-      ...this.dadosQuizPreco,
-      ...this.materialForm.value
+  finalizar() {
+    if (this.levantamentoForm.invalid) return;
+
+    // Payload final unificado: Quiz + Levantamento
+    const payloadFinal = {
+      ...this.dadosQuiz,
+      ...this.levantamentoForm.value
     };
 
-    this.materialService.gerarLevantamento(payload).subscribe({
-      next: (res: any) => {
-        // ESSENCIAL: Destrava o estado de loading
-        this.loading = false; 
+    console.log('Enviando para o MaterialService (8082):', payloadFinal);
 
-        if (this.userRole === 'ADMIN') {
-          alert('Levantamento salvo com sucesso!');
-          this.router.navigate(['/dashboard']);
-        } else {
-          const nomeEletricista = this.authService.getUserName() || 'Eletricista';
-          const nomeCliente = res.clienteNome || 'Cliente';
-          
-          this.mensagemDinamica = `Recebemos suas informações! O eletricista <strong>${nomeEletricista}</strong> entrará em contato em breve.`;
-          
-          const fone = "5511999999999"; 
-          const texto = encodeURIComponent(`Olá, realizei o levantamento para a obra de ${nomeCliente}.`);
-          this.linkWhats = `https://wa.me/${fone}?text=${texto}`;
-          
-          // MUDA A TELA: Esconde o form e mostra o sucesso
-          this.exibirSucesso = true; 
-        }
+    this.materialService.gerarLevantamento(payloadFinal).subscribe({
+      next: (res) => {
+        console.log('Levantamento gerado com sucesso!', res);
+        alert('Cálculo de materiais gerado com sucesso!');
+        this.router.navigate(['/historico']);
       },
-      error: (err: any) => {
-        this.loading = false;
-        console.error('Erro no processamento:', err);
-        alert('Erro ao processar materiais. Verifique o console do backend.');
+      error: (err) => {
+        console.error('Erro no microserviço de materiais:', err);
+        alert('Erro ao gerar levantamento. Verifique se o microserviço na 8082 está rodando.');
       }
     });
   }

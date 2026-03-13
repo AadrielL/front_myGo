@@ -1,0 +1,33 @@
+ <aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <div class="logo-container" *ngIf="!isCollapsed">
+      <span class="material-icons logo-icon">bolt</span>
+      <span class="logo-text">MyGo</span>
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <span class="material-icons">{{ isCollapsed ? 'menu' : 'menu_open' }}</span>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <span class="material-icons">dashboard</span>
+      <span class="nav-text" *ngIf="!isCollapsed">Visão Geral</span>
+    </a>
+    <a routerLink="/quiz" routerLinkActive="active" class="nav-item">
+      <span class="material-icons">bolt</span>
+      <span class="nav-text" *ngIf="!isCollapsed">Novo Projeto</span>
+    </a>
+    <a routerLink="/historico" routerLinkActive="active" class="nav-item">
+      <span class="material-icons">history</span>
+      <span class="nav-text" *ngIf="!isCollapsed">Histórico</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button (click)="logout()" class="nav-item logout-btn">
+      <span class="material-icons">logout</span>
+      <span class="nav-text" *ngIf="!isCollapsed">Sair</span>
+    </button>
+  </div>
+</aside>

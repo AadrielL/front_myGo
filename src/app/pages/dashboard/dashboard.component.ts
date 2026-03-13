@@ -12,7 +12,7 @@ import { DashboardService } from '../../core/service/dashboard.service';
 export class DashboardComponent implements OnInit {
   userName: string = 'Usuário';
   userRole: string = '';
-  stats: any = null; // Onde os dados do Java serão armazenados
+  stats: any = null;
   loading: boolean = false;
 
   constructor(
@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
     this.userRole = this.authService.getUserRole().toUpperCase().trim();
     this.userName = this.authService.getUserName();
 
+    // Inicia o carregamento se for ADMIN
     if (this.userRole === 'ADMIN') {
       this.carregarDadosDashboard();
     }
@@ -34,12 +35,15 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     this.dashboardService.getStats().subscribe({
       next: (data) => {
+        console.log('Dados recebidos do Java:', data); // Verifique isso no F12
         this.stats = data;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erro ao buscar dados do dashboard:', err);
+        console.error('Erro na conexão com o Java:', err);
         this.loading = false;
+        // Mock de emergência para a UI não travar se o Java falhar
+        this.stats = { totalOrcamentos: 0, taxaConversao: 0, statusCount: {} };
       }
     });
   }
@@ -49,7 +53,7 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  irParaCalculo() { this.router.navigate(['/quiz']); }
-  irParaHistorico() { this.router.navigate(['/historico']); }
-  irParaConfigPrecos() { this.router.navigate(['/config-precos']); }
-}
+  navegar(rota: string) {
+    this.router.navigate([`/${rota}`]);
+  }
+} 

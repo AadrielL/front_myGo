@@ -1,1 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary: #1a1a1a;
+  --bg: #fdfdfd;
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 80px;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Layout em Flex para colocar Sidebar e Conteúdo lado a lado */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Onde o Router-Outlet renderiza as páginas */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width); /* Cria o espaço para a sidebar fixa */
+  padding: 2rem;
+  background-color: var(--bg);
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.collapsed {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+@media (max-width: 768px) {
+  .main-content { margin-left: 0 !important; padding: 1rem; }
+}

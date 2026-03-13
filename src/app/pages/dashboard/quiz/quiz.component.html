@@ -1,0 +1,83 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="welcome-text">
+      <h1>Novo Orçamento</h1>
+      <p>Configure os detalhes técnicos do seu projeto.</p>
+    </div>
+  </header>
+
+  <div class="action-card">
+    <form [formGroup]="quizForm" (ngSubmit)="proximo()">
+      
+      <div class="section-group">
+        <h3 class="section-title">1. Dados do Projeto</h3>
+        
+        <div class="form-grid">
+          <div class="field-box full">
+            <label>Nome do Cliente / Projeto</label>
+            <input type="text" formControlName="nomeCliente" placeholder="Ex: Apartamento 302 - Bloco B">
+          </div>
+
+          <div class="field-box">
+            <label>Área (m²)</label>
+            <input type="number" formControlName="metragemM2">
+          </div>
+
+          <div class="field-box">
+            <label>Possui Infra Elétrica?</label>
+            <select formControlName="comInfra">
+              <option [ngValue]="true">Sim (Completo)</option>
+              <option [ngValue]="false">Não (Apenas fiação)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid mt-3">
+          <div class="field-box">
+            <label>Sabe a distância do poste ao quadro?</label>
+            <select (change)="toggleDistancia($event)">
+              <option value="nao">Não (Considerar 0m)</option>
+              <option value="sim">Sim, eu sei</option>
+            </select>
+          </div>
+
+          <div class="field-box animate-in" *ngIf="sabeDistancia">
+            <label>Distância em Metros</label>
+            <input type="number" formControlName="distanciaQuadroPoste">
+          </div>
+        </div>
+      </div>
+
+      <hr class="form-divider">
+
+      <div class="section-group">
+        <h3 class="section-title">2. Itens Adicionais (Admin)</h3>
+        <p class="section-subtitle">Selecione serviços extras e suas quantidades.</p>
+        
+        <div formArrayName="servicosAdicionaisUI" class="adicionais-grid">
+          <div *ngFor="let s of servicosExtras; let i = index" [formGroupName]="i" 
+               class="adicional-card" [class.selected]="quizForm.get('servicosAdicionaisUI')?.get(i + '.selecionado')?.value">
+            
+            <div class="adicional-header">
+              <div class="checkbox-wrapper">
+                <input type="checkbox" formControlName="selecionado" [id]="'extra-' + i">
+                <label [for]="'extra-' + i">{{ s.nome }}</label>
+              </div>
+            </div>
+
+            <div class="adicional-body" *ngIf="quizForm.get('servicosAdicionaisUI')?.get(i + '.selecionado')?.value">
+              <label>Quantidade</label>
+              <input type="number" formControlName="quantidade" min="1">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="submit" class="btn-reports-primary" [disabled]="quizForm.invalid">
+          Continuar para Levantamento <span class="material-icons">arrow_forward</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
