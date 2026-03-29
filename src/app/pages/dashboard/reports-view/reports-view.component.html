@@ -1,0 +1,45 @@
+<div class="reports-container">
+  <div class="flex-header">
+    <h2>Análise de Desempenho</h2>
+    <button class="btn-print" (click)="carregarDados(true)">
+      <span class="material-icons">refresh</span> Atualizar
+    </button>
+  </div>
+
+  <!-- KPIs de Resumo -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+      <small>Total de Orçamentos</small>
+      <h3>{{ totalOrcamentos }}</h3>
+      </div>
+      <div class="kpi-card">
+      <small>Ticket Médio (Geral)</small>
+      <h3>R$ {{ ticketMedio | number:'1.2-2' }}</h3>
+    </div>
+  </div>
+
+  <div class="main-reports-grid">
+    <!-- Gráfico 1: Status -->
+    <div class="chart-box">
+      <h3>Distribuição por Status</h3>
+      <div class="canvas-wrapper">
+        <canvas baseChart 
+          [data]="pieChartData" 
+          [type]="pieChartType"
+          [options]="pieChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Gráfico 2: Médias Mensais -->
+    <div class="chart-box">
+      <h3>Média de Valor Mensal</h3>
+      <div class="canvas-wrapper">
+        <canvas baseChart 
+          [data]="barChartData" 
+          [type]="barChartType">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>

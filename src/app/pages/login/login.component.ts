@@ -15,14 +15,14 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
-    // CORREÇÃO: Passando como um objeto único {}
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (res: any) => {
-        // O token já é salvo pelo AuthService via tap()
-        this.router.navigate(['/dashboard']);
+      // CORREÇÃO: A rota correta é 'dashboard-main', que é filha do DashboardComponent
+      this.router.navigate(['/dashboard-main']);
       },
       error: (err: any) => {
         console.error('Erro no Login:', err);
+      // Se der 403, a senha/email está errado ou o Java ainda não atualizou no Render
         this.errorMessage = err.status === 403 ? 'E-mail ou senha inválidos.' : 'Erro ao conectar ao servidor.';
       }
     });

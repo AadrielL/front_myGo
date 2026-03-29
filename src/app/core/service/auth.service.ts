@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core'; // CORREÇÃO: Importado do @angular/core
+import { Injectable } from '@angular/core'; 
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API_URL = 'https://orcamento-db.onrender.com';
+  private readonly API_URL = 'http://localhost:8083';
 
   constructor(private http: HttpClient) {}
 
@@ -14,17 +14,40 @@ export class AuthService {
 
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.API_URL}/auth/login`, credentials).pipe(
-      tap((res: any) => {
-        if (res.token) localStorage.setItem('token', res.token);
-        if (res.role) localStorage.setItem('userRole', res.role.toUpperCase());
-        if (res.name) localStorage.setItem('userName', res.name);
-      })
+      tap((res: any) => this.saveSession(res))
     );
   }
 
-  // Métodos que seu Dashboard e Login precisam:
-  getUserName(): string { return localStorage.getItem('userName') || 'Usuário'; }
+  private saveSession(res: any): void {
+    if (res.token) localStorage.setItem('token', res.token);
+    if (res.role) localStorage.setItem('userRole', res.role.toUpperCase());
+    
+    const nomeUsuario = res.nome || res.name || 'Usuário';
+    localStorage.setItem('userName', nomeUsuario);
+    
+    // Essencial para o TenantId das APIs 8081 e 8082
+    if (res.email) localStorage.setItem('userEmail', res.email);
+  }
+
+  isAuthenticated(): boolean { return !!localStorage.getItem('token'); }
   getUserRole(): string { return localStorage.getItem('userRole') || 'VISITANTE'; }
-  logout(): void { localStorage.clear(); }
-  isLoggedIn(): boolean { return !!localStorage.getItem('token'); }
+  getUserName(): string { return localStorage.getItem('userName') || 'Eletricista Mygo'; }
+
+  getTenantId(): string {
+    const email = localStorage.getItem('userEmail');
+    return email && email !== 'undefined' ? email : 'admin@teste.com';
+  }
+
+  logout(): void { 
+    localStorage.clear(); 
+    window.location.href = '/login';
+  }
+  simularUpgradePago(email: string): Observable<any> {
+  // Simulando o payload que o Mercado Pago enviaria
+  const payload = {
+    payer_email: email,
+    status: 'approved'
+  };
+  return this.http.post(`${this.API_URL}/api/payments/confirm`, payload);
+  }
 }

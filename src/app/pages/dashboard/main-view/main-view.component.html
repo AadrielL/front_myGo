@@ -1,0 +1,56 @@
+<div class="dashboard-container">
+  <!-- Cabeçalho de Boas-vindas -->
+  <div class="welcome-section">
+      <h1>Bem-vindo, {{ userName }}</h1>
+      <p>Gerencie seus orçamentos e projetos de forma simplificada.</p>
+    </div>
+
+  <!-- Grade de Ações Rápidas -->
+  <div class="quick-actions">
+    
+    <!-- Card: Novo Orçamento (Disponível para todos) -->
+    <div class="action-card" (click)="navegar('quiz')">
+      <div class="icon-box blue">
+        <span class="material-icons">add_task</span>
+      </div>
+      <div class="card-content">
+      <h3>Novo Orçamento</h3>
+      <p>Inicie um dimensionamento baseado na NBR 5410.</p>
+    </div>
+    </div>
+
+    <!-- Card: Histórico (Disponível para todos) -->
+    <div class="action-card" (click)="navegar('historico')">
+      <div class="icon-box green">
+        <span class="material-icons">history</span>
+      </div>
+      <div class="card-content">
+      <h3>Histórico</h3>
+      <p>Consulte orçamentos e cálculos anteriores.</p>
+    </div>
+    </div>
+
+    <!-- Card: Levantamento (Somente ADMIN) -->
+    <div *ngIf="userRole === 'ADMIN'" class="action-card" (click)="navegar('levantamento')">
+      <div class="icon-box orange">
+        <span class="material-icons">inventory</span>
+      </div>
+      <div class="card-content">
+      <h3>Levantamento de Materiais</h3>
+        <p>Gere a lista técnica completa para o cliente.</p>
+      </div>
+    </div>
+
+    <!-- Card: Relatórios de Gestão (Dica: Útil para o ADMIN ver os gráficos) -->
+    <div *ngIf="userRole === 'ADMIN'" class="action-card" (click)="navegar('reports')">
+      <div class="icon-box purple">
+        <span class="material-icons">bar_chart</span>
+      </div>
+      <div class="card-content">
+        <h3>Relatórios de Gestão</h3>
+        <p>Visualize o desempenho e taxas de conversão.</p>
+      </div>
+    </div>
+
+  </div>
+</div>

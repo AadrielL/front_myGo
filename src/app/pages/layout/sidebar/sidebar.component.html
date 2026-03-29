@@ -1,0 +1,65 @@
+<nav class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="logo-area">
+    <span class="logo-text" *ngIf="!isCollapsed">MYGO <strong>ELÉTRICA</strong></span>
+    <!-- Botão que dispara a ação -->
+    <button class="btn-toggle" (click)="toggleSidebar()">
+      <span class="material-icons">more_vert</span>
+    </button>
+  </div>
+  
+  <ul class="nav-links">
+    <li>
+      <a routerLink="/dashboard-main" routerLinkActive="active">
+        <span class="material-icons">dashboard</span>
+        <span class="nav-text">Início</span>
+      </a>
+    </li>
+    
+    <li>
+      <a routerLink="/historico" routerLinkActive="active">
+        <span class="material-icons">history</span>
+        <span class="nav-text">Histórico</span>
+      </a>
+    </li>
+
+    <li *ngIf="userRole === 'USER'">
+      <a routerLink="/quiz" routerLinkActive="active">
+        <span class="material-icons">calculate</span>
+        <span class="nav-text">Gerar Valor de Serviço</span>
+      </a>
+    </li>
+
+    <!-- Divisores só aparecem se estiver aberto -->
+    <li class="nav-divider" *ngIf="userRole === 'ADMIN' && !isCollapsed">GESTÃO</li>
+
+    <li *ngIf="userRole === 'ADMIN'">
+      <a routerLink="/reports" routerLinkActive="active">
+        <span class="material-icons">analytics</span>
+        <span class="nav-text">Relatórios de Gestão</span>
+      </a>
+    </li>
+    
+    <li *ngIf="userRole === 'ADMIN'">
+      <a routerLink="/levantamento" routerLinkActive="active">
+        <span class="material-icons">assignment</span>
+        <span class="nav-text">Novo Levantamento</span>
+      </a>
+    </li>
+
+    <li class="nav-divider" *ngIf="userRole === 'ADMIN' && !isCollapsed">CONFIGURAÇÕES</li>
+
+    <li *ngIf="userRole === 'ADMIN'">
+      <a routerLink="/config-precos" routerLinkActive="active">
+        <span class="material-icons">settings</span>
+        <span class="nav-text">Tabela de Preços (Base)</span>
+      </a>
+    </li>
+
+    <li *ngIf="userRole === 'ADMIN'">
+      <a routerLink="/admin/servicos-extras" routerLinkActive="active">
+        <span class="material-icons">playlist_add</span>
+        <span class="nav-text">Serviços do Quiz</span>
+      </a>
+    </li>
+  </ul>
+</nav>

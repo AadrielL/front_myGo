@@ -1,33 +1,36 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/login/register/register.component';
-import { QuizComponent } from './shared/quiz/quiz.component';
-import { LevantamentoComponent } from './pages/levantamento/levantamento.component'; // ADICIONADO
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { MainViewComponent } from './pages/dashboard/main-view/main-view.component';
+import { ReportsViewComponent } from './pages/dashboard/reports-view/reports-view.component';
+import { QuizComponent } from './pages/dashboard/quiz/quiz.component';
+import { HistoricoComponent } from './pages/orcamentos/historico/historico.component';
+import { LevantamentoComponent } from './pages/levantamento/levantamento.component';
+import { ConfigPrecosComponent } from './pages/config-precos/config-precos.component';
+
 import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { 
-    path: 'dashboard', 
-    component: DashboardComponent, 
-    canActivate: [authGuard] 
+  {
+    path: '',
+    component: DashboardComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'dashboard-main', component: MainViewComponent },
+      { path: 'quiz', component: QuizComponent },
+      { path: 'historico', component: HistoricoComponent },
+      { path: 'levantamento', component: LevantamentoComponent, data: { role: 'ADMIN' } },
+      { path: 'reports', component: ReportsViewComponent, data: { role: 'ADMIN' } },
+      { path: 'config-precos', component: ConfigPrecosComponent, data: { role: 'ADMIN' } }
+    ]
   },
-  { 
-    path: 'quiz', 
-    component: QuizComponent, 
-    canActivate: [authGuard] 
-  },
-  { 
-    path: 'levantamento', // ADICIONADO
-    component: LevantamentoComponent, 
-    canActivate: [authGuard] 
-  },
-  { path: '**', redirectTo: '/dashboard' }
+  { path: '**', redirectTo: 'dashboard-main' }
 ];
 
 @NgModule({

@@ -1,59 +1,37 @@
-# OrcamentoFront
+# Front MyGo Documentation
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+## Overview
+This is the comprehensive documentation for the Angular frontend application for Front MyGo. The application interfaces with various components, including a quiz interface and a dashboard for users.
 
-## Development server
+## Quiz Interface
+The quiz interface allows users to participate in quizzes with real-time feedback. Users can select quizzes, view questions, submit answers, and see results immediately. The quiz functionality includes:
+- Timed quizzes
+- Multi-choice questions
+- Instant feedback on answers
 
-To start a local development server, run:
+### Features:
+- User-friendly interface
+- Real-time result tracking
 
-```bash
-ng serve
-```
+## Dashboard
+The dashboard provides users with a personalized view of their quiz performance and other related metrics. Features of the dashboard include:
+- Overall performance statistics
+- Historical quiz data
+- Progress tracking over time
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Dashboard Features:
+- Graphical representation of performance
+- Filter options for quizzes by date and type
 
-## Code scaffolding
+## Integration with Backend APIs
+The Angular frontend integrates seamlessly with backend APIs to retrieve and submit data. This includes user authentication, quiz data retrieval, and submission of answers. Key endpoints include:
+- **/api/auth/login** - for user login
+- **/api/quizzes** - to fetch available quizzes
+- **/api/quiz/submit** - to submit answers and get results
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Important Notes:
+- Ensure API keys are securely stored.
+- Always validate user inputs on both frontend and backend.
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Conclusion
+This documentation serves as a guide for developers and users to understand the functionalities of the Front MyGo Angular application. For further information, please refer to the API documentation and developer guidelines.
