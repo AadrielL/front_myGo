@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; // Importado Interceptor
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, DatePipe } from '@angular/common';
 
-import { AppRoutingModule } from './app-routing-module'; // Verifique se o nome é exatamente esse
+import { AppRoutingModule } from './app-routing-module'; 
 import { AppComponent } from './app.component';
+
+// Interceptor
+import { AuthInterceptor } from './core/interceptors/auth.interceptor'; // Verifique se o caminho está correto
 
 // Componentes
 import { LoginComponent } from './pages/login/login.component';
@@ -19,6 +22,8 @@ import { QuizComponent } from './pages/dashboard/quiz/quiz.component';
 import { LevantamentoComponent } from './pages/levantamento/levantamento.component';
 import { HistoricoComponent } from './pages/orcamentos/historico/historico.component';
 import { ConfigPrecosComponent } from './pages/config-precos/config-precos.component';
+
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -41,9 +46,19 @@ import { ConfigPrecosComponent } from './pages/config-precos/config-precos.compo
     ReactiveFormsModule,
     FormsModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    BaseChartDirective 
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    provideCharts(withDefaultRegisterables()),
+    // REGISTRO DO INTERCEPTOR AQUI:
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

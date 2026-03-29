@@ -1,25 +1,33 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class MaterialService {
-  // URLs para os dois microserviços diferentes
-  private apiMateriais = 'http://localhost:8082/api/materiais'; 
-  private apiCalculadora = 'http://localhost:8081/v1/orcamentos';
+  private readonly URL_MATERIAIS = 'http://localhost:8082/api/materiais';
+  private readonly URL_ORCAMENTOS_BASE = 'http://localhost:8081/v1/orcamentos';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
-  // Busca dados do Quiz que o cliente fez (API 8081)
-  getOrcamentoPorId(id: string): Observable<any> {
-    return this.http.get(`${this.apiCalculadora}/${id}`);
+  private getHeaders() {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'X-Tenant-ID': this.authService.getTenantId() || ''
+    });
   }
 
-  // Gera a lista técnica final (API 8082)
-  gerarLevantamento(payload: any): Observable<any> {
-    return this.http.post(`${this.apiMateriais}/gerar`, payload);
+  getOrcamentoPorId(orcamentoId: string): Observable<any> {
+    const idLimpo = orcamentoId.trim();
+    return this.http.get<any>(`${this.URL_ORCAMENTOS_BASE}/${idLimpo}`, { headers: this.getHeaders() });
   }
+
+  gerarLevantamento(dados: any): Observable<any> {
+    return this.http.post<any>(`${this.URL_MATERIAIS}/gerar`, dados, { headers: this.getHeaders() });
+  }
+
  getDetalhesMaterial(orcamentoId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiCalculadora}/orcamento/${orcamentoId}`);
+    const idLimpo = orcamentoId.trim();
+    return this.http.get<any>(`${this.URL_MATERIAIS}/detalhes/${idLimpo}`, { headers: this.getHeaders() });
   }
 }

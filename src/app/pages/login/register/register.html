@@ -1,18 +1,112 @@
-<div style="text-align: center; margin-top: 50px;">
-  <h2>Criar Conta MyGo</h2>
-  <form (submit)="onRegister()" style="display: inline-block; text-align: left;">
-    <input type="text" [(ngModel)]="name" name="name" placeholder="Nome Completo" required><br><br>
-    <input type="email" [(ngModel)]="email" name="email" placeholder="E-mail" required><br><br>
-    <input type="password" [(ngModel)]="password" name="password" placeholder="Senha" required><br><br>
-    
-    <label>Tipo de Conta:</label><br>
-    <select [(ngModel)]="role" name="role">
-      <option value="VISITANTE">Visitante (1 cálculo/dia)</option>
-      <option value="ADMIN">Admin (Acesso Total)</option>
-    </select><br><br>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2 class="auth-title">Criar Conta MyGo</h2>
+      <p class="auth-subtitle">Sua calculadora NBR 5410 começa aqui</p>
+    </div>
 
-    <button type="submit">Cadastrar</button>
+    <form (submit)="onRegister()">
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" [(ngModel)]="nome" name="nome" placeholder="Ex: João Silva" required>
+      </div>
+
+      <div class="form-group">
+        <label>E-mail Profissional</label>
+        <input type="email" [(ngModel)]="email" name="email" placeholder="seu@email.com" required>
+      </div>
+
+      <div class="form-group">
+        <label>Senha de Acesso</label>
+        <input type="password" [(ngModel)]="password" name="password" placeholder="Mínimo 6 caracteres" required>
+      </div>
+    
+      <div class="plan-info">
+        <span class="badge">PLANO GRÁTIS</span>
+        <p>Acesso imediato como <b>Visitante</b>.</p>
+      </div>
+
+      <button type="submit" class="btn-primary">Criar Minha Conta</button>
   </form>
-  <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
-  <p><a routerLink="/login">Já tem conta? Faça login</a></p>
+    
+    <div class="auth-footer">
+      <p>Já possui uma conta? <a routerLink="/login">Faça Login</a></p>
+    </div>
+    
+    <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+  </div>
 </div>
+
+<style>
+  /* Container Principal */
+  .auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f0f2f5;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+  }
+
+  /* Card de Autenticação */
+  .auth-card {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .auth-header { text-align: center; margin-bottom: 30px; }
+  .auth-title { color: #1a1a1a; font-size: 26px; margin-bottom: 8px; font-weight: 700; }
+  .auth-subtitle { color: #666; font-size: 14px; }
+
+  /* Formulário */
+  .form-group { margin-bottom: 20px; text-align: left; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 6px; text-transform: uppercase; }
+  
+  input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  input:focus { border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); }
+
+  /* Info do Plano */
+  .plan-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid #3498db;
+    text-align: left;
+  }
+  .plan-info p { margin: 0; font-size: 13px; color: #555; }
+  .badge { background: #3498db; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; display: inline-block; margin-bottom: 5px; }
+
+  /* Botão */
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .btn-primary:hover { background: #1a252f; }
+
+  /* Footer */
+  .auth-footer { margin-top: 25px; text-align: center; font-size: 14px; color: #666; }
+  .auth-footer a { color: #3498db; text-decoration: none; font-weight: 600; }
+  .error-msg { color: #e74c3c; margin-top: 20px; text-align: center; font-size: 14px; font-weight: 500; }
+</style>

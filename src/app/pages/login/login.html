@@ -1,14 +1,38 @@
-<div style="text-align: center; margin-top: 50px;">
-  <h2>Login MyGo</h2>
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">Login ⚡ MyGo</h2>
+    <p class="auth-subtitle">Acesse sua calculadora NBR 5410</p>
+
   <form (submit)="onSubmit()">
-    <input type="email" [(ngModel)]="email" name="email" placeholder="E-mail" required><br><br>
-    <input type="password" [(ngModel)]="password" name="password" placeholder="Senha" required><br><br>
-    <button type="submit">Entrar</button>
+      <div class="form-group">
+        <input type="email" [(ngModel)]="email" name="email" placeholder="E-mail" required>
+      </div>
+      <div class="form-group">
+        <input type="password" [(ngModel)]="password" name="password" placeholder="Senha" required>
+      </div>
+      
+      <button type="submit" class="btn-primary">Entrar</button>
   </form>
   
-  <p style="margin-top: 20px;">
+    <div class="auth-footer">
     Não tem conta? <a routerLink="/register">Cadastre-se aqui</a>
-  </p>
+    </div>
   
-  <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+    <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+  </div>
 </div>
+
+<style>
+  .auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+  .auth-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+  .auth-title { color: #2c3e50; margin-bottom: 5px; font-size: 24px; }
+  .auth-subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 14px; }
+  .form-group { margin-bottom: 15px; }
+  input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; transition: border 0.3s; }
+  input:focus { border-color: #3498db; outline: none; }
+  .btn-primary { width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; transition: background 0.3s; }
+  .btn-primary:hover { background: #2980b9; }
+  .auth-footer { margin-top: 20px; font-size: 14px; color: #7f8c8d; }
+  .auth-footer a { color: #3498db; text-decoration: none; font-weight: bold; }
+  .error-msg { color: #e74c3c; margin-top: 15px; font-size: 14px; font-weight: 500; }
+</style>

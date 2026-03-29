@@ -1,37 +1,157 @@
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><span class="material-icons">history</span> {{ userRole === 'ADMIN' ? 'Gerenciar Orçamentos' : 'Meus Orçamentos' }}</h2>
-    <button class="btn btn-secondary" (click)="voltar()">Voltar</button>
+  <div class="dashboard-header d-flex justify-content-between align-items-center mb-4">
+    <div class="welcome-text">
+      <h2 class="section-title">
+        <span class="material-icons">{{ verLixeira ? 'delete_outline' : 'history' }}</span> 
+        {{ verLixeira ? 'Lixeira (Excluídos)' : (userRole === 'ADMIN' ? 'Gerenciar Orçamentos' : 'Meus Orçamentos') }}
+      </h2>
+      <p *ngIf="verLixeira" class="text-danger mb-0" style="font-size: 0.85rem;">
+        <span class="material-icons" style="font-size: 14px;">info</span> 
+        Itens na lixeira são removidos permanentemente após 7 dias.
+      </p>
+    </div>
+    
+    <div class="d-flex gap-2">
+      <!-- Botão de Alternância (Histórico <-> Lixeira) -->
+      <button [class]="verLixeira ? 'btn-history-secondary' : 'btn-trash-outline'" (click)="alternarVisualizacao()">
+        <span class="material-icons">{{ verLixeira ? 'arrow_back' : 'delete_sweep' }}</span>
+        {{ verLixeira ? 'Voltar ao Histórico' : 'Ver Lixeira' }}
+      </button>
+
+      <button class="btn-reports-primary" (click)="voltar()">
+        <span class="material-icons">arrow_back</span> Voltar
+      </button>
+    </div>
   </div>
 
-  <div class="table-responsive shadow-sm rounded">
-    <table class="table table-hover bg-white mb-0">
-      <thead class="table-dark">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="action-card text-center p-5">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="mt-2 text-muted">Sincronizando dados...</p>
+  </div>
+
+  <!-- Tabela de Orçamentos -->
+  <div class="table-responsive" *ngIf="!loading">
+    <table class="table-materials">
+      <thead>
         <tr>
           <th>Cliente</th>
-          <th>Data</th>
-          <th>Valor Estimado</th>
-          <th>Status</th>
-          <th *ngIf="userRole === 'ADMIN'">Ações</th>
+          <th class="text-center">Data</th>
+          <th class="text-center">Valor Estimado</th>
+          <th class="text-center">Status</th>
+          <th class="text-end">Ações</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let orc of listaOrcamentos">
-          <td>{{ orc.clienteNome }}</td>
-          <td>{{ orc.dataCriacao | date:'dd/MM/yyyy' }}</td>
-          <td>{{ orc.valorTotal | currency:'BRL' }}</td>
-          <td>
-            <span class="badge" [ngClass]="orc.status === 'ACEITO' ? 'bg-success' : 'bg-warning text-dark'">
+        <tr *ngFor="let orc of listaOrcamentos" [class.row-deleted]="verLixeira">
+          <td><strong>{{ orc.clienteNome }}</strong></td>
+          <td class="text-center">{{ orc.dataExibicao | date:'dd/MM/yyyy' }}</td>
+          <td class="text-center">
+            <span class="text-primary" style="font-weight: 700;">
+              {{ orc.valorExibicao | currency:'BRL' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <span class="badge" [ngClass]="orc.status === 'ACEITO' ? 'bg-success' : 'bg-warning'">
               {{ orc.status }}
             </span>
           </td>
-          <td *ngIf="userRole === 'ADMIN'">
-            <button (click)="capturarParaLevantamento(orc.id)">Gerar Materiais</button>
-            <button class="btn btn-sm btn-outline-success me-1" (click)="alterarStatus(orc.id, 'ACEITO')">Aceitar</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="alterarStatus(orc.id, 'RECUSADO')">Recusar</button>
+          <td class="text-end">
+            <div class="d-flex justify-content-end gap-2">
+              
+              <!-- Se NÃO estiver na lixeira, mostra ações normais -->
+              <ng-container *ngIf="!verLixeira">
+                <button class="btn-print" style="padding: 6px 12px; font-size: 0.8rem;" (click)="verDetalhes(orc.id)">
+                  <span class="material-icons" style="font-size: 16px;">inventory_2</span> Materiais
+                </button>
+                
+                <ng-container *ngIf="userRole === 'ADMIN'">
+                  <button class="btn-reports-primary" style="padding: 6px 12px; font-size: 0.8rem;" (click)="capturarParaLevantamento(orc.id)">
+                    Gerar Lista
+                  </button>
+                  <button class="btn btn-sm btn-outline-success" (click)="alterarStatus(orc.id, 'ACEITO')">✔</button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="confirmarRecusar(orc.id)">
+                    <span class="material-icons" style="font-size: 14px;">delete</span>
+                  </button>
+                </ng-container>
+              </ng-container>
+
+              <!-- Se ESTIVER na lixeira, mostra apenas o botão Restaurar -->
+              <ng-container *ngIf="verLixeira">
+                <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="restaurar(orc.id)">
+                  <span class="material-icons" style="font-size: 16px;">restore</span> Restaurar
+                </button>
+              </ng-container>
+
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
+    
+    <div *ngIf="listaOrcamentos.length === 0" class="action-card text-center p-5">
+      <p class="text-muted">{{ verLixeira ? 'A lixeira está vazia.' : 'Nenhum orçamento encontrado.' }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE DETALHES (Mantido) -->
+<div class="modal-backdrop" *ngIf="mostrarModal" (click)="fecharModal()">
+  <div class="modal-content-custom printable-content" (click)="$event.stopPropagation()">
+    <div class="modal-header-custom no-print">
+      <h3><span class="material-icons">description</span> Relatório de Materiais</h3>
+      <button class="btn-close-custom" (click)="fecharModal()">&times;</button>
+    </div>
+
+    <div class="modal-body-custom" *ngIf="detalheMaterial">
+      <div class="info-header mb-4 d-flex justify-content-between align-items-end">
+        <div>
+          <h2 class="mb-1" style="color: var(--sidebar-bg)">Levantamento Técnico</h2>
+          <p class="mb-0"><strong>Cliente:</strong> {{ detalheMaterial.clienteNome }}</p>
+          <p class="text-muted small mb-0">Data: {{ detalheMaterial.dataGeracao | date:'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+        <div class="text-end">
+          <span class="text-muted small">Valor Estimado</span>
+          <h3 class="text-success m-0">{{ detalheMaterial.valorTotalEstimado | currency:'BRL' }}</h3>
+        </div>
+      </div>
+      <hr>
+      <div *ngFor="let cat of detalheMaterial.categorias | keyvalue" class="mb-4">
+        <div *ngIf="cat.value.length > 0">
+          <h5 class="category-header">
+            <span class="material-icons">label_important</span> {{ cat.key }}
+          </h5>
+          <table class="table-materials-mini">
+            <thead>
+              <tr>
+                <th>Item / Descrição</th>
+                <th class="text-center">Qtd</th>
+                <th class="text-center">Unid</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of cat.value">
+                <td style="width: 70%">{{ item.descricao }}</td>
+                <td class="text-center"><strong>{{ item.quantidade }}</strong></td>
+                <td class="text-center text-muted">{{ item.unidade }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="total-section mt-4 pt-3" style="border-top: 2px solid var(--mygo-green);">
+        <div class="aviso-box" *ngIf="detalheMaterial.avisoTecnico">
+          <p class="mb-1"><strong><span class="material-icons" style="font-size: 14px;">gavel</span> Notas Técnicas:</strong></p>
+          <small class="text-muted">{{ detalheMaterial.avisoTecnico }}</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer-custom no-print">
+      <button class="btn-print" (click)="imprimirDetalhe()">
+        <span class="material-icons">print</span> Imprimir PDF
+      </button>
+      <button class="btn-secondary" (click)="fecharModal()">Fechar</button>
+    </div>
   </div>
 </div>

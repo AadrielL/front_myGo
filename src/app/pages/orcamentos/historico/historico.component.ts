@@ -1,62 +1,176 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router'; // Import necessário para o voltar()
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { DashboardService } from '../../../core/service/dashboard.service';
 import { MaterialService } from '../../../core/service/material.service';
-import { AuthService } from '../../../core/service/auth.service'; // Import necessário para o userRole
+import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-historico',
   templateUrl: './historico.component.html',
-  styleUrls: ['./historico.component.css'], // Faltava essa linha
   standalone: false
 })
 export class HistoricoComponent implements OnInit {
   listaOrcamentos: any[] = [];
   detalheMaterial: any = null;
-  
-  // ADICIONADO: Variável que o HTML está pedindo
   userRole: string = 'USER'; 
+  loading: boolean = false;
+  mostrarModal: boolean = false;
+  verLixeira: boolean = false; // Controle de visualização da lixeira
 
   constructor(
     private dashboardService: DashboardService,
     private materialService: MaterialService,
-    private authService: AuthService, // Injetado para pegar o cargo
-    private router: Router // Injetado para a função voltar()
+    private authService: AuthService,
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // Pega o cargo do usuário (ADMIN ou USER)
-    this.userRole = this.authService.getUserRole()?.toUpperCase() || 'USER';
-    this.carregarProjetos();
+    const role = this.authService.getUserRole();
+    this.userRole = role ? role.toUpperCase() : 'USER';
+    this.carregarProjetos(true);
   }
 
-  carregarProjetos() {
-    this.dashboardService.getHistorico().subscribe({
-      next: (data) => this.listaOrcamentos = data,
-      error: (err) => console.error('Erro ao carregar histórico:', err)
+  // Alterna entre a lista de ativos e a lixeira
+  alternarVisualizacao() {
+    this.verLixeira = !this.verLixeira;
+    this.carregarProjetos(true);
+  }
+
+  carregarProjetos(force = false) {
+    this.loading = true;
+    this.cdRef.detectChanges();
+
+    // Decide qual lista buscar baseada no estado da variável verLixeira
+    const request = this.verLixeira 
+      ? this.dashboardService.getLixeira() 
+      : this.dashboardService.getHistorico(force);
+
+    request.subscribe({
+      next: (data: any[]) => {
+        this.listaOrcamentos = data.map(orc => ({
+          ...orc,
+          id: orc.id || orc.orcamentoId,
+          clienteNome: orc.clienteNome || orc.cliente_nome || 'Cliente sem nome',
+          dataExibicao: orc.dataCriacao || orc.data_creacao,
+          valorExibicao: orc.valorTotal || orc.valor_total || orc.valorEstimado || 0,
+          status: orc.status || 'PENDENTE'
+        }));
+        this.loading = false;
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        console.error("Erro ao carregar projetos:", err);
+        this.loading = false;
+        this.cdRef.detectChanges();
+      }
     });
   }
 
-  // ADICIONADO: Função que o botão "Voltar" do HTML chama
-  voltar() {
-    this.router.navigate(['/dashboard']);
+  // --- AÇÕES DE LIXEIRA ---
+
+  confirmarRecusar(id: string) {
+    if (confirm("Deseja enviar este orçamento para a lixeira? Ele será excluído permanentemente em 7 dias.")) {
+      this.dashboardService.recusarOrcamento(id).subscribe({
+        next: () => {
+          this.carregarProjetos(true);
+        },
+        error: () => alert('Erro ao mover para a lixeira.')
+      });
+    }
   }
 
-  // Adicione este método no seu HistoricoComponent
+  restaurar(id: string) {
+    this.dashboardService.restaurarOrcamento(id).subscribe({
+      next: () => {
+        alert("Orçamento restaurado com sucesso!");
+        this.carregarProjetos(true);
+      },
+      error: () => alert('Erro ao restaurar orçamento.')
+    });
+  }
+
+  // --- GERENCIAMENTO DE STATUS E NAVEGAÇÃO ---
+
+  alterarStatus(id: any, novoStatus: string) {
+    this.dashboardService.alterarStatus(id, novoStatus).subscribe({
+      next: () => this.carregarProjetos(true),
+      error: () => alert('Erro ao atualizar status.')
+    });
+  }
+
   capturarParaLevantamento(id: string) {
-    // Navega para a tela de levantamento passando o ID do orçamento
     this.router.navigate(['/levantamento'], { queryParams: { orcamentoId: id } });
   }
 
-  // ADICIONADO: Função que os botões "Aceitar/Recusar" do HTML chamam
-  alterarStatus(id: any, novoStatus: string) {
-    console.log(`Alterando status do orçamento ${id} para ${novoStatus}`);
-    // Aqui você pode implementar a chamada para o service depois
-  }
+  // --- MODAL E MATERIAIS ---
 
   verDetalhes(orcamentoId: string) {
-    this.materialService.getDetalhesMaterial(orcamentoId).subscribe(res => {
-      this.detalheMaterial = res;
+    if (!orcamentoId) return;
+
+    this.loading = true;
+    this.detalheMaterial = null;
+    this.mostrarModal = false;
+    this.cdRef.detectChanges();
+
+    this.materialService.getDetalhesMaterial(orcamentoId).subscribe({
+      next: (res: any) => {
+        if (!res) {
+          this.loading = false;
+          alert("Lista de materiais não encontrada.");
+          return;
+        }
+
+        this.detalheMaterial = {
+          clienteNome: res.clienteNome,
+          valorTotalEstimado: res.valorTotalEstimado || 0,
+          avisoTecnico: res.avisoTecnico || '',
+          dataGeracao: new Date(),
+          categorias: this.organizarMateriais(res.materiais || [])
+        };
+
+        this.loading = false;
+        this.mostrarModal = true;
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        console.error("Erro detalhes:", err);
+        this.loading = false;
+        this.cdRef.detectChanges();
+        alert('Este orçamento ainda não possui uma lista gerada.');
+      }
     });
+  }
+
+  organizarMateriais(materiais: any[]) {
+    const categorias: any = {
+      'Fios e Cabos': [],
+      'Disjuntores': [],
+      'Proteção e Outros': []
+    };
+
+    materiais.forEach(item => {
+      const desc = item.descricao.toLowerCase();
+      if (desc.includes('cabo') || desc.includes('fio') || desc.includes('circuito')) {
+        categorias['Fios e Cabos'].push(item);
+      } else if (desc.includes('disjuntor')) {
+        categorias['Disjuntores'].push(item);
+      } else {
+        categorias['Proteção e Outros'].push(item);
+      }
+    });
+
+    return categorias;
+  }
+
+  fecharModal() {
+    this.mostrarModal = false;
+    this.cdRef.detectChanges();
+  }
+
+  voltar() { this.router.navigate(['/dashboard-main']); }
+
+  imprimirDetalhe() {
+    setTimeout(() => window.print(), 200);
   }
 }

@@ -1,36 +1,45 @@
-<section class="reports-container">
+<div class="reports-container">
   <div class="flex-header">
-    <h2 class="section-title">Desempenho e Relatórios</h2>
-    <button class="refresh-circle" (click)="carregarDados()" [class.active]="loading">
-      <span class="material-icons">refresh</span>
+    <h2>Análise de Desempenho</h2>
+    <button class="btn-print" (click)="carregarDados(true)">
+      <span class="material-icons">refresh</span> Atualizar
     </button>
   </div>
 
-  <div *ngIf="loading" class="loading-state">
-    <div class="spinner"></div>
-    <p>Sincronizando com o servidor...</p>
-  </div>
-
-  <div class="stats-container" *ngIf="!loading && stats">
+  <!-- KPIs de Resumo -->
     <div class="kpi-row">
       <div class="kpi-card">
-        <small>Total Orçamentos</small>
-        <h3>{{ stats.totalOrcamentos }}</h3>
+      <small>Total de Orçamentos</small>
+      <h3>{{ totalOrcamentos }}</h3>
       </div>
       <div class="kpi-card">
-        <small>Taxa de Conversão</small>
-        <h3>{{ stats.taxaConversao | number:'1.0-0' }}%</h3>
+      <small>Ticket Médio (Geral)</small>
+      <h3>R$ {{ ticketMedio | number:'1.2-2' }}</h3>
+    </div>
+  </div>
+
+  <div class="main-reports-grid">
+    <!-- Gráfico 1: Status -->
+    <div class="chart-box">
+      <h3>Distribuição por Status</h3>
+      <div class="canvas-wrapper">
+        <canvas baseChart 
+          [data]="pieChartData" 
+          [type]="pieChartType"
+          [options]="pieChartOptions">
+        </canvas>
       </div>
     </div>
 
+    <!-- Gráfico 2: Médias Mensais -->
     <div class="chart-box">
-      <h3>Distribuição de Status</h3>
-      <div class="progress-stack">
-        <div class="bar-label">Aceitos ({{ stats.statusCount['ACEITO'] || 0 }})</div>
-        <div class="progress-bg">
-          <div class="progress-fill green" [style.width.%]="(stats.statusCount['ACEITO'] / stats.totalOrcamentos) * 100 || 0"></div>
-        </div>
+      <h3>Média de Valor Mensal</h3>
+      <div class="canvas-wrapper">
+        <canvas baseChart 
+          [data]="barChartData" 
+          [type]="barChartType">
+        </canvas>
       </div>
     </div>
   </div>
-</section>
+</div>

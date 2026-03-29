@@ -1,7 +1,75 @@
 <div class="dashboard-layout">
-  <app-sidebar></app-sidebar>
+  <!-- Sidebar com emissor de evento para o estado de colapso -->
+  <app-sidebar (collapseChanged)="onToggleSidebar($event)"></app-sidebar>
 
-  <main class="main-content">
+  <!-- O 'collapsed' aqui controla o recuo da margem esquerda -->
+  <main class="main-content" [class.collapsed]="sidebarCollapsed">
+    
+    <header class="top-header-layout">
+      <div class="header-left">
+        <h2 class="page-title">Sistema MyGo</h2>
+        <span class="badge bg-success">Painel {{ userRole }}</span>
+      </div>
+<div *ngIf="userRole === 'VISITANTE'" class="promo-banner">
+  <div class="promo-content">
+    <span class="icon">🚀</span>
+    <div>
+      <strong>Plano Limitado:</strong>
+      <p>Você está no modo Visitante. Faça o upgrade para cálculos ilimitados e relatórios PDF!</p>
+    </div>
+  </div>
+  <button (click)="solicitarUpgradePro()" class="btn-upgrade-pro">
+    VIRAR PRO AGORA
+  </button>
+</div>
+
+<style>
+.promo-banner {
+  background: linear-gradient(90deg, #2c3e50, #34495e);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 12px;
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.promo-content { display: flex; align-items: center; gap: 15px; }
+.promo-content p { margin: 0; font-size: 13px; opacity: 0.9; }
+.btn-upgrade-pro {
+  background: #f1c40f;
+  color: #2c3e50;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.btn-upgrade-pro:hover { transform: scale(1.05); background: #f39c12; }
+</style>
+      <!-- Grupo de Botões Alinhados à Direita -->
+      <div class="header-actions">
+        <button *ngIf="userRole === 'ADMIN'" class="btn-header btn-reports" (click)="navegar('reports')">
+          <span class="material-icons">analytics</span>
+          <span class="btn-text">Relatórios</span>
+        </button>
+
+        <button class="btn-header btn-trash" (click)="navegar('historico/lixeira')">
+          <span class="material-icons">delete_outline</span>
+          <span class="btn-text">Lixeira</span>
+        </button>
+
+        <button class="btn-header btn-logout" (click)="logout()">
+          <span class="material-icons">logout</span>
+          <span class="btn-text">Sair</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-container">
     <router-outlet></router-outlet>
+    </div>
   </main>
 </div>

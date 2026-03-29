@@ -6,14 +6,14 @@ import { DashboardService } from '../../core/service/dashboard.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
   standalone: false
 })
 export class DashboardComponent implements OnInit {
   userName: string = 'Usuário';
   userRole: string = '';
-  stats: any = null;
+  sidebarCollapsed: boolean = false; 
   loading: boolean = false;
+  stats: any = null;
 
   constructor(
     private authService: AuthService, 
@@ -22,38 +22,55 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userRole = this.authService.getUserRole().toUpperCase().trim();
-    this.userName = this.authService.getUserName();
-
-    // Inicia o carregamento se for ADMIN
-    if (this.userRole === 'ADMIN') {
+    this.userRole = this.authService.getUserRole()?.toUpperCase() || 'USER';
+    this.userName = this.authService.getUserName() || 'Eletricista Mygo';
       this.carregarDadosDashboard();
     }
+
+  onToggleSidebar(collapsed: boolean): void {
+    this.sidebarCollapsed = collapsed;
   }
 
-  carregarDadosDashboard() {
+  carregarDadosDashboard(force = false): void {
     this.loading = true;
-    this.dashboardService.getStats().subscribe({
-      next: (data) => {
-        console.log('Dados recebidos do Java:', data); // Verifique isso no F12
-        this.stats = data;
+    this.dashboardService.getStats(force).subscribe({
+      next: (res) => {
+        this.stats = res;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erro na conexão com o Java:', err);
+        console.error('Erro ao carregar estatísticas:', err);
         this.loading = false;
-        // Mock de emergência para a UI não travar se o Java falhar
-        this.stats = { totalOrcamentos: 0, taxaConversao: 0, statusCount: {} };
       }
     });
   }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  // Adicione este método dentro da classe DashboardComponent
+solicitarUpgradePro(): void {
+  const email = localStorage.getItem('userEmail');
+  if (!email) {
+    alert('Erro: E-mail não encontrado na sessão.');
+    return;
   }
 
-  navegar(rota: string) {
-    this.router.navigate([`/${rota}`]);
+  this.authService.simularUpgradePago(email).subscribe({
+    next: () => {
+      alert('⚡ PAGAMENTO APROVADO! \n\nSeu plano foi atualizado para PRO. Você será deslogado para aplicar as novas permissões.');
+      this.logout(); // Chama seu método de logout já existente
+    },
+    error: (err) => {
+      console.error('Falha no upgrade:', err);
+      alert('Erro ao processar pagamento simulado. Verifique se a API 8083 está online.');
+    }
+  });
+}
+
+  navegar(rota: string): void {
+    this.router.navigate([rota]);
+  }
+
+  logout(): void {
+    this.dashboardService.limparCache();
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 } 

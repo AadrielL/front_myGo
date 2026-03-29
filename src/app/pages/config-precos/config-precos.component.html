@@ -1,29 +1,98 @@
-<div class="config-container">
-  <div class="config-card">
-    <div class="card-header">
-      <h3 class="mb-0">Ajuste de Insumos e Mão de Obra</h3>
+<div class="container-fluid p-4 bg-light min-vh-100">
+  <!-- Topo -->
+  <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white shadow-sm rounded border-start border-primary border-5">
+    <div>
+      <h2 class="fw-bold text-dark mb-0">Configuração de Preços</h2>
+      <small class="text-muted">Gerencie os valores de M² e instalações extras</small>
+    </div>
+    <button class="btn btn-success btn-lg px-5 shadow fw-bold" (click)="salvarConfigGeral()">
+       SALVAR ALTERAÇÕES
+    </button>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-xl-8">
+      <!-- MÃO DE OBRA M² -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-dark text-white py-3">
+          <h5 class="mb-0 fw-bold text-uppercase">Valores por Metro Quadrado</h5>
     </div>
     <div class="card-body">
-      <div class="input-group">
-        <label>Valor Metro Cabo (2.5mm)</label>
-        <input type="number" [(ngModel)]="config.valorMetroCabo25" placeholder="R$ 0,00">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-danger">COM INFRAESTRUTURA (R$)</label>
+              <input type="number" class="form-control form-control-lg border-danger" [(ngModel)]="config.valorM2ComInfra">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-primary">SEM INFRAESTRUTURA (R$)</label>
+              <input type="number" class="form-control form-control-lg border-primary" [(ngModel)]="config.valorM2SemInfra">
+            </div>
+          </div>
+        </div>
       </div>
       
-      <div class="input-group">
-        <label>Valor Mão de Obra (por Ponto)</label>
-        <input type="number" [(ngModel)]="config.valorPontoEletrico" placeholder="R$ 0,00">
+      <!-- INSTALAÇÕES FIXAS -->
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3 border-bottom">
+          <h5 class="mb-0 fw-bold text-uppercase">Instalações e Segurança</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="small fw-bold">MOTOR PORTÃO (UN)</label>
+              <input type="number" class="form-control" [(ngModel)]="config.precoMotor">
+            </div>
+            <div class="col-md-4">
+              <label class="small fw-bold">CÂMERA (UN)</label>
+              <input type="number" class="form-control" [(ngModel)]="config.precoCamera">
+            </div>
+            <div class="col-md-4">
+              <label class="small fw-bold">CERCA (METRO)</label>
+              <input type="number" class="form-control" [(ngModel)]="config.precoCerca">
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
       
-      <div class="input-group">
-        <label>Diária Base Ajudante</label>
-        <input type="number" [(ngModel)]="config.diariaAjudante" placeholder="R$ 0,00">
+    <!-- LOGÍSTICA E ADICIONAIS -->
+    <div class="col-xl-4">
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-primary text-white py-3">
+          <h5 class="mb-0 fw-bold text-uppercase">Logística</h5>
+        </div>
+        <div class="card-body">
+          <label class="fw-bold small">VALOR DIÁRIA TÉCNICO (R$)</label>
+          <input type="number" class="form-control form-control-lg text-success fw-bold" [(ngModel)]="config.valorDiaria">
+        </div>
       </div>
       
-      <hr class="my-4">
-      
-      <button class="btn-save" (click)="salvarPrecos()">
-        Salvar Novas Configurações
-      </button>
+      <!-- SERVIÇOS CUSTOMIZADOS -->
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3 border-bottom">
+          <h5 class="mb-0 fw-bold text-uppercase">Outros Serviços</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <input type="text" class="form-control mb-2" placeholder="Nome (ex: Lustre)" [(ngModel)]="novoServico.nome">
+            <input type="number" class="form-control mb-2" placeholder="Valor R$" [(ngModel)]="novoServico.valor">
+            <button class="btn btn-outline-primary w-100 fw-bold" (click)="adicionarExtra()">+ ADICIONAR</button>
+          </div>
+          <div class="overflow-auto" style="max-height: 250px;">
+            <table class="table table-sm">
+              <tbody>
+                <tr *ngFor="let s of servicosExtras">
+                  <td>{{s.nome}}</td>
+                  <td class="text-end fw-bold">{{s.valor | currency:'BRL'}}</td>
+                  <td class="text-end">
+                    <button class="btn btn-link btn-sm text-danger" (click)="excluirExtra(s.id)">Excluir</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
