@@ -1,75 +1,28 @@
 <div class="dashboard-layout">
-  <!-- Sidebar com emissor de evento para o estado de colapso -->
-  <app-sidebar (collapseChanged)="onToggleSidebar($event)"></app-sidebar>
+  <!-- Sidebar flutuante no canto esquerdo -->
+  <app-sidebar></app-sidebar>
 
   <!-- O 'collapsed' aqui controla o recuo da margem esquerda -->
-  <main class="main-content" [class.collapsed]="sidebarCollapsed">
+  <main class="main-content">
     
-    <header class="top-header-layout">
-      <div class="header-left">
-        <h2 class="page-title">Sistema MyGo</h2>
-        <span class="badge bg-success">Painel {{ userRole }}</span>
-      </div>
-<div *ngIf="userRole === 'VISITANTE'" class="promo-banner">
-  <div class="promo-content">
-    <span class="icon">🚀</span>
-    <div>
-      <strong>Plano Limitado:</strong>
-      <p>Você está no modo Visitante. Faça o upgrade para cálculos ilimitados e relatórios PDF!</p>
+    <!-- TOPBAR GLOBAL -->
+    <div class="global-topbar" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; width: 100%; box-sizing: border-box; z-index: 100; background: var(--bg-main);">
+      <!-- Lado Esquerdo: Botão Sair -->
+      <button class="btn-topbar btn-sair" (click)="logout()" style="display: flex; align-items: center; gap: 8px; background: transparent; border: 2px solid var(--wire-pink-dark); color: var(--wire-pink-dark); font-weight: bold; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: all 0.2s;">
+        <span class="material-icons" style="font-size: 1.2rem;">logout</span>
+        Sair
+      </button>
+
+      <!-- Lado Direito: Botão Assinatura -->
+      <button class="btn-topbar btn-pro" (click)="irParaAssinatura()" style="display: flex; align-items: center; gap: 8px; background: var(--wire-green-dark); color: white; font-weight: bold; padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0, 168, 107, 0.3);">
+        <span class="material-icons" style="font-size: 1.2rem;">stars</span>
+        Assinatura PRO
+      </button>
     </div>
-  </div>
-  <button (click)="solicitarUpgradePro()" class="btn-upgrade-pro">
-    VIRAR PRO AGORA
-  </button>
-</div>
 
-<style>
-.promo-banner {
-  background: linear-gradient(90deg, #2c3e50, #34495e);
-  color: white;
-  padding: 15px 25px;
-  border-radius: 12px;
-  margin: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-.promo-content { display: flex; align-items: center; gap: 15px; }
-.promo-content p { margin: 0; font-size: 13px; opacity: 0.9; }
-.btn-upgrade-pro {
-  background: #f1c40f;
-  color: #2c3e50;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.btn-upgrade-pro:hover { transform: scale(1.05); background: #f39c12; }
-</style>
-      <!-- Grupo de Botões Alinhados à Direita -->
-      <div class="header-actions">
-        <button *ngIf="userRole === 'ADMIN'" class="btn-header btn-reports" (click)="navegar('reports')">
-          <span class="material-icons">analytics</span>
-          <span class="btn-text">Relatórios</span>
-        </button>
-
-        <button class="btn-header btn-trash" (click)="navegar('historico/lixeira')">
-          <span class="material-icons">delete_outline</span>
-          <span class="btn-text">Lixeira</span>
-        </button>
-
-        <button class="btn-header btn-logout" (click)="logout()">
-          <span class="material-icons">logout</span>
-          <span class="btn-text">Sair</span>
-        </button>
-      </div>
-    </header>
-
-    <div class="page-container">
-    <router-outlet></router-outlet>
+    <!-- ÁREA DE CONTEÚDO (flex: 1 para ocupar o resto do espaço, padding para espaçar) -->
+    <div class="page-container" style="flex: 1; width: 100%; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
+      <router-outlet></router-outlet>
     </div>
   </main>
 </div>

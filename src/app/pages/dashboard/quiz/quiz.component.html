@@ -1,116 +1,237 @@
-<div class="dashboard-container">
-  <div class="quiz-progress">
-    <div class="progress-fill" [style.width.%]="(passoAtual / (servicosExtras.length > 0 ? 3 : 2)) * 100"></div>
-    <span class="progress-text">Passo {{passoAtual}} de {{servicosExtras.length > 0 ? 3 : 2}}</span>
-  </div>
+<!-- TELA DE ENTRADA: Aparece antes do quiz começar -->
+<div class="quiz-landing" *ngIf="!quizAberto && !exibirModal">
+  <div class="landing-card">
+    <div class="landing-icon">⚡</div>
+    <h1 class="landing-title">Gerar Orçamento</h1>
+    <p class="landing-sub">Responda algumas perguntas rápidas e receba um orçamento elétrico completo, calculado pela NBR 5410.</p>
 
-  <div class="action-card">
-    <form [formGroup]="quizForm">
-      
-      <div *ngIf="passoAtual === 1" class="step-animation">
-        <h3 class="section-title">1. Conte-nos sobre a obra</h3>
-        <div class="form-grid">
-          <div class="field-box full">
-            <label>Nome do Cliente</label>
+    <div class="landing-features">
+      <div class="feature-item">
+        <span class="material-icons">timer</span>
+        <span>2-3 minutos</span>
+      </div>
+      <div class="feature-item">
+        <span class="material-icons">check_circle</span>
+        <span>Resultado imediato</span>
+      </div>
+      <div class="feature-item">
+        <span class="material-icons">bolt</span>
+        <span>NBR 5410</span>
+      </div>
+    </div>
+
+    <button class="btn-iniciar" (click)="abrirQuiz()">
+      <span class="material-icons">play_arrow</span>
+      Iniciar Orçamento
+    </button>
+  </div>
+</div>
+
+<!-- OVERLAY DO QUIZ: Sobrepõe e desfoça o fundo -->
+<div class="quiz-overlay" *ngIf="quizAberto && !exibirModal" [@fadeIn]>
+  <div class="quiz-modal">
+
+    <!-- Cabeçalho do Modal -->
+    <div class="quiz-modal-header">
+      <button class="btn-voltar-quiz" (click)="fecharQuiz()">
+        <span class="material-icons">arrow_back</span>
+        Voltar
+      </button>
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" [style.width.%]="progressoPorcentagem"></div>
+      </div>
+      <span class="quiz-passo-label">{{ passoAtual }} / {{ totalPassos }}</span>
+    </div>
+
+    <!-- Corpo do Quiz com Form -->
+    <form [formGroup]="quizForm" class="quiz-body">
+
+      <!-- PASSO 1: Tipo de obra (cards clicáveis) -->
+      <div *ngIf="passoAtual === 1" class="quiz-step">
+        <p class="quiz-step-num">Passo 1</p>
+        <h2 class="quiz-question">Qual é o tipo da obra?</h2>
+        <div class="quiz-cards-grid">
+          <div class="quiz-option-card" *ngFor="let opt of opcoesTipoObra"
+               [class.selected]="quizForm.get('complexidade')?.value === opt.value"
+               (click)="selecionar('complexidade', opt.value)">
+            <span class="option-icon">{{ opt.icon }}</span>
+            <strong>{{ opt.label }}</strong>
+            <small>{{ opt.desc }}</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASSO 2: Infraestrutura -->
+      <div *ngIf="passoAtual === 2" class="quiz-step">
+        <p class="quiz-step-num">Passo 2</p>
+        <h2 class="quiz-question">Incluir infraestrutura?</h2>
+        <p class="quiz-hint">(eletrodutos, caixas, quadro elétrico)</p>
+        <div class="quiz-cards-grid two-col">
+          <div class="quiz-option-card"
+               [class.selected]="quizForm.get('comInfra')?.value === true"
+               (click)="selecionar('comInfra', true)">
+            <span class="option-icon">🔧</span>
+            <strong>Sim, completo</strong>
+            <small>Inclui materiais e mão de obra</small>
+          </div>
+          <div class="quiz-option-card"
+               [class.selected]="quizForm.get('comInfra')?.value === false"
+               (click)="selecionar('comInfra', false)">
+            <span class="option-icon">⚡</span>
+            <strong>Não, só fiação</strong>
+            <small>Apenas cabos e conexões</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASSO 3: Dados da obra -->
+      <div *ngIf="passoAtual === 3" class="quiz-step">
+        <p class="quiz-step-num">Passo 3</p>
+        <h2 class="quiz-question">Dados da obra</h2>
+        <div class="quiz-fields-grid">
+          <div class="quiz-field full">
+            <label>Nome do Cliente / Projeto</label>
             <input type="text" formControlName="nomeCliente" placeholder="Ex: Casa do João">
           </div>
-
-          <div class="field-box">
-            <label>Tipo de Obra</label>
-            <select formControlName="complexidade">
-              <option value="RESIDENCIAL">Residencial</option>
-              <option value="COMERCIAL">Comercial</option>
-              <option value="REFORMA">Reforma</option>
-              <option value="ALTO_PADRAO">Alto Padrão</option>
-            </select>
-          </div>
-
-          <div class="field-box">
-            <label>Incluir Infraestrutura?</label>
-            <select formControlName="comInfra">
-              <option [ngValue]="true">Sim (Completo)</option>
-              <option [ngValue]="false">Não (Só fiação)</option>
-            </select>
-          </div>
-
-          <div class="field-box">
+          <div class="quiz-field">
             <label>Área total (m²)</label>
-            <input type="number" formControlName="metragemM2">
+            <input type="number" formControlName="metragemM2" placeholder="0">
           </div>
-
-          <div class="field-box">
-            <label>Qtd. Pontos Elétricos</label>
-            <input type="number" formControlName="qtdPontosEletrica">
+          <div class="quiz-field">
+            <label>Pontos Elétricos</label>
+            <input type="number" formControlName="qtdPontosEletrica" placeholder="0">
           </div>
-
-          <div class="field-box">
+          <div class="quiz-field full">
             <label>Distância Poste ao Quadro?</label>
             <select (change)="toggleDistancia($event)">
               <option value="nao">Não sei / Padrão (0m)</option>
-              <option value="sim">Sim, eu sei</option>
+              <option value="sim">Sim, eu sei a distância</option>
             </select>
           </div>
-
-          <div class="field-box full animate-in" *ngIf="sabeDistancia">
-            <label>Distância (Metros)</label>
+          <div class="quiz-field full" *ngIf="sabeDistancia">
+            <label>Distância em Metros</label>
             <input type="number" formControlName="distanciaQuadroPoste">
           </div>
         </div>
       </div>
 
-      <div *ngIf="passoAtual === 2" class="step-animation">
-        <h3 class="section-title">2. Quais itens serão instalados?</h3>
-        <div class="form-grid">
-          <div class="field-box"><label>Chuveiros</label><input type="number" formControlName="qtdChuveiro"></div>
-          <div class="field-box"><label>Ar Condicionado</label><input type="number" formControlName="qtdArCondicionado"></div>
-          <div class="field-box"><label>Câmeras (CFTV)</label><input type="number" formControlName="qtdCameras"></div>
-          <div class="field-box"><label>Motores de Portão</label><input type="number" formControlName="qtdMotoresPortao"></div>
-          <div class="field-box full"><label>Cerca Elétrica (Metros)</label><input type="number" formControlName="metrosCerca"></div>
-        </div>
-      </div>
-
-      <div *ngIf="passoAtual === 3 && servicosExtras.length > 0" class="step-animation">
-        <h3 class="section-title">3. Serviços Adicionais</h3>
-        <div formArrayName="servicosAdicionaisUI" class="adicionais-grid">
-          <div *ngFor="let s of servicosExtras; let i = index" [formGroupName]="i" 
-               class="adicional-card" [class.selected]="quizForm.get('servicosAdicionaisUI')?.get(i + '.selecionado')?.value">
-            <div class="checkbox-wrapper">
-              <input type="checkbox" formControlName="selecionado" [id]="'extra-'+i">
-              <label [for]="'extra-'+i">{{s.nome}}</label>
+      <!-- PASSO 4: Equipamentos -->
+      <div *ngIf="passoAtual === 4" class="quiz-step">
+        <p class="quiz-step-num">Passo 4</p>
+        <h2 class="quiz-question">Quais equipamentos serão instalados?</h2>
+        <p class="quiz-hint">Coloque 0 nos que não se aplicam</p>
+        <div class="quiz-equip-grid">
+          <div class="equip-item">
+            <span class="equip-icon">🚿</span>
+            <label>Chuveiros</label>
+            <div class="counter">
+              <button type="button" (click)="decrementar('qtdChuveiro')">−</button>
+              <span>{{ quizForm.get('qtdChuveiro')?.value }}</span>
+              <button type="button" (click)="incrementar('qtdChuveiro')">+</button>
             </div>
-            <div *ngIf="quizForm.get('servicosAdicionaisUI')?.get(i + '.selecionado')?.value" class="mt-2">
-              <label>Qtd:</label>
-              <input type="number" formControlName="quantidade" class="small-input">
+          </div>
+          <div class="equip-item">
+            <span class="equip-icon">❄️</span>
+            <label>Ar Condicionado</label>
+            <div class="counter">
+              <button type="button" (click)="decrementar('qtdArCondicionado')">−</button>
+              <span>{{ quizForm.get('qtdArCondicionado')?.value }}</span>
+              <button type="button" (click)="incrementar('qtdArCondicionado')">+</button>
+            </div>
+          </div>
+          <div class="equip-item">
+            <span class="equip-icon">📷</span>
+            <label>Câmeras (CFTV)</label>
+            <div class="counter">
+              <button type="button" (click)="decrementar('qtdCameras')">−</button>
+              <span>{{ quizForm.get('qtdCameras')?.value }}</span>
+              <button type="button" (click)="incrementar('qtdCameras')">+</button>
+            </div>
+          </div>
+          <div class="equip-item">
+            <span class="equip-icon">🚗</span>
+            <label>Motores de Portão</label>
+            <div class="counter">
+              <button type="button" (click)="decrementar('qtdMotoresPortao')">−</button>
+              <span>{{ quizForm.get('qtdMotoresPortao')?.value }}</span>
+              <button type="button" (click)="incrementar('qtdMotoresPortao')">+</button>
+            </div>
+          </div>
+          <div class="equip-item full">
+            <span class="equip-icon">⚡</span>
+            <label>Cerca Elétrica (Metros)</label>
+            <div class="counter">
+              <button type="button" (click)="decrementar('metrosCerca')">−</button>
+              <span>{{ quizForm.get('metrosCerca')?.value }}</span>
+              <button type="button" (click)="incrementar('metrosCerca')">+</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="form-footer">
-        <button type="button" class="btn-back" (click)="voltarPasso()" *ngIf="passoAtual > 1" [disabled]="carregando">Voltar</button>
-        <button type="button" class="btn-next" (click)="proximoPasso()" [disabled]="carregando">
-          <span *ngIf="!carregando">
-            {{ (passoAtual === 2 && servicosExtras.length === 0) || passoAtual === 3 ? 'Gerar Orçamento' : 'Próximo' }}
-          </span>
-          <span *ngIf="carregando">Calculando...</span>
-        </button>
+      <!-- PASSO 5: Serviços Extras (só se existirem) -->
+      <div *ngIf="passoAtual === 5 && servicosExtras.length > 0" class="quiz-step" formArrayName="servicosAdicionaisUI">
+        <p class="quiz-step-num">Passo 5</p>
+        <h2 class="quiz-question">Serviços Adicionais</h2>
+        <p class="quiz-hint">Selecione o que precisar (opcional)</p>
+        <div class="extras-grid">
+          <div *ngFor="let s of servicosExtras; let i = index" [formGroupName]="i"
+               class="extra-card" [class.selected]="quizForm.get('servicosAdicionaisUI')?.get(i + '.selecionado')?.value"
+               (click)="toggleExtra(i)">
+            <div class="extra-header">
+              <span class="extra-check material-icons">{{ quizForm.get('servicosAdicionaisUI')?.get(i + '.selecionado')?.value ? 'check_box' : 'check_box_outline_blank' }}</span>
+              <strong>{{ s.nome }}</strong>
+            </div>
+            <div *ngIf="quizForm.get('servicosAdicionaisUI')?.get(i + '.selecionado')?.value" class="extra-qty" (click)="$event.stopPropagation()">
+              <label>Quantidade:</label>
+              <div class="counter small">
+                <button type="button" (click)="decrementarExtra(i)">−</button>
+                <span>{{ quizForm.get('servicosAdicionaisUI')?.get(i + '.quantidade')?.value }}</span>
+                <button type="button" (click)="incrementarExtra(i)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </form>
-  </div>
 
-  <div class="modal-overlay" *ngIf="exibirModal">
-    <div class="modal-card">
-      <div class="success-icon">💰</div>
-      <h2>Orçamento Gerado!</h2>
-      <p>O valor estimado para <strong>{{ quizForm.get('nomeCliente')?.value }}</strong> é:</p>
-      
-      <div class="price-box">
-        <span class="value">
-          R$ {{ ((resultadoCalculo?.valorTotalMaoDeObra || 0) + (resultadoCalculo?.custoLogistica || 0)) | number:'1.2-2' }}
+    <!-- Rodapé com botões de navegação -->
+    <div class="quiz-footer">
+      <button class="btn-quiz-back" (click)="voltarPasso()" *ngIf="passoAtual > 1">
+        <span class="material-icons">chevron_left</span>
+        Voltar
+      </button>
+      <button class="btn-quiz-next" (click)="proximoPasso()" [disabled]="carregando">
+        <span *ngIf="!carregando && !ehUltimoPasso">
+          Próximo
+          <span class="material-icons">chevron_right</span>
         </span>
-      </div>
-
-      <button class="btn-finish" (click)="fecharModal()">Ver Levantamento Técnico</button>
+        <span *ngIf="!carregando && ehUltimoPasso">
+          <span class="material-icons">bolt</span>
+          Gerar Orçamento
+        </span>
+        <span *ngIf="carregando">Calculando...</span>
+      </button>
     </div>
+
+  </div>
+</div>
+
+<!-- MODAL DE RESULTADO -->
+<div class="modal-overlay" *ngIf="exibirModal">
+  <div class="modal-card resultado-card">
+    <div class="success-icon">💰</div>
+    <h2>Orçamento Gerado!</h2>
+    <p>O valor estimado para <strong>{{ quizForm.get('nomeCliente')?.value }}</strong> é:</p>
+    <div class="price-box">
+      <span class="value">
+        R$ {{ ((resultadoCalculo?.valorTotalMaoDeObra || 0) + (resultadoCalculo?.custoLogistica || 0)) | number:'1.2-2' }}
+      </span>
+    </div>
+    <button class="btn-finish" (click)="fecharModal()">
+      <span class="material-icons">inventory</span>
+      Ver Levantamento Técnico
+    </button>
   </div>
 </div>

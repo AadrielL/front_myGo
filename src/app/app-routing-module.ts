@@ -12,11 +12,15 @@ import { LevantamentoComponent } from './pages/levantamento/levantamento.compone
 import { ConfigPrecosComponent } from './pages/config-precos/config-precos.component';
 
 import { authGuard } from './core/guards/auth.guard';
+import { Onboarding } from './pages/onboarding/onboarding';
+import { AssinaturaComponent } from './pages/assinatura/assinatura';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/onboarding', pathMatch: 'full' },
+  { path: 'onboarding', component: Onboarding },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'assinatura', component: AssinaturaComponent, canActivate: [authGuard] },
   {
     path: '',
     component: DashboardComponent,

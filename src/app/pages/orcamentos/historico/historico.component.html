@@ -1,37 +1,36 @@
-<div class="container mt-4">
-  <div class="dashboard-header d-flex justify-content-between align-items-center mb-4">
+<div class="cartoon-card" style="width: 100%; max-width: 1200px; display: flex; flex-direction: column; max-height: 90vh;">
+  <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
     <div class="welcome-text">
-      <h2 class="section-title">
-        <span class="material-icons">{{ verLixeira ? 'delete_outline' : 'history' }}</span> 
+      <h2 class="title-cartoon" style="margin-bottom: 0.5rem; text-align: left; font-size: 2rem;">
+        <span class="material-icons" style="color: var(--wire-green-dark); vertical-align: middle; font-size: 2.5rem;">{{ verLixeira ? 'delete_outline' : 'history' }}</span> 
         {{ verLixeira ? 'Lixeira (Excluídos)' : (userRole === 'ADMIN' ? 'Gerenciar Orçamentos' : 'Meus Orçamentos') }}
       </h2>
-      <p *ngIf="verLixeira" class="text-danger mb-0" style="font-size: 0.85rem;">
-        <span class="material-icons" style="font-size: 14px;">info</span> 
+      <p *ngIf="verLixeira" class="text-danger mb-0" style="font-size: 0.85rem; color: var(--danger);">
+        <span class="material-icons" style="font-size: 14px; vertical-align: middle;">info</span> 
         Itens na lixeira são removidos permanentemente após 7 dias.
       </p>
     </div>
     
-    <div class="d-flex gap-2">
+    <div class="header-actions" style="display: flex; gap: 1rem;">
       <!-- Botão de Alternância (Histórico <-> Lixeira) -->
-      <button [class]="verLixeira ? 'btn-history-secondary' : 'btn-trash-outline'" (click)="alternarVisualizacao()">
+      <button class="btn-cartoon" [ngClass]="verLixeira ? 'btn-wire-blue' : 'btn-wire-orange'" (click)="alternarVisualizacao()" style="display: flex; align-items: center; gap: 8px;">
         <span class="material-icons">{{ verLixeira ? 'arrow_back' : 'delete_sweep' }}</span>
         {{ verLixeira ? 'Voltar ao Histórico' : 'Ver Lixeira' }}
       </button>
 
-      <button class="btn-reports-primary" (click)="voltar()">
+      <button class="btn-cartoon btn-wire-blue" (click)="voltar()" style="display: flex; align-items: center; gap: 8px;">
         <span class="material-icons">arrow_back</span> Voltar
       </button>
     </div>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" class="action-card text-center p-5">
-    <div class="spinner-border text-success" role="status"></div>
-    <p class="mt-2 text-muted">Sincronizando dados...</p>
+  <div *ngIf="loading" class="text-center" style="padding: 3rem;">
+    <p style="color: var(--text-muted); font-weight: 800; font-size: 1.2rem;">Sincronizando dados...</p>
   </div>
 
   <!-- Tabela de Orçamentos -->
-  <div class="table-responsive" *ngIf="!loading">
+  <div class="scrollable-content" *ngIf="!loading">
     <table class="table-materials">
       <thead>
         <tr>
@@ -112,7 +111,7 @@
         </div>
         <div class="text-end">
           <span class="text-muted small">Valor Estimado</span>
-          <h3 class="text-success m-0">{{ detalheMaterial.valorTotalEstimado | currency:'BRL' }}</h3>
+          <h3 class="text-success m-0">R$ {{ detalheMaterial.valorTotalEstimado }}</h3>
         </div>
       </div>
       <hr>

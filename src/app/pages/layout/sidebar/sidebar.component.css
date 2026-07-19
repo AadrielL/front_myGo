@@ -1,0 +1,117 @@
+/* --- SIDEBAR CARTOON/WIRE (HOVER-ONLY) --- */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: var(--sidebar-bg);
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  /* Esconde 95% da sidebar para fora da tela, deixando só uma bordinha verde visível */
+  transform: translateX(-245px); 
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  z-index: 2000; /* Z-index alto para flutuar acima da Topbar e do conteúdo */
+  overflow-x: hidden;
+  white-space: nowrap;
+  border-right: 4px solid var(--wire-green-dark); /* Fio verde chamativo na borda que fica visível */
+  box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+}
+
+/* Quando passa o mouse no lado esquerdo (na bordinha visível) ou nela toda, expande */
+.sidebar:hover {
+  transform: translateX(0);
+}
+
+/* Indicador visual de que dá pra abrir (opcional, setinha) */
+.sidebar::after {
+  content: '▶';
+  position: absolute;
+  top: 50%;
+  right: -12px;
+  background: var(--wire-green-dark);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  transform: translateY(-50%);
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.sidebar:hover::after {
+  opacity: 0;
+}
+
+.logo-area {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 4px solid rgba(255,255,255,0.1);
+  min-height: 80px;
+}
+
+.logo-text { font-weight: 900; font-size: 1.2rem; color: white; }
+.logo-text strong { color: var(--wire-green-dark); }
+
+.nav-links { list-style: none; padding: 1rem 0; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+
+.nav-links li { margin: 0 10px; }
+
+.nav-links li a {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #cbd5e1;
+  text-decoration: none;
+  gap: 12px;
+  border-radius: 16px;
+  font-weight: 700;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* O fio de conexão (efeito de hover) */
+.nav-links li a::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 0;
+  transition: 0.3s;
+  z-index: -1;
+  border-radius: 16px;
+}
+
+/* Classes para cada "Fio" */
+.nav-links li a.wire-blue:hover::before, .nav-links li a.wire-blue.active::before { width: 100%; background: var(--wire-blue); }
+.nav-links li a.wire-blue:hover, .nav-links li a.wire-blue.active { color: var(--sidebar-bg); }
+
+.nav-links li a.wire-green:hover::before, .nav-links li a.wire-green.active::before { width: 100%; background: var(--wire-green); }
+.nav-links li a.wire-green:hover, .nav-links li a.wire-green.active { color: var(--sidebar-bg); }
+
+.nav-links li a.wire-orange:hover::before, .nav-links li a.wire-orange.active::before { width: 100%; background: var(--wire-orange); }
+.nav-links li a.wire-orange:hover, .nav-links li a.wire-orange.active { color: var(--sidebar-bg); }
+
+.nav-links li a.wire-purple:hover::before, .nav-links li a.wire-purple.active::before { width: 100%; background: var(--wire-purple); }
+.nav-links li a.wire-purple:hover, .nav-links li a.wire-purple.active { color: var(--sidebar-bg); }
+
+.nav-links li a.wire-pink:hover::before, .nav-links li a.wire-pink.active::before { width: 100%; background: var(--wire-pink); }
+.nav-links li a.wire-pink:hover, .nav-links li a.wire-pink.active { color: var(--sidebar-bg); }
+
+.nav-links .material-icons {
+  min-width: 24px;
+  text-align: center;
+}
+
+.nav-divider {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #64748b;
+  margin: 1rem 1rem 0.5rem 1.5rem;
+}

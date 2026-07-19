@@ -68,6 +68,10 @@ solicitarUpgradePro(): void {
     this.router.navigate([rota]);
   }
 
+  irParaAssinatura(): void {
+    this.router.navigate(['/assinatura']);
+  }
+
   logout(): void {
     this.dashboardService.limparCache();
     this.authService.logout();
