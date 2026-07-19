@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; // Importado Interceptor
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -24,6 +24,8 @@ import { HistoricoComponent } from './pages/orcamentos/historico/historico.compo
 import { ConfigPrecosComponent } from './pages/config-precos/config-precos.component';
 
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { Onboarding } from './pages/onboarding/onboarding';
+import { AssinaturaComponent } from './pages/assinatura/assinatura';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2
     QuizComponent,
     LevantamentoComponent,
     HistoricoComponent,
-    ConfigPrecosComponent
+    ConfigPrecosComponent,
+    Onboarding,
+    AssinaturaComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +63,7 @@ import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2
       multi: true
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

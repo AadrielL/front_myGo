@@ -1,37 +1,88 @@
 /* ==========================================================
    MYGO ELÉTRICA - MASTER GLOBAL STYLE (SIDEBAR RETRÁTIL)
 ========================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
 :root {
-  --sidebar-bg: #111827;
-  --mygo-green: #a2f64e;
-  --mygo-green-hover: #8de03d;
+  --sidebar-bg: #1e293b;
+  --mygo-green: #4ade80;
+  --mygo-green-hover: #22c55e;
   --bg-main: #f8fafc;
-  --text-main: #1e293b;
+  --text-main: #334155;
   --text-muted: #64748b;
   --border-color: #e2e8f0;
   --danger: #ef4444;
   --blue-icon: #3b82f6;
   --orange-icon: #f59e0b;
+  
+  /* Pastel "Wire" Colors */
+  --wire-blue: #bae6fd;
+  --wire-blue-dark: #38bdf8;
+  --wire-green: #bbf7d0;
+  --wire-green-dark: #4ade80;
+  --wire-orange: #fed7aa;
+  --wire-orange-dark: #fb923c;
+  --wire-purple: #e9d5ff;
+  --wire-purple-dark: #c084fc;
+  --wire-pink: #fbcfe8;
+  --wire-pink-dark: #f472b6;
+
+  --border-radius: 24px;
+  --border-thick: 4px solid #cbd5e1;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
+/* Trava completamente o scroll da página. Tudo deve caber em 100vh e 100vw */
+body { background-color: var(--bg-main); color: var(--text-main); overflow: hidden; width: 100vw; height: 100vh; position: relative; }
+
+/* --- ANIMAÇÃO DE FUNDO: ENERGIA / ELÉTRONS --- */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(74, 222, 128, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 50% 50%, rgba(251, 146, 60, 0.05) 0%, transparent 30%);
+  z-index: -2;
+}
+
+.energy-lines {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: 
+    linear-gradient(90deg, rgba(203, 213, 225, 0.15) 2px, transparent 2px),
+    linear-gradient(rgba(203, 213, 225, 0.15) 2px, transparent 2px);
+  background-size: 100px 100px;
+  z-index: -1;
+  animation: bgScroll 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes bgScroll {
+  from { background-position: 0 0; }
+  to { background-position: 100px 100px; }
+}
 
 /* --- ESTRUTURA DASHBOARD (Layout Pai) --- */
 .dashboard-layout { display: flex; min-height: 100vh; }
 
 .main-content { 
   flex: 1; 
-  margin-left: 260px; /* Alinhado com a largura da sidebar */
+  /* A sidebar agora é hover (position fixed), então não precisamos de margin-left global no PC. 
+     Deixaremos um pequeno padding à esquerda para a bordinha verde da sidebar. */
+  margin-left: 15px; 
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
   padding: 2rem; 
   background: var(--bg-main); 
+  height: 100vh;
+  overflow: hidden; /* Garante que o main também não crie barra de rolagem */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Quando a sidebar encolhe, o conteúdo expande */
-.main-content.collapsed { margin-left: 85px; }
+/* Deleta o estado collapsed daqui pois a sidebar cuida disso sozinha no hover */
+.main-content.collapsed { margin-left: 15px; }
 
 /* --- CABEÇALHO SUPERIOR (LAYOUT PAI) --- */
 .top-header {
@@ -86,105 +137,31 @@ white-space: nowrap;
 }
 .btn-reports-primary:hover { background: var(--mygo-green-hover); transform: translateY(-2px); }
 
-/* --- SIDEBAR (LOGICA DE RETRAÇÃO ADICIONADA) --- */
-.sidebar {
-    width: 260px; 
-    height: 100vh; 
-    background: var(--sidebar-bg);
-    color: white; 
-    position: fixed; 
-    left: 0; 
-    top: 0; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex; 
-    flex-direction: column; 
-    z-index: 1000;
-    overflow-x: hidden; /* Garante que o texto suma sem quebrar */
-    white-space: nowrap;
-}
-
-/* Estado Retraído */
-.sidebar.collapsed { width: 85px; }
-
-/* Esconde textos e divisores no estado retraído */
-.sidebar.collapsed .logo-text,
-.sidebar.collapsed .nav-text,
-.sidebar.collapsed .section-title,
-.sidebar.collapsed .nav-divider {
-    opacity: 0;
-    visibility: hidden;
-    display: none;
-}
-
-/* Centraliza os ícones quando estiver fechada */
-.sidebar.collapsed .nav-links li a {
-    justify-content: center;
-    padding: 12px 0;
-}
-
-.logo-area { 
-    padding: 1.5rem; 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    border-bottom: 1px solid rgba(255,255,255,0.1); 
-    min-height: 75px;
-}
-
-/* Botão de 3 pontos / Menu */
-.btn-toggle {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    transition: 0.2s;
-}
-.btn-toggle:hover { color: var(--mygo-green); }
-
-.logo-text { font-weight: 800; font-size: 1.1rem; color: white; }
-.logo-text strong { color: var(--mygo-green); }
-
-.nav-links { list-style: none; padding: 1rem 0; flex: 1; }
-.nav-links li a {
-  display: flex; 
-  align-items: center; 
-  padding: 12px 20px; 
-  color: #94a3b8;
-  text-decoration: none; 
-  gap: 12px; 
-  transition: 0.2s;
-}
-.nav-links li a:hover, .nav-links li a.active { background: rgba(162, 246, 78, 0.1); color: var(--mygo-green); }
-
-/* Mantém os ícones com tamanho fixo para não "dançarem" */
-.nav-links .material-icons {
-    min-width: 24px;
-    text-align: center;
-}
 
 /* --- CARDS DE AÇÃO --- */
-.dashboard-container, .container { max-width: 1200px; margin: 0 auto; }
+.dashboard-container, .container { max-width: 1200px; width: 100%; margin: 0 auto; height: 100%; display: flex; flex-direction: column; justify-content: center; }
 
 .action-card {
   background: white; border-radius: 20px; border: 1px solid var(--border-color);
-  padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
 }
 
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* Tenta forçar 4 colunas lado a lado no PC */
   gap: 1.5rem;
+  align-items: stretch;
 }
 
-.quick-actions .action-card {
-cursor: pointer; transition: 0.3s; text-align: center;
+.quick-actions .action-card, .quick-actions .cartoon-card {
+  cursor: pointer; transition: 0.3s; text-align: center;
+  background: white; border-radius: 20px; border: 1px solid var(--border-color);
+  padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
-.quick-actions .action-card:hover { transform: translateY(-5px); border-color: var(--mygo-green); }
+.quick-actions .action-card:hover, .quick-actions .cartoon-card:hover { transform: translateY(-5px); border-color: var(--mygo-green); }
 
-.icon-box { width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+.icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; }
 .icon-box.blue { background: rgba(59, 130, 246, 0.1); color: var(--blue-icon); }
 .icon-box.green { background: rgba(162, 246, 78, 0.1); color: #166534; }
 .icon-box.orange { background: rgba(245, 158, 11, 0.1); color: var(--orange-icon); }
@@ -193,11 +170,21 @@ cursor: pointer; transition: 0.3s; text-align: center;
 .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
 .bg-success { background: #dcfce7; color: #166534; }
 
-/* Responsividade */
+/* Responsividade: Garante que as coisas encolham pra não gerar scroll */
 @media (max-width: 992px) {
-  .main-content { margin-left: 0 !important; }
   .dashboard-header { grid-template-columns: 1fr; text-align: center; gap: 1rem; }
   .btn-reports-primary { grid-column: 1; justify-self: center; }
+  .quick-actions { grid-template-columns: repeat(2, 1fr); /* Força no máximo 2 colunas em telas menores */ gap: 1rem; }
+  .quick-actions .action-card, .quick-actions .cartoon-card { padding: 1rem; }
+  .icon-box { width: 40px; height: 40px; }
+  h1, h2, h3 { font-size: 80%; }
+}
+@media (max-height: 700px) {
+  /* Em telas baixinhas, diminui espaçamentos globais para caber tudo */
+  .quick-actions { gap: 0.5rem; }
+  .quick-actions .action-card, .quick-actions .cartoon-card { padding: 0.8rem; }
+  .icon-box { display: none; } /* Oculta ícones para dar mais espaço aos textos */
+  h1 { font-size: 1.5rem !important; }
 }
 
 /* --- CONFIGURAÇÕES / TABELA DE PREÇOS --- */
@@ -531,14 +518,14 @@ box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
 
 .main-content {
   flex: 1;
-    margin-left: 260px; /* Largura da sidebar aberta */
+    margin-left: 15px; 
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
 }
 
 .main-content.collapsed {
-    margin-left: 85px; /* Largura da sidebar fechada */
+    margin-left: 15px;
 }
 
 /* --- HEADER SUPERIOR (TOP BAR) --- */
@@ -596,27 +583,7 @@ box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
     color: white;
 }
 
-/* --- AJUSTES DA SIDEBAR RETRÁTIL --- */
-.sidebar.collapsed .nav-text {
-    display: none;
-}
 
-.btn-toggle {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.btn-toggle:hover {
-    background: rgba(255,255,255,0.1);
-    color: var(--mygo-green);
-}
 
 :host {
   --primary: #2563eb;
@@ -793,3 +760,55 @@ box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+/* --- CARTOON UTILITIES --- */
+.title-cartoon {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.cartoon-card {
+  background: white;
+  border-radius: var(--border-radius);
+  border: var(--border-thick);
+  padding: 2rem;
+  box-shadow: 0 8px 0 var(--border-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cartoon-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 0 var(--border-color);
+}
+
+.btn-cartoon {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: var(--border-thick);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+}
+.btn-cartoon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+}
+.btn-cartoon:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 rgba(0,0,0,0.1);
+}
+
+.btn-wire-orange { background: var(--wire-orange); border-color: var(--wire-orange-dark); color: var(--wire-orange-dark); }
+.btn-wire-blue { background: var(--wire-blue); border-color: var(--wire-blue-dark); color: var(--wire-blue-dark); }
+.btn-wire-green { background: var(--wire-green); border-color: var(--wire-green-dark); color: var(--wire-green-dark); }
+
+/* Sidebar Wire Colors overrides */
+.sidebar .nav-links li a.wire-blue:hover, .sidebar .nav-links li a.wire-blue.active { background: var(--wire-blue); color: var(--wire-blue-dark); border-right: 4px solid var(--wire-blue-dark); }
+.sidebar .nav-links li a.wire-green:hover, .sidebar .nav-links li a.wire-green.active { background: var(--wire-green); color: var(--wire-green-dark); border-right: 4px solid var(--wire-green-dark); }
+.sidebar .nav-links li a.wire-orange:hover, .sidebar .nav-links li a.wire-orange.active { background: var(--wire-orange); color: var(--wire-orange-dark); border-right: 4px solid var(--wire-orange-dark); }
+.sidebar .nav-links li a.wire-purple:hover, .sidebar .nav-links li a.wire-purple.active { background: var(--wire-purple); color: var(--wire-purple-dark); border-right: 4px solid var(--wire-purple-dark); }
+.sidebar .nav-links li a.wire-pink:hover, .sidebar .nav-links li a.wire-pink.active { background: var(--wire-pink); color: var(--wire-pink-dark); border-right: 4px solid var(--wire-pink-dark); }

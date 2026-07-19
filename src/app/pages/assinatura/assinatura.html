@@ -1,0 +1,61 @@
+<div class="dashboard-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+  
+  <div class="welcome-section" style="text-align: center; margin-bottom: 2rem;">
+    <h1 class="title-cartoon">Assinatura <span style="color: var(--wire-green-dark)">PRO</span></h1>
+    <p style="font-size: 1.2rem; color: var(--text-muted);">Tenha acesso a todas as ferramentas de levantamento e relatórios.</p>
+  </div>
+
+  <!-- Mensagem de erro -->
+  <div *ngIf="erroMP" style="background: #fee; border: 2px solid #f88; border-radius: 12px; padding: 1rem 2rem; margin-bottom: 1.5rem; color: #c33; text-align: center; max-width: 500px;">
+    <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">error_outline</span>
+    {{ erroMP }}
+  </div>
+
+  <div class="plans-container" style="display: flex; gap: 2rem; max-width: 900px; width: 100%; justify-content: center; flex-wrap: wrap; padding: 0 1rem;">
+    
+    <!-- Plano Diário -->
+    <div class="cartoon-card text-center" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center;">
+      <h3 style="color: var(--wire-blue-dark); font-size: 1.8rem; margin-bottom: 0;">Plano Diário</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Acesso de 1 Dia</p>
+      <h2 style="font-size: 3rem; margin-bottom: 2rem;">R$ 7<span style="font-size: 1rem; color: var(--text-muted);">/dia</span></h2>
+      <ul style="list-style: none; padding: 0; text-align: left; margin-bottom: 2rem;">
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Levantamentos Ilimitados</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Relatórios Gerenciais</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Configuração de Preços</li>
+      </ul>
+      <button class="btn-cartoon btn-wire-blue" (click)="iniciarPagamento(7, 'Plano PRO - 1 Dia')" [disabled]="loading" style="width: 100%; margin-top: auto;">
+        {{ loading ? 'Carregando...' : 'Assinar Diário' }}
+      </button>
+    </div>
+
+    <!-- Plano Mensal -->
+    <div class="cartoon-card text-center" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; border-color: var(--wire-green-dark); position: relative;">
+      <div style="position: absolute; top: -15px; background: var(--wire-green-dark); color: white; padding: 5px 15px; border-radius: 20px; font-weight: 800; font-size: 0.9rem;">RECOMENDADO</div>
+      <h3 style="color: var(--wire-green-dark); font-size: 1.8rem; margin-bottom: 0;">Plano Mensal</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Acesso de 30 Dias</p>
+      <h2 style="font-size: 3rem; margin-bottom: 2rem;">R$ 89<span style="font-size: 1rem; color: var(--text-muted);">/mês</span></h2>
+      <ul style="list-style: none; padding: 0; text-align: left; margin-bottom: 2rem;">
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Levantamentos Ilimitados</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Relatórios Gerenciais</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Configuração de Preços</li>
+      </ul>
+      <button class="btn-cartoon btn-wire-green" (click)="iniciarPagamento(89, 'Plano PRO - Mensal')" [disabled]="loading" style="width: 100%; margin-top: auto;">
+        {{ loading ? 'Carregando...' : 'Assinar Mensal' }}
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Overlay do Checkout MP -->
+  <div *ngIf="checkoutActive" class="checkout-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="cartoon-card" style="width: 90%; max-width: 550px; max-height: 90vh; overflow-y: auto; position: relative; padding: 2rem;">
+      <button (click)="fecharCheckout()" style="position: absolute; top: 12px; right: 16px; background: transparent; border: none; font-size: 1.8rem; cursor: pointer; color: #999; line-height: 1;">&times;</button>
+      <h3 style="text-align: center; margin-bottom: 1.5rem; font-weight: 800;">
+        <span class="material-icons" style="vertical-align: middle; margin-right: 8px; color: var(--wire-green-dark);">lock</span>
+        Pagamento Seguro
+      </h3>
+      <div id="wallet_container" style="min-height: 200px;"></div>
+    </div>
+  </div>
+
+</div>
