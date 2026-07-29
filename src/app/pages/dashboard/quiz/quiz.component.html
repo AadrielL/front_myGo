@@ -229,7 +229,21 @@
         R$ {{ ((resultadoCalculo?.valorTotalMaoDeObra || 0) + (resultadoCalculo?.custoLogistica || 0)) | number:'1.2-2' }}
       </span>
     </div>
-    <button class="btn-finish" (click)="fecharModal()">
+
+    <!-- Seção do WhatsApp -->
+    <div style="margin: 1.5rem 0; text-align: left; background: var(--bg-light); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+      <label style="display: block; margin-bottom: 0.5rem; font-weight: bold; color: var(--text-dark);">Enviar via WhatsApp do Cliente</label>
+      <div style="display: flex; gap: 0.5rem;">
+        <input type="text" [value]="numeroWhatsApp" (input)="atualizarNumeroWhatsApp($event)" placeholder="(XX) 9XXXX-XXXX" 
+               style="flex: 1; padding: 0.8rem; border-radius: 8px; border: 2px solid var(--border-color); font-size: 1rem;">
+        <button class="btn-cartoon btn-wire-green" (click)="enviarWhatsApp()" [disabled]="!numeroWhatsApp" 
+                style="padding: 0.8rem 1rem; display: flex; align-items: center; gap: 5px;">
+          <span class="material-icons">chat</span>
+        </button>
+      </div>
+    </div>
+
+    <button class="btn-finish" (click)="fecharModal()" style="width: 100%;">
       <span class="material-icons">inventory</span>
       Ver Levantamento Técnico
     </button>

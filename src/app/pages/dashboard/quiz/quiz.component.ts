@@ -32,6 +32,7 @@ export class QuizComponent implements OnInit {
   // Controle do Modal
   exibirModal: boolean = false;
   resultadoCalculo: any = null;
+  numeroWhatsApp: string = '';
 
   // Opções estilo "múltipla escolha" para tipo de obra
   opcoesTipoObra = [
@@ -160,10 +161,28 @@ export class QuizComponent implements OnInit {
   fecharModal() {
     this.exibirModal = false;
     this.quizAberto = false;
+    this.numeroWhatsApp = '';
     document.body.style.overflow = '';
     if (this.resultadoCalculo && this.resultadoCalculo.id) {
       this.router.navigate(['/levantamento'], { queryParams: { orcamentoId: this.resultadoCalculo.id } });
     }
+  }
+
+  atualizarNumeroWhatsApp(event: any) {
+    this.numeroWhatsApp = event.target.value;
+  }
+
+  enviarWhatsApp() {
+    if (!this.numeroWhatsApp || !this.resultadoCalculo) return;
+    
+    const nome = this.quizForm.get('nomeCliente')?.value || 'Cliente';
+    const total = ((this.resultadoCalculo.valorTotalMaoDeObra || 0) + (this.resultadoCalculo.custoLogistica || 0)).toFixed(2);
+    
+    const telefone = this.numeroWhatsApp.replace(/\D/g, ''); // Limpa caracteres não numéricos
+    const msg = `Olá! O orçamento elétrico para o projeto "${nome}" ficou no valor estimado de R$ ${total}.\nPara mais detalhes, entre em contato.`;
+    
+    const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
   }
 
   finalizar() {

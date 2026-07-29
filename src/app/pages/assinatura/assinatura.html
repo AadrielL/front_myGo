@@ -11,36 +11,57 @@
     {{ erroMP }}
   </div>
 
-  <div class="plans-container" style="display: flex; gap: 2rem; max-width: 900px; width: 100%; justify-content: center; flex-wrap: wrap; padding: 0 1rem;">
+  <div class="plans-container" style="display: flex; gap: 2rem; max-width: 1000px; width: 100%; justify-content: center; flex-wrap: wrap; padding: 0 1rem;">
     
-    <!-- Plano Diário -->
-    <div class="cartoon-card text-center" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center;">
-      <h3 style="color: var(--wire-blue-dark); font-size: 1.8rem; margin-bottom: 0;">Plano Diário</h3>
-      <p style="color: var(--text-muted); margin-bottom: 1rem;">Acesso de 1 Dia</p>
-      <h2 style="font-size: 3rem; margin-bottom: 2rem;">R$ 7<span style="font-size: 1rem; color: var(--text-muted);">/dia</span></h2>
+    <!-- Plano Semanal -->
+    <div class="cartoon-card text-center" style="flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center;">
+      <h3 style="color: var(--wire-blue-dark); font-size: 1.6rem; margin-bottom: 0;">Plano Semanal</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Até 50 Orçamentos / dia</p>
+      <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">R$ 1,99<span style="font-size: 1rem; color: var(--text-muted);">/sem</span></h2>
       <ul style="list-style: none; padding: 0; text-align: left; margin-bottom: 2rem;">
-        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Levantamentos Ilimitados</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Dashboard Liberado</li>
         <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Relatórios Gerenciais</li>
-        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Configuração de Preços</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Compartilhar WhatsApp</li>
       </ul>
-      <button class="btn-cartoon btn-wire-blue" (click)="iniciarPagamento(7, 'Plano PRO - 1 Dia')" [disabled]="loading" style="width: 100%; margin-top: auto;">
-        {{ loading ? 'Carregando...' : 'Assinar Diário' }}
+      <button class="btn-cartoon btn-wire-blue" (click)="iniciarPagamento(1.99, 'Plano PRO - Semanal')" [disabled]="loading" style="width: 100%; margin-top: auto;">
+        {{ loading ? 'Carregando...' : 'Assinar Semanal' }}
       </button>
     </div>
 
     <!-- Plano Mensal -->
-    <div class="cartoon-card text-center" style="flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; border-color: var(--wire-green-dark); position: relative;">
+    <div class="cartoon-card text-center" style="flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center; border-color: var(--wire-green-dark); position: relative;">
       <div style="position: absolute; top: -15px; background: var(--wire-green-dark); color: white; padding: 5px 15px; border-radius: 20px; font-weight: 800; font-size: 0.9rem;">RECOMENDADO</div>
-      <h3 style="color: var(--wire-green-dark); font-size: 1.8rem; margin-bottom: 0;">Plano Mensal</h3>
-      <p style="color: var(--text-muted); margin-bottom: 1rem;">Acesso de 30 Dias</p>
-      <h2 style="font-size: 3rem; margin-bottom: 2rem;">R$ 89<span style="font-size: 1rem; color: var(--text-muted);">/mês</span></h2>
+      <h3 style="color: var(--wire-green-dark); font-size: 1.6rem; margin-bottom: 0;">Plano Mensal</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Até 100 Orçamentos / dia</p>
+      <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">R$ 9,99<span style="font-size: 1rem; color: var(--text-muted);">/mês</span></h2>
       <ul style="list-style: none; padding: 0; text-align: left; margin-bottom: 2rem;">
-        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Levantamentos Ilimitados</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Dashboard Liberado</li>
         <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Relatórios Gerenciais</li>
-        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Configuração de Preços</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Compartilhar WhatsApp</li>
       </ul>
-      <button class="btn-cartoon btn-wire-green" (click)="iniciarPagamento(89, 'Plano PRO - Mensal')" [disabled]="loading" style="width: 100%; margin-top: auto;">
+      <button class="btn-cartoon btn-wire-green" (click)="iniciarPagamento(9.99, 'Plano PRO - Mensal')" [disabled]="loading" style="width: 100%; margin-top: auto;">
         {{ loading ? 'Carregando...' : 'Assinar Mensal' }}
+      </button>
+    </div>
+
+    <!-- Plano Vitalício -->
+    <div class="cartoon-card text-center" style="flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center; border-color: var(--wire-orange-dark); position: relative;">
+      <div style="position: absolute; top: -15px; background: var(--wire-orange-dark); color: white; padding: 5px 15px; border-radius: 20px; font-weight: 800; font-size: 0.9rem;">
+        Apenas {{ vagasVitalicias }} de 1000 vagas restantes!
+      </div>
+      <h3 style="color: var(--wire-orange-dark); font-size: 1.6rem; margin-bottom: 0;">Plano Vitalício</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Acesso Ilimitado para Sempre</p>
+      <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">R$ 199<span style="font-size: 1rem; color: var(--text-muted);">,00</span></h2>
+      <ul style="list-style: none; padding: 0; text-align: left; margin-bottom: 2rem;">
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> 100 Orçamentos / dia</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Sem cobranças mensais</li>
+        <li style="margin-bottom: 10px;"><span class="material-icons text-success" style="vertical-align: bottom;">check_circle</span> Todas as ferramentas</li>
+      </ul>
+      <button class="btn-cartoon" [ngStyle]="{'background': vagasVitalicias > 0 ? 'var(--wire-orange-dark)' : '#ccc', 'color': 'white', 'border': 'none'}" 
+              (click)="iniciarPagamento(199.00, 'Plano PRO - Vitalício')" 
+              [disabled]="loading || vagasVitalicias <= 0" 
+              style="width: 100%; margin-top: auto;">
+        {{ vagasVitalicias > 0 ? (loading ? 'Carregando...' : 'Garantir Vaga') : 'Esgotado' }}
       </button>
     </div>
 

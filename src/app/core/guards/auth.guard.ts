@@ -9,6 +9,14 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.isAuthenticated()) {
     const userRole = authService.getUserRole(); 
     const requiredRole = route.data['role'];
+    const planType = authService.getPlanType();
+
+    // Bloqueia a navegação para dashboard-main se for FREE
+    if (state.url.includes('/dashboard-main') && planType === 'FREE') {
+      alert('O Dashboard é exclusivo para assinantes.');
+      router.navigate(['/assinatura']);
+      return false;
+    }
 
     // Lógica de proteção por Role
     if (requiredRole && userRole !== requiredRole) {

@@ -16,12 +16,21 @@ export class AssinaturaComponent implements OnInit {
   checkoutActive = false;
   mp: any;
   erroMP: string = '';
+  vagasVitalicias: number = 0;
   private valorPendente: number = 0;
 
   constructor(private http: HttpClient, private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.inicializarMP();
+    this.carregarVagasVitalicias();
+  }
+
+  carregarVagasVitalicias() {
+    this.http.get<number>(environment.apiUrl + '/auth/vagas-vitalicias').subscribe({
+      next: (vagas) => this.vagasVitalicias = vagas,
+      error: (err) => console.error("Erro ao buscar vagas vitalícias", err)
+    });
   }
 
   inicializarMP() {

@@ -38,6 +38,17 @@ export class AuthService {
     return email && email !== 'undefined' ? email : 'admin@teste.com';
   }
 
+  getPlanType(): string {
+    const token = localStorage.getItem('token');
+    if (!token) return 'FREE';
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.planType || 'FREE';
+    } catch (e) {
+      return 'FREE';
+    }
+  }
+
   logout(): void { 
     localStorage.clear(); 
     window.location.href = '/login';
