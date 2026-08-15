@@ -13,6 +13,12 @@
         Sair
       </button>
 
+      <!-- Centro: Contador de Limite Diário -->
+      <div *ngIf="stats" class="credit-badge" style="display: flex; align-items: center; gap: 8px; background: #eef6ff; border: 1.5px solid var(--wire-blue-dark); color: #1e3a8a; font-weight: 700; padding: 6px 16px; border-radius: 20px; font-size: 0.9rem;">
+        <span class="material-icons" style="font-size: 1.1rem; color: var(--wire-blue-dark);">electric_bolt</span>
+        <span>Créditos Diários: {{ stats.budgetsToday || 0 }}/{{ stats.dailyLimit || 3 }} ({{ stats.planType || 'FREE' }})</span>
+      </div>
+
       <!-- Lado Direito: Botão Assinatura -->
       <button class="btn-topbar btn-pro" (click)="irParaAssinatura()" style="display: flex; align-items: center; gap: 8px; background: var(--wire-green-dark); color: white; font-weight: bold; padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0, 168, 107, 0.3);">
         <span class="material-icons" style="font-size: 1.2rem;">stars</span>

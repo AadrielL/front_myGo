@@ -173,4 +173,26 @@ export class HistoricoComponent implements OnInit {
   imprimirDetalhe() {
     setTimeout(() => window.print(), 200);
   }
-}
+
+  formatarData(data: any): string {
+    if (!data) return '';
+    const d = new Date(data);
+    if (isNaN(d.getTime())) return '';
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const ano = d.getFullYear();
+    const hora = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${dia}/${mes}/${ano} ${hora}:${min}`;
+  }
+
+  formatarMoeda(valor: any): string {
+    if (valor === null || valor === undefined) return 'R$ 0,00';
+    return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  getCategorias(): { key: string; value: any[] }[] {
+    if (!this.detalheMaterial?.categorias) return [];
+    return Object.entries(this.detalheMaterial.categorias).map(([key, value]) => ({ key, value: value as any[] }));
+  }
+}

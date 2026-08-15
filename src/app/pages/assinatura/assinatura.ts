@@ -1,5 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/service/auth.service';
 import { environment } from '../../../environments/environment';
 
 declare var MercadoPago: any;
@@ -19,7 +21,16 @@ export class AssinaturaComponent implements OnInit {
   vagasVitalicias: number = 0;
   private valorPendente: number = 0;
 
-  constructor(private http: HttpClient, private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router,
+    private cdRef: ChangeDetectorRef
+  ) {}
+
+  voltarAoQuiz() {
+    this.router.navigate(['/quiz']);
+  }
 
   ngOnInit(): void {
     this.inicializarMP();
@@ -188,5 +199,21 @@ export class AssinaturaComponent implements OnInit {
   fecharCheckout() {
     this.checkoutActive = false;
     this.erroMP = '';
+    
+    this.loading = true;
+    this.authService.refreshSession().subscribe({
+      next: () => {
+        this.loading = false;
+        const plan = this.authService.getPlanType();
+        if (plan !== 'FREE') {
+          alert('⚡ Assinatura confirmada com sucesso! Bem-vindo ao MyGo PRO.');
+          this.router.navigate(['/dashboard-main']);
+        }
+      },
+      error: (err: any) => {
+        console.error("Erro ao atualizar sessão após fechar checkout:", err);
+        this.loading = false;
+      }
+    });
   }
 }

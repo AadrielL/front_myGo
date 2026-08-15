@@ -53,12 +53,19 @@ export class AuthService {
     localStorage.clear(); 
     window.location.href = '/login';
   }
+
+  refreshSession(): Observable<any> {
+    return this.http.get(`${this.API_URL}/auth/refresh`).pipe(
+      tap((res: any) => this.saveSession(res))
+    );
+  }
+
   simularUpgradePago(email: string): Observable<any> {
-  // Simulando o payload que o Mercado Pago enviaria
-  const payload = {
-    payer_email: email,
-    status: 'approved'
-  };
-  return this.http.post(`${this.API_URL}/api/payments/confirm`, payload);
+    // Simulando o payload que o Mercado Pago enviaria
+    const payload = {
+      payer_email: email,
+      status: 'approved'
+    };
+    return this.http.post(`${this.API_URL}/api/payments/confirm`, payload);
   }
 }

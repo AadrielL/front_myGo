@@ -228,7 +228,13 @@ export class QuizComponent implements OnInit {
       error: (err) => {
         this.carregando = false;
         console.error('ERRO:', err);
-        alert('Erro ao calcular orçamento. Verifique se as APIs estão online.');
+        if (err.status === 429) {
+          alert('🚫 Limite diário atingido!\n\nVocê atingiu seu limite diário gratuito de 3 requisições. Volte amanhã ou assine o plano Diário, Mensal ou Vitalício para ter acesso ilimitado!');
+          this.fecharQuiz();
+          this.router.navigate(['/assinatura']);
+        } else {
+          alert('Erro ao calcular orçamento. Verifique se as APIs estão online.');
+        }
       }
     });
   }

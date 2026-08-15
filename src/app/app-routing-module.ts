@@ -29,9 +29,9 @@ const routes: Routes = [
       { path: 'dashboard-main', component: MainViewComponent },
       { path: 'quiz', component: QuizComponent },
       { path: 'historico', component: HistoricoComponent },
-      { path: 'levantamento', component: LevantamentoComponent, data: { role: 'ADMIN' } },
+      { path: 'levantamento', component: LevantamentoComponent },
       { path: 'reports', component: ReportsViewComponent, data: { role: 'ADMIN' } },
-      { path: 'config-precos', component: ConfigPrecosComponent, data: { role: 'ADMIN' } }
+      { path: 'config-precos', component: ConfigPrecosComponent }
     ]
   },
   { path: '**', redirectTo: 'dashboard-main' }

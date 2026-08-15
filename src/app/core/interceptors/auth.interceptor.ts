@@ -38,9 +38,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        // 5. TRATAMENTO DE ERRO (IGNORA SE FOR ERRO NO PRÓPRIO LOGIN)
-        if ((error.status === 401 || error.status === 403) && !request.url.includes('/auth/login')) {
-          console.warn('Acesso negado ou Token expirado. Redirecionando...');
+        // 5. TRATAMENTO DE ERRO: Apenas 401 (Token inválido/expirado) força o logout. 
+        // 403 indica apenas falta de permissão em um recurso específico e não deve deslogar o usuário.
+        if (error.status === 401 && !request.url.includes('/auth/login')) {
+          console.warn('Token expirado ou não autorizado. Redirecionando para login...');
           localStorage.clear();
           this.router.navigate(['/login']);
         }

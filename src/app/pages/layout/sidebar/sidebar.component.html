@@ -18,43 +18,51 @@
       </a>
     </li>
 
-    <li *ngIf="userRole === 'USER'">
+    <li>
       <a routerLink="/quiz" routerLinkActive="active" class="wire-orange">
         <span class="material-icons">calculate</span>
         <span class="nav-text">Gerar Valor de Serviço</span>
       </a>
     </li>
 
-    <!-- Divisores -->
-    <li class="nav-divider" *ngIf="userRole === 'ADMIN'">GESTÃO</li>
-
-    <li *ngIf="userRole === 'ADMIN'">
-      <a routerLink="/reports" routerLinkActive="active" class="wire-purple">
-        <span class="material-icons">analytics</span>
-        <span class="nav-text">Relatórios de Gestão</span>
-      </a>
-    </li>
-    
-    <li *ngIf="userRole === 'ADMIN'">
+    <li>
       <a routerLink="/levantamento" routerLinkActive="active" class="wire-pink">
         <span class="material-icons">assignment</span>
         <span class="nav-text">Novo Levantamento</span>
       </a>
     </li>
 
-    <li class="nav-divider" *ngIf="userRole === 'ADMIN'">CONFIGURAÇÕES</li>
+    <li *ngIf="planType === 'FREE'">
+      <a routerLink="/assinatura" routerLinkActive="active" class="wire-purple">
+        <span class="material-icons">star</span>
+        <span class="nav-text">Seja PRO</span>
+      </a>
+    </li>
 
-    <li *ngIf="userRole === 'ADMIN'">
+    <!-- Seção de Configurações (visível para todos os usuários logados) -->
+    <li class="nav-divider">CONFIGURAÇÕES</li>
+
+    <li>
       <a routerLink="/config-precos" routerLinkActive="active" class="wire-blue">
         <span class="material-icons">settings</span>
         <span class="nav-text">Tabela de Preços (Base)</span>
       </a>
     </li>
 
-    <li *ngIf="userRole === 'ADMIN'">
-      <a routerLink="/admin/servicos-extras" routerLinkActive="active" class="wire-orange">
+    <li>
+      <a routerLink="/config-precos" routerLinkActive="active" class="wire-orange" [queryParams]="{tab: 'servicos'}">
         <span class="material-icons">playlist_add</span>
         <span class="nav-text">Serviços do Quiz</span>
+      </a>
+    </li>
+
+    <!-- Seção de Gestão (apenas ADMIN) -->
+    <li class="nav-divider" *ngIf="userRole === 'ADMIN'">GESTÃO</li>
+
+    <li *ngIf="userRole === 'ADMIN'">
+      <a routerLink="/reports" routerLinkActive="active" class="wire-purple">
+        <span class="material-icons">analytics</span>
+        <span class="nav-text">Relatórios de Gestão</span>
       </a>
     </li>
   </ul>

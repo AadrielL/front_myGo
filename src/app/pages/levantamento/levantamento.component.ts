@@ -99,7 +99,12 @@ export class LevantamentoComponent implements OnInit {
       error: (err: any) => {
         this.processando = false;
         this.cdRef.detectChanges();
-        alert('Erro ao gerar levantamento: ' + (err.error?.message || err.message));
+        if (err.status === 429) {
+          alert('🚫 Limite atingido!\n\nVocê atingiu seu limite diário gratuito de 3 requisições. Volte amanhã ou assine o plano Diário, Mensal ou Vitalício para ter acesso ilimitado!');
+          this.router.navigate(['/assinatura']);
+        } else {
+          alert('Erro ao gerar levantamento: ' + (err.error?.message || err.message));
+        }
       }
     });
   }

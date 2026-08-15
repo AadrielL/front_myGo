@@ -12,8 +12,7 @@
     </div>
     
     <div class="header-actions" style="display: flex; gap: 1rem;">
-      <!-- Botão de Alternância (Histórico <-> Lixeira) -->
-      <button class="btn-cartoon" [ngClass]="verLixeira ? 'btn-wire-blue' : 'btn-wire-orange'" (click)="alternarVisualizacao()" style="display: flex; align-items: center; gap: 8px;">
+      <button class="btn-cartoon" [class.btn-wire-blue]="verLixeira" [class.btn-wire-orange]="!verLixeira" (click)="alternarVisualizacao()" style="display: flex; align-items: center; gap: 8px;">
         <span class="material-icons">{{ verLixeira ? 'arrow_back' : 'delete_sweep' }}</span>
         {{ verLixeira ? 'Voltar ao Histórico' : 'Ver Lixeira' }}
       </button>
@@ -44,14 +43,14 @@
       <tbody>
         <tr *ngFor="let orc of listaOrcamentos" [class.row-deleted]="verLixeira">
           <td><strong>{{ orc.clienteNome }}</strong></td>
-          <td class="text-center">{{ orc.dataExibicao | date:'dd/MM/yyyy' }}</td>
+          <td class="text-center">{{ formatarData(orc.dataExibicao) }}</td>
           <td class="text-center">
             <span class="text-primary" style="font-weight: 700;">
-              {{ orc.valorExibicao | currency:'BRL' }}
+              {{ formatarMoeda(orc.valorExibicao) }}
             </span>
           </td>
           <td class="text-center">
-            <span class="badge" [ngClass]="orc.status === 'ACEITO' ? 'bg-success' : 'bg-warning'">
+            <span class="badge" [class.bg-success]="orc.status === 'ACEITO'" [class.bg-warning]="orc.status !== 'ACEITO'">
               {{ orc.status }}
             </span>
           </td>
@@ -107,7 +106,7 @@
         <div>
           <h2 class="mb-1" style="color: var(--sidebar-bg)">Levantamento Técnico</h2>
           <p class="mb-0"><strong>Cliente:</strong> {{ detalheMaterial.clienteNome }}</p>
-          <p class="text-muted small mb-0">Data: {{ detalheMaterial.dataGeracao | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p class="text-muted small mb-0">Data: {{ formatarData(detalheMaterial.dataGeracao) }}</p>
         </div>
         <div class="text-end">
           <span class="text-muted small">Valor Estimado</span>
@@ -115,7 +114,7 @@
         </div>
       </div>
       <hr>
-      <div *ngFor="let cat of detalheMaterial.categorias | keyvalue" class="mb-4">
+      <div *ngFor="let cat of getCategorias()" class="mb-4">
         <div *ngIf="cat.value.length > 0">
           <h5 class="category-header">
             <span class="material-icons">label_important</span> {{ cat.key }}
