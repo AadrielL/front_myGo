@@ -44,25 +44,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-  // Adicione este método dentro da classe DashboardComponent
-solicitarUpgradePro(): void {
-  const email = localStorage.getItem('userEmail');
-  if (!email) {
-    alert('Erro: E-mail não encontrado na sessão.');
-    return;
-  }
 
-  this.authService.simularUpgradePago(email).subscribe({
-    next: () => {
-      alert('⚡ PAGAMENTO APROVADO! \n\nSeu plano foi atualizado para PRO. Você será deslogado para aplicar as novas permissões.');
-      this.logout(); // Chama seu método de logout já existente
-    },
-    error: (err) => {
-      console.error('Falha no upgrade:', err);
-      alert('Erro ao processar pagamento simulado. Verifique se a API 8083 está online.');
-    }
-  });
-}
 
   navegar(rota: string): void {
     this.router.navigate([rota]);

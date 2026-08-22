@@ -8,8 +8,8 @@ declare var MercadoPago: any;
 
 @Component({
   selector: 'app-assinatura',
-  templateUrl: './assinatura.html',
-  styleUrls: ['./assinatura.css'],
+  templateUrl: './assinatura.component.html',
+  styleUrls: ['./assinatura.component.css'],
   standalone: false
 })
 export class AssinaturaComponent implements OnInit {

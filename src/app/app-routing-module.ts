@@ -12,8 +12,8 @@ import { LevantamentoComponent } from './pages/levantamento/levantamento.compone
 import { ConfigPrecosComponent } from './pages/config-precos/config-precos.component';
 
 import { authGuard } from './core/guards/auth.guard';
-import { Onboarding } from './pages/onboarding/onboarding';
-import { AssinaturaComponent } from './pages/assinatura/assinatura';
+import { Onboarding } from './pages/onboarding/onboarding.component';
+import { AssinaturaComponent } from './pages/assinatura/assinatura.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/onboarding', pathMatch: 'full' },

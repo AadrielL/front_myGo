@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-onboarding',
   standalone: false,
-  templateUrl: './onboarding.html',
-  styleUrl: './onboarding.css',
+  templateUrl: './onboarding.component.html',
+  styleUrl: './onboarding.component.css',
 })
 export class Onboarding {
   constructor(private router: Router) {}

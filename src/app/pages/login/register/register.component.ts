@@ -4,7 +4,7 @@ import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.html',
+  templateUrl: './register.component.html',
   standalone: false
 })
 export class RegisterComponent {

@@ -24,8 +24,8 @@ import { HistoricoComponent } from './pages/orcamentos/historico/historico.compo
 import { ConfigPrecosComponent } from './pages/config-precos/config-precos.component';
 
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { Onboarding } from './pages/onboarding/onboarding';
-import { AssinaturaComponent } from './pages/assinatura/assinatura';
+import { Onboarding } from './pages/onboarding/onboarding.component';
+import { AssinaturaComponent } from './pages/assinatura/assinatura.component';
 
 @NgModule({
   declarations: [
