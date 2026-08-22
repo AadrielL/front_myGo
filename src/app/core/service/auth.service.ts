@@ -54,18 +54,17 @@ export class AuthService {
     window.location.href = '/login';
   }
 
+  getVagasVitalicias(): Observable<number> {
+    return this.http.get<number>(`${this.API_URL}/auth/vagas-vitalicias`);
+  }
+
+  processarPagamento(dados: any): Observable<any> {
+    return this.http.post(`${this.API_URL}/api/payments/process`, dados);
+  }
+
   refreshSession(): Observable<any> {
     return this.http.get(`${this.API_URL}/auth/refresh`).pipe(
       tap((res: any) => this.saveSession(res))
     );
-  }
-
-  simularUpgradePago(email: string): Observable<any> {
-    // Simulando o payload que o Mercado Pago enviaria
-    const payload = {
-      payer_email: email,
-      status: 'approved'
-    };
-    return this.http.post(`${this.API_URL}/api/payments/confirm`, payload);
   }
 }

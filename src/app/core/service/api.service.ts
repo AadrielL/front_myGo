@@ -1,61 +1,78 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  // MANTIDO: Todas as suas URLs originais
   private readonly URL_ORCAMENTOS = 'http://localhost:8081/v1/orcamentos';
   private readonly URL_ADMIN = 'http://localhost:8081/v1/admin';
   private readonly URL_DASHBOARD = 'http://localhost:8081/api/v1/dashboard';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient) {}
 
-  private getHeaders() {
-    return new HttpHeaders({
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      'X-User-Role': this.authService.getUserRole(),
-      'X-Tenant-ID': this.authService.getTenantId()
-    });
-  }
-
-  // MANTIDO: Lógica de payload com data que você criou
+  /**
+   * Envia as respostas do quiz para processamento e geração do cálculo de orçamento.
+   */
   gerarOrcamento(quiz: any): Observable<any> {
     const payload = { ...quiz, dataProcessamento: new Date().toLocaleDateString('pt-BR') };
-    return this.http.post(`${this.URL_ORCAMENTOS}/gerar-quiz`, payload, { headers: this.getHeaders() });
+    return this.http.post(`${this.URL_ORCAMENTOS}/gerar-quiz`, payload);
   }
 
-  // MANTIDO: Métodos de Configuração
+  /**
+   * Obtém as configurações de precificação base cadastradas.
+   */
   getConfig(): Observable<any> {
-    return this.http.get(`${this.URL_ADMIN}/config`, { headers: this.getHeaders() });
+    return this.http.get(`${this.URL_ADMIN}/config`);
   }
 
+  obterConfiguracao(): Observable<any> {
+    return this.getConfig();
+  }
+
+  /**
+   * Atualiza a tabela de preços base.
+   */
   updatePrecos(config: any): Observable<any> {
-    return this.http.put(`${this.URL_ADMIN}/config`, config, { headers: this.getHeaders() });
+    return this.http.put(`${this.URL_ADMIN}/config`, config);
   }
 
-  // MANTIDO: Seu método original de buscar extras
-  getServicosExtras(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.URL_ADMIN}/servicos-extras`, { headers: this.getHeaders() });
+  atualizarPrecos(config: any): Observable<any> {
+    return this.updatePrecos(config);
   }
 
-  // ADICIONADO: Alias para o componente unificado não quebrar (chama o seu método acima)
+  /**
+   * Lista todos os serviços extras adicionais para o quiz.
+   */
   listarServicosExtras(): Observable<any[]> {
-    return this.getServicosExtras();
+    return this.http.get<any[]>(`${this.URL_ADMIN}/servicos-extras`);
   }
 
-  // MANTIDO: Adição e Deleção
+  getServicosExtras(): Observable<any[]> {
+    return this.listarServicosExtras();
+  }
+
+  /**
+   * Cadastra um novo serviço adicional.
+   */
   adicionarServicoExtra(servico: any): Observable<any> {
-    return this.http.post(`${this.URL_ADMIN}/servicos-extras`, servico, { headers: this.getHeaders() });
+    return this.http.post(`${this.URL_ADMIN}/servicos-extras`, servico);
   }
 
+  /**
+   * Remove um serviço adicional pelo ID.
+   */
   deletarServicoExtra(id: number): Observable<any> {
-    return this.http.delete(`${this.URL_ADMIN}/servicos-extras/${id}`, { headers: this.getHeaders() });
+    return this.http.delete(`${this.URL_ADMIN}/servicos-extras/${id}`);
   }
 
-  // MANTIDO: Caso você precise de algo do Dashboard futuramente
+  /**
+   * Obtém dados gerais do dashboard (reserva para uso futuro).
+   */
   getDadosDashboard(): Observable<any> {
-    return this.http.get(`${this.URL_DASHBOARD}`, { headers: this.getHeaders() });
+    return this.http.get(`${this.URL_DASHBOARD}`);
+  }
+
+  obterDadosDashboard(): Observable<any> {
+    return this.getDadosDashboard();
   }
 }

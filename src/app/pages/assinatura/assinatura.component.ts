@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/service/auth.service';
 import { environment } from '../../../environments/environment';
@@ -22,7 +21,6 @@ export class AssinaturaComponent implements OnInit {
   private valorPendente: number = 0;
 
   constructor(
-    private http: HttpClient,
     private authService: AuthService,
     private router: Router,
     private cdRef: ChangeDetectorRef
@@ -38,7 +36,7 @@ export class AssinaturaComponent implements OnInit {
   }
 
   carregarVagasVitalicias() {
-    this.http.get<number>(environment.apiUrl + '/auth/vagas-vitalicias').subscribe({
+    this.authService.getVagasVitalicias().subscribe({
       next: (vagas) => this.vagasVitalicias = vagas,
       error: (err) => console.error("Erro ao buscar vagas vitalícias", err)
     });
@@ -125,7 +123,7 @@ export class AssinaturaComponent implements OnInit {
           onSubmit: ({ selectedPaymentMethod, formData }: any) => {
             console.log("Dados a enviar para API:", formData);
             return new Promise<void>((resolve, reject) => {
-              this.http.post(environment.apiUrl + '/api/payments/process', formData).subscribe({
+              this.authService.processarPagamento(formData).subscribe({
                 next: (res: any) => {
                   console.log("Pagamento processado:", res);
                   resolve();

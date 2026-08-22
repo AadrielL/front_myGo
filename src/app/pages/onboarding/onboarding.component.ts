@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: './onboarding.component.html',
   styleUrl: './onboarding.component.css',
 })
-export class Onboarding {
+export class OnboardingComponent {
   constructor(private router: Router) {}
 
   goToLogin() {
