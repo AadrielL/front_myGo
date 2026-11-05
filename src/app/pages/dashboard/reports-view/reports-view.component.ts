@@ -14,6 +14,7 @@ export class ReportsViewComponent implements OnInit, OnDestroy {
   // KPIs para o HTML
   totalOrcamentos: number = 0;
   ticketMedio: number = 0;
+  taxaConversao: number = 0;
 
   // --- CONFIGURAÇÕES DO GRÁFICO DE PIZZA ---
   public pieChartType: ChartType = 'pie';
@@ -64,6 +65,16 @@ export class ReportsViewComponent implements OnInit, OnDestroy {
   carregarDados(force = false) {
     this.loading = true;
     
+    // Busca dados agregados de stats (Etapa 2)
+    this.dashboardService.getStats(force).subscribe({
+      next: (stats) => {
+        if (stats) {
+          this.taxaConversao = stats.taxaConversao || 0;
+        }
+      },
+      error: () => {}
+    });
+
     // Pegamos a lista do histórico para processar as médias
     this.dashboardService.getHistorico(force).subscribe({
       next: (dados: any[]) => {

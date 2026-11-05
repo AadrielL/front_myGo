@@ -1,155 +1,209 @@
-.onboarding-container {
+/* ==========================================================
+   MYGO ELÉTRICA - LANDING & ONBOARDING CORPORATIVO
+   ========================================================== */
+
+.landing-page {
   min-height: 100vh;
-  background-color: var(--sidebar-bg); /* Dark background for cyber feel */
-  color: white;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Barra de Navegação */
+.landing-nav {
+  height: 64px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.landing-nav-inner {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.landing-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.landing-logo-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--accent-muted);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  position: relative;
+  color: var(--accent-primary);
 }
 
-/* Fundo quadriculado (Pixel Grid) */
-.onboarding-container::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background-image: 
-    linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
-  background-size: 30px 30px;
-  z-index: 0;
+.landing-logo-icon .material-icons {
+  font-size: 22px;
 }
 
-.onboarding-content {
-  position: relative;
-  z-index: 1;
+.landing-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.brand-title strong {
+  color: var(--accent-primary);
+}
+
+.brand-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.landing-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Grid Hero */
+.hero-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  max-width: 1200px;
-  width: 90%;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
   align-items: center;
 }
 
-.text-section {
+@media (max-width: 960px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.hero-content {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  margin-bottom: 1.25rem;
+}
+
+.hero-title .highlight {
+  color: var(--accent-primary);
+}
+
+.hero-description {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 580px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+/* Indicadores de Confiança */
+.trust-metrics {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+  width: 100%;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.trust-icon {
+  font-size: 24px;
+}
+
+/* Mockup Realista */
+.mockup-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mockup-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.5rem;
+  background: var(--bg-surface);
+  border-radius: var(--radius-xs);
+  border-left: 2px solid var(--accent-primary);
+}
+
+.mockup-item-name {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.mockup-item-val {
+  color: var(--text-main);
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+}
+
+.mockup-partner-box {
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+}
+
+/* Banner Final */
+.cta-banner {
+  margin-top: 5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
-.glitch {
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: white;
-  text-shadow: var(--cyber-glow);
-  position: relative;
-}
-
-.sub-title {
-  color: var(--mygo-green);
-  font-size: 1.5rem;
-  letter-spacing: 2px;
-}
-
-.description {
-  color: #94a3b8;
-  line-height: 1.6;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-}
-
-.features {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.feature-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.5rem;
-  border-radius: 12px;
-  backdrop-filter: blur(5px);
-  transition: all 0.3s;
-}
-
-.feature-card:hover {
-  border-color: var(--mygo-green);
-  box-shadow: var(--cyber-glow);
-  transform: translateY(-5px);
-}
-
-.cyber-icon {
-  color: var(--orange-icon);
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.feature-card h3 {
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  color: white;
-}
-
-.feature-card p {
-  font-size: 0.8rem;
-  color: #cbd5e1;
-}
-
-.btn-cyber {
-  margin-top: 2rem;
-  background: transparent;
-  color: white;
-  border: 2px solid var(--mygo-green);
-  padding: 1rem 2.5rem;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: 0.3s;
-  box-shadow: var(--cyber-glow);
-  border-radius: 4px;
-  align-self: flex-start;
-}
-
-.btn-cyber::before {
-  content: "";
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: var(--mygo-green);
-  transition: 0.3s;
-  z-index: -1;
-}
-
-.btn-cyber:hover::before {
-  left: 0;
-}
-
-.btn-cyber:hover {
-  color: var(--sidebar-bg);
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
-}
-
-.section-3d {
-  width: 100%;
-  height: 500px;
-  position: relative;
-}
-
-spline-viewer {
-  width: 100%;
-  height: 100%;
-}
-
-@media (max-width: 900px) {
-  .onboarding-content {
-    grid-template-columns: 1fr;
-  }
-  .section-3d {
-    height: 300px;
-  }
+/* Rodapé */
+.landing-footer {
+  margin-top: auto;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
 }

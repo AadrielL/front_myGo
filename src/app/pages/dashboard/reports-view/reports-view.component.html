@@ -1,28 +1,67 @@
-<div class="reports-container">
-  <div class="flex-header">
-    <h2>Análise de Desempenho</h2>
-    <button class="btn-print" (click)="carregarDados(true)">
-      <span class="material-icons">refresh</span> Atualizar
+﻿<div class="dashboard-container">
+  <!-- Header da Página -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h2 class="app-title" style="font-size: 1.5rem;">Relatórios de Gestão</h2>
+      <p class="app-subtitle">Análise consolidada de volume, conversão e métricas de desempenho.</p>
+    </div>
+    <button class="app-btn app-btn-secondary" (click)="carregarDados(true)">
+      <span class="material-icons" style="font-size: 16px;">refresh</span>
+      <span>Atualizar Dados</span>
     </button>
   </div>
 
   <!-- KPIs de Resumo -->
-    <div class="kpi-row">
-      <div class="kpi-card">
-      <small>Total de Orçamentos</small>
-      <h3>{{ totalOrcamentos }}</h3>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+    <!-- Total Orçamentos -->
+    <div class="app-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
+      <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; justify-content: center; color: var(--status-info); flex-shrink: 0;">
+        <span class="material-icons" style="font-size: 22px;">assessment</span>
       </div>
-      <div class="kpi-card">
-      <small>Ticket Médio (Geral)</small>
-      <h3>R$ {{ ticketMedio | number:'1.2-2' }}</h3>
+      <div>
+        <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Total de Orçamentos</span>
+        <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); font-family: 'JetBrains Mono', monospace; line-height: 1.2; margin-top: 2px;">
+          {{ totalOrcamentos }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket Médio -->
+    <div class="app-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
+      <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center; color: var(--status-success); flex-shrink: 0;">
+        <span class="material-icons" style="font-size: 22px;">payments</span>
+      </div>
+      <div>
+        <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Ticket Médio</span>
+        <div style="font-size: 1.5rem; font-weight: 800; color: var(--status-success); font-family: 'JetBrains Mono', monospace; line-height: 1.2; margin-top: 2px;">
+          R$ {{ ticketMedio | number:'1.2-2' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Taxa de Conversão -->
+    <div class="app-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
+      <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--accent-muted); border: 1px solid rgba(245, 158, 11, 0.3); display: flex; align-items: center; justify-content: center; color: var(--accent-primary); flex-shrink: 0;">
+        <span class="material-icons" style="font-size: 22px;">trending_up</span>
+      </div>
+      <div>
+        <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em;">Taxa de Conversão</span>
+        <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-primary); font-family: 'JetBrains Mono', monospace; line-height: 1.2; margin-top: 2px;">
+          {{ taxaConversao | number:'1.0-1' }}%
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="main-reports-grid">
+  <!-- Grade de Gráficos -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem;">
     <!-- Gráfico 1: Status -->
-    <div class="chart-box">
-      <h3>Distribuição por Status</h3>
-      <div class="canvas-wrapper">
+    <div class="app-card">
+      <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span class="material-icons" style="font-size: 18px; color: var(--accent-primary);">pie_chart</span>
+        Distribuição por Status
+      </h3>
+      <div style="height: 280px; position: relative;">
         <canvas baseChart 
           [data]="pieChartData" 
           [type]="pieChartType"
@@ -32,9 +71,12 @@
     </div>
 
     <!-- Gráfico 2: Médias Mensais -->
-    <div class="chart-box">
-      <h3>Média de Valor Mensal</h3>
-      <div class="canvas-wrapper">
+    <div class="app-card">
+      <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span class="material-icons" style="font-size: 18px; color: var(--status-info);">bar_chart</span>
+        Média de Valor Mensal
+      </h3>
+      <div style="height: 280px; position: relative;">
         <canvas baseChart 
           [data]="barChartData" 
           [type]="barChartType">

@@ -1,38 +1,80 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <h2 class="auth-title">Login ⚡ MyGo</h2>
-    <p class="auth-subtitle">Acesse sua calculadora NBR 5410</p>
+﻿<div style="display: flex; min-height: 100vh; background: var(--bg-main);">
+  <!-- Painel Esquerdo Decorativo -->
+  <div style="flex: 1; background: var(--bg-surface); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 3rem; min-width: 0;">
+    <div style="max-width: 380px; width: 100%;">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 3rem;">
+        <div style="width: 40px; height: 40px; background: var(--accent-muted); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--accent-primary);">
+          <span class="material-icons">bolt</span>
+        </div>
+        <span style="font-size: 1.2rem; font-weight: 800; color: var(--text-main);">MYGO <strong style="color: var(--accent-primary);">ELÉTRICA</strong></span>
+      </div>
 
-  <form (submit)="onSubmit()">
-      <div class="form-group">
-        <input type="email" [(ngModel)]="email" name="email" placeholder="E-mail" required>
+      <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.75rem; line-height: 1.2;">
+        Plataforma de Orçamentos Elétricos
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2.5rem;">
+        Automatize seus cálculos de mão de obra, dimensionamento de cabos e levantamento de materiais conforme a NBR 5410.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+          <span class="material-icons" style="color: var(--accent-primary);">calculate</span>
+          <div>
+            <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin: 0;">Cálculo Automatizado</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Orçamentos precisos em minutos</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+          <span class="material-icons" style="color: var(--status-success);">inventory_2</span>
+          <div>
+            <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin: 0;">Lista de Materiais NBR 5410</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Dimensionamento técnico automatizado</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+          <span class="material-icons" style="color: var(--status-info);">chat</span>
+          <div>
+            <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin: 0;">Envio via WhatsApp</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Proposta direto para o cliente</p>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <input type="password" [(ngModel)]="password" name="password" placeholder="Senha" required>
-      </div>
-      
-      <button type="submit" class="btn-primary">Entrar</button>
-  </form>
-  
-    <div class="auth-footer">
-    Não tem conta? <a routerLink="/register">Cadastre-se aqui</a>
     </div>
-  
-    <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+  </div>
+
+  <!-- Painel Direito: Formulário de Login -->
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; min-width: 0;">
+    <div style="width: 100%; max-width: 400px;">
+      <div style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.25rem;">Acessar Plataforma</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Insira suas credenciais para continuar.</p>
+      </div>
+
+      <form (submit)="onSubmit()">
+        <div class="app-form-group">
+          <label class="app-label">E-mail Profissional</label>
+          <input type="email" [(ngModel)]="email" name="email" placeholder="seu@email.com" required class="app-input">
+        </div>
+        <div class="app-form-group" style="margin-bottom: 1.5rem;">
+          <label class="app-label">Senha de Acesso</label>
+          <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" required class="app-input">
+        </div>
+
+        <button type="submit" class="app-btn app-btn-primary" style="width: 100%; padding: 0.85rem; font-size: 0.95rem;">
+          <span class="material-icons" style="font-size: 18px;">login</span>
+          Entrar
+        </button>
+      </form>
+
+      <p *ngIf="errorMessage" style="color: var(--status-danger); margin-top: 1rem; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+        <span class="material-icons" style="font-size: 16px;">error_outline</span>
+        {{ errorMessage }}
+      </p>
+
+      <div style="margin-top: 1.5rem; text-align: center; font-size: 0.875rem; color: var(--text-muted);">
+        Não tem conta?
+        <a routerLink="/register" style="color: var(--accent-primary); font-weight: 700; text-decoration: none; margin-left: 0.25rem;">Cadastre-se grátis</a>
+      </div>
+    </div>
   </div>
 </div>
-
-<style>
-  .auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
-  .auth-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-  .auth-title { color: #2c3e50; margin-bottom: 5px; font-size: 24px; }
-  .auth-subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 14px; }
-  .form-group { margin-bottom: 15px; }
-  input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; transition: border 0.3s; }
-  input:focus { border-color: #3498db; outline: none; }
-  .btn-primary { width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; transition: background 0.3s; }
-  .btn-primary:hover { background: #2980b9; }
-  .auth-footer { margin-top: 20px; font-size: 14px; color: #7f8c8d; }
-  .auth-footer a { color: #3498db; text-decoration: none; font-weight: bold; }
-  .error-msg { color: #e74c3c; margin-top: 15px; font-size: 14px; font-weight: 500; }
-</style>

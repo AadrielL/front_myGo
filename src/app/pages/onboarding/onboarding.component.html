@@ -1,34 +1,258 @@
-<div class="onboarding-container">
-  <div class="onboarding-content">
-    <div class="text-section">
-      <h1 class="glitch" data-text="BEM-VINDO">BEM-VINDO</h1>
-      <h2 class="sub-title">AO MYGO CYBER-ORÇAMENTO</h2>
-      <p class="description">
-        O sistema definitivo para eletricistas. Calcule materiais com precisão cirúrgica,
-        gere orçamentos em segundos e tenha total controle dos seus projetos.
-      </p>
-      
-      <div class="features">
-        <div class="feature-card">
-          <i class="material-icons cyber-icon">memory</i>
-          <h3>Cálculos pela NBR-5410</h3>
-          <p>Dimensionamento exato de fios e disjuntores.</p>
+<div class="landing-page">
+  <!-- Barra de Navegação Superior -->
+  <header class="landing-nav">
+    <div class="landing-nav-inner">
+      <div class="landing-brand">
+        <div class="landing-logo-icon">
+          <span class="material-icons">bolt</span>
         </div>
-        <div class="feature-card">
-          <i class="material-icons cyber-icon">bolt</i>
-          <h3>Velocidade</h3>
-          <p>Orçamentos de mão de obra rápidos e padronizados.</p>
+        <div class="landing-brand-text">
+          <span class="brand-title">MYGO <strong>ELÉTRICA</strong></span>
+          <span class="brand-sub">NBR 5410 • Palmas/TO</span>
         </div>
       </div>
 
-      <button class="btn-cyber" (click)="goToLogin()">
-        <span>INICIAR SISTEMA</span>
-      </button>
+      <div class="landing-nav-actions">
+        <button class="app-btn app-btn-ghost" routerLink="/parceiros">
+          <span class="material-icons" style="font-size: 16px; color: var(--accent-primary);">handshake</span>
+          <span>Rede de Eletricistas</span>
+        </button>
+
+        <button class="app-btn app-btn-secondary" (click)="goToLogin()">
+          <span class="material-icons" style="font-size: 16px;">login</span>
+          <span>Área do Eletricista</span>
+        </button>
+      </div>
     </div>
-    
-    <div class="section-3d">
-      <!-- Spline 3D Viewer (Exemplo público de objeto 3D) -->
-      <spline-viewer url="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"></spline-viewer>
+  </header>
+
+  <!-- Seção Hero Principal -->
+  <main class="app-container" style="padding-top: 3rem; padding-bottom: 4rem;">
+    <div class="hero-grid">
+      <!-- Coluna da Esquerda: Proposta de Valor -->
+      <div class="hero-content">
+        <div class="app-badge app-badge-amber" style="margin-bottom: 1.25rem;">
+          <span class="material-icons" style="font-size: 14px;">verified</span>
+          <span>ECOSSISTEMA ELÉTRICO INTELIGENTE & COTAÇÃO DIRETA</span>
+        </div>
+
+        <h1 class="hero-title">
+          Orçamentos Elétricos em Minutos pela <span class="highlight">NBR 5410</span>
+        </h1>
+
+        <p class="hero-description">
+          A ferramenta que conecta clientes e eletricistas autônomos de Palmas/TO com cálculos precisos
+          de mão de obra, lista de materiais dimensionada e envio direto para cotação na Capital Elétrica.
+        </p>
+
+        <!-- CTAs de Conversão -->
+        <div class="hero-actions">
+          <button class="app-btn app-btn-primary app-btn-lg" (click)="solicitarOrcamentoCliente()">
+            <span class="material-icons" style="font-size: 20px;">calculate</span>
+            <span>Solicitar Orçamento de Obra (Cliente)</span>
+          </button>
+
+          <button class="app-btn app-btn-outline app-btn-lg" (click)="goToLogin()">
+            <span class="material-icons" style="font-size: 20px;">badge</span>
+            <span>Sou Eletricista</span>
+          </button>
+        </div>
+
+        <!-- Indicadores de Confiança -->
+        <div class="trust-metrics">
+          <div class="trust-item">
+            <span class="material-icons trust-icon" style="color: var(--accent-primary);">rule</span>
+            <div>
+              <strong style="color: var(--text-main);">100% NBR 5410</strong>
+              <p style="color: var(--text-muted); font-size: 0.75rem;">Normas da ABNT</p>
+            </div>
+          </div>
+
+          <div class="trust-item">
+            <span class="material-icons trust-icon" style="color: var(--status-success);">store</span>
+            <div>
+              <strong style="color: var(--text-main);">Capital Elétrica</strong>
+              <p style="color: var(--text-muted); font-size: 0.75rem;">Cotação Integrada</p>
+            </div>
+          </div>
+
+          <div class="trust-item">
+            <span class="material-icons trust-icon" style="color: var(--status-info);">verified_user</span>
+            <div>
+              <strong style="color: var(--text-main);">Anti-Panelinha</strong>
+              <p style="color: var(--text-muted); font-size: 0.75rem;">Oportunidade Justa</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna da Direita: Mockup Realista da Proposta NBR 5410 (Substitui o 3D Pesado) -->
+      <div class="hero-preview">
+        <div class="app-mockup-panel">
+          <div class="app-mockup-header">
+            <div class="app-mockup-dots">
+              <span class="app-mockup-dot"></span>
+              <span class="app-mockup-dot"></span>
+              <span class="app-mockup-dot"></span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+              <span class="app-badge app-badge-success">PROPOSTA CONFORME NBR 5410</span>
+            </div>
+          </div>
+
+          <div class="app-mockup-body">
+            <!-- Cabeçalho do Orçamento -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.85rem;">
+              <div>
+                <p style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-family: 'JetBrains Mono', monospace;">Orçamento #MYGO-2026</p>
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-top: 2px;">Residência Padrão - 120m²</h3>
+                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">Plano Diretor Sul • Palmas / TO</p>
+              </div>
+              <span class="app-badge app-badge-amber">Auditado</span>
+            </div>
+
+            <!-- Lista de Materiais Dimensionados -->
+            <div style="margin-bottom: 1rem;">
+              <p style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em;">
+                Materiais Dimensionados (Extrato)
+              </p>
+              <div class="mockup-item-list">
+                <div class="mockup-item-row">
+                  <span class="mockup-item-name">Cabo Flexível 2,5mm² 750V (Tomadas/Iluminação)</span>
+                  <span class="mockup-item-val">100m</span>
+                </div>
+                <div class="mockup-item-row">
+                  <span class="mockup-item-name">Cabo Flexível 6,0mm² (Chuveiro Elétrico NBR)</span>
+                  <span class="mockup-item-val">30m</span>
+                </div>
+                <div class="mockup-item-row">
+                  <span class="mockup-item-name">Disjuntor Bipolar Termomagnético DIN 40A</span>
+                  <span class="mockup-item-val">1 un</span>
+                </div>
+                <div class="mockup-item-row">
+                  <span class="mockup-item-name">DPS Dispositivo Proteção Surtos 275V 20kA</span>
+                  <span class="mockup-item-val">2 un</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resumo Financeiro -->
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.35rem;">
+                <span style="color: var(--text-secondary);">Mão de Obra Especializada:</span>
+                <strong style="color: var(--text-main);">R$ 2.850,00</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.5rem;">
+                <span style="color: var(--text-secondary);">Estimativa de Materiais:</span>
+                <strong style="color: var(--text-main);">R$ 1.620,00</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; border-top: 1px solid var(--border-subtle); padding-top: 0.5rem;">
+                <span style="color: var(--accent-primary);">Total do Projeto:</span>
+                <span style="color: var(--accent-primary); font-family: 'JetBrains Mono', monospace;">R$ 4.470,00</span>
+              </div>
+            </div>
+
+            <!-- Destaque Parceria Capital Elétrica -->
+            <div class="mockup-partner-box">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="material-icons" style="font-size: 18px; color: #10b981;">shopping_cart</span>
+                <span style="font-size: 0.8rem; font-weight: 700; color: #10b981;">Capital Elétrica Palmas</span>
+              </div>
+              <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
+                Lista pronta para transmissão direta ao WhatsApp de televendas da distribuidora.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+
+    <!-- Pilares de Valor (Grid de 3 Colunas) -->
+    <div style="margin-top: 5rem;">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto 3rem auto;">
+        <span class="app-badge app-badge-muted" style="margin-bottom: 0.5rem;">DESENVOLVIDO PARA A CONSTRUÇÃO CIVIL</span>
+        <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">
+          Por que profissionais e clientes escolhem o MyGo?
+        </h2>
+      </div>
+
+      <div class="app-grid-3">
+        <!-- Card 1 -->
+        <div class="app-feature-box">
+          <div class="app-feature-icon-wrapper amber">
+            <span class="material-icons" style="font-size: 22px;">engineering</span>
+          </div>
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">
+            Dimensionamento NBR 5410
+          </h3>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;">
+            Chega de chutar bitolas e disjuntores. O sistema calcula a seção adequada dos condutores, limites de queda de tensão e dispositivos de proteção contra choques e incêndios.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="app-feature-box">
+          <div class="app-feature-icon-wrapper green">
+            <span class="material-icons" style="font-size: 22px;">storefront</span>
+          </div>
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">
+            Cotação Direta Capital Elétrica
+          </h3>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;">
+            A lista levantada de cabos, conduítes e quadros é convertida em formato executivo e enviada com um toque direto para a equipe de vendas da Capital Elétrica em Palmas.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="app-feature-box">
+          <div class="app-feature-icon-wrapper blue">
+            <span class="material-icons" style="font-size: 22px;">handshake</span>
+          </div>
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">
+            Matchmaking Anti-Panelinha
+          </h3>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;">
+            Clientes sem indicação prévia são direcionados para uma vitrine justa que destaca profissionais autônomos iniciantes com excelentes avaliações técnicas e pontualidade.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner Final de Ação -->
+    <div class="cta-banner">
+      <div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.35rem;">
+          Pronto para dimensionar sua instalação elétrica?
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">
+          Leva menos de 3 minutos para receber a estimativa completa de mão de obra e materiais.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <button class="app-btn app-btn-primary app-btn-lg" (click)="solicitarOrcamentoCliente()">
+          <span class="material-icons" style="font-size: 18px;">play_arrow</span>
+          <span>Iniciar Orçamento</span>
+        </button>
+
+        <button class="app-btn app-btn-secondary app-btn-lg" routerLink="/parceiros">
+          <span class="material-icons" style="font-size: 18px;">person_search</span>
+          <span>Ver Eletricistas</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rodapé Institucional -->
+  <footer class="landing-footer">
+    <div class="app-container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-top: 1.5rem; padding-bottom: 1.5rem;">
+      <span style="font-size: 0.8rem; color: var(--text-muted);">
+        © 2026 MYGO Elétrica • Conforme Norma ABNT NBR 5410 • Palmas / TO
+      </span>
+      <div style="display: flex; gap: 1.25rem;">
+        <a routerLink="/login" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Acesso Eletricista</a>
+        <a routerLink="/parceiros" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Parceiros Oficiais</a>
+      </div>
+    </div>
+  </footer>
 </div>

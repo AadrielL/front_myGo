@@ -1,155 +1,297 @@
-<div class="cartoon-card" style="width: 100%; max-width: 1200px; display: flex; flex-direction: column; max-height: 90vh;">
-  <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <div class="welcome-text">
-      <h2 class="title-cartoon" style="margin-bottom: 0.5rem; text-align: left; font-size: 2rem;">
-        <span class="material-icons" style="color: var(--wire-green-dark); vertical-align: middle; font-size: 2.5rem;">{{ verLixeira ? 'delete_outline' : 'history' }}</span> 
-        {{ verLixeira ? 'Lixeira (Excluídos)' : (userRole === 'ADMIN' ? 'Gerenciar Orçamentos' : 'Meus Orçamentos') }}
-      </h2>
-      <p *ngIf="verLixeira" class="text-danger mb-0" style="font-size: 0.85rem; color: var(--danger);">
-        <span class="material-icons" style="font-size: 14px; vertical-align: middle;">info</span> 
-        Itens na lixeira são removidos permanentemente após 7 dias.
-      </p>
-    </div>
-    
-    <div class="header-actions" style="display: flex; gap: 1rem;">
-      <button class="btn-cartoon" [class.btn-wire-blue]="verLixeira" [class.btn-wire-orange]="!verLixeira" (click)="alternarVisualizacao()" style="display: flex; align-items: center; gap: 8px;">
-        <span class="material-icons">{{ verLixeira ? 'arrow_back' : 'delete_sweep' }}</span>
-        {{ verLixeira ? 'Voltar ao Histórico' : 'Ver Lixeira' }}
-      </button>
-
-      <button class="btn-cartoon btn-wire-blue" (click)="voltar()" style="display: flex; align-items: center; gap: 8px;">
-        <span class="material-icons">arrow_back</span> Voltar
-      </button>
-    </div>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="loading" class="text-center" style="padding: 3rem;">
-    <p style="color: var(--text-muted); font-weight: 800; font-size: 1.2rem;">Sincronizando dados...</p>
-  </div>
-
-  <!-- Tabela de Orçamentos -->
-  <div class="scrollable-content" *ngIf="!loading">
-    <table class="table-materials">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th class="text-center">Data</th>
-          <th class="text-center">Valor Estimado</th>
-          <th class="text-center">Status</th>
-          <th class="text-end">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let orc of listaOrcamentos" [class.row-deleted]="verLixeira">
-          <td><strong>{{ orc.clienteNome }}</strong></td>
-          <td class="text-center">{{ formatarData(orc.dataExibicao) }}</td>
-          <td class="text-center">
-            <span class="text-primary" style="font-weight: 700;">
-              {{ formatarMoeda(orc.valorExibicao) }}
-            </span>
-          </td>
-          <td class="text-center">
-            <span class="badge" [class.bg-success]="orc.status === 'ACEITO'" [class.bg-warning]="orc.status !== 'ACEITO'">
-              {{ orc.status }}
-            </span>
-          </td>
-          <td class="text-end">
-            <div class="d-flex justify-content-end gap-2">
-              
-              <!-- Se NÃO estiver na lixeira, mostra ações normais -->
-              <ng-container *ngIf="!verLixeira">
-                <button class="btn-print" style="padding: 6px 12px; font-size: 0.8rem;" (click)="verDetalhes(orc.id)">
-                  <span class="material-icons" style="font-size: 16px;">inventory_2</span> Materiais
-                </button>
-                
-                <ng-container *ngIf="userRole === 'ADMIN'">
-                  <button class="btn-reports-primary" style="padding: 6px 12px; font-size: 0.8rem;" (click)="capturarParaLevantamento(orc.id)">
-                    Gerar Lista
-                  </button>
-                  <button class="btn btn-sm btn-outline-success" (click)="alterarStatus(orc.id, 'ACEITO')">✔</button>
-                  <button class="btn btn-sm btn-outline-danger" (click)="confirmarRecusar(orc.id)">
-                    <span class="material-icons" style="font-size: 14px;">delete</span>
-                  </button>
-                </ng-container>
-              </ng-container>
-
-              <!-- Se ESTIVER na lixeira, mostra apenas o botão Restaurar -->
-              <ng-container *ngIf="verLixeira">
-                <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="restaurar(orc.id)">
-                  <span class="material-icons" style="font-size: 16px;">restore</span> Restaurar
-                </button>
-              </ng-container>
-
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <div *ngIf="listaOrcamentos.length === 0" class="action-card text-center p-5">
-      <p class="text-muted">{{ verLixeira ? 'A lixeira está vazia.' : 'Nenhum orçamento encontrado.' }}</p>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL DE DETALHES (Mantido) -->
-<div class="modal-backdrop" *ngIf="mostrarModal" (click)="fecharModal()">
-  <div class="modal-content-custom printable-content" (click)="$event.stopPropagation()">
-    <div class="modal-header-custom no-print">
-      <h3><span class="material-icons">description</span> Relatório de Materiais</h3>
-      <button class="btn-close-custom" (click)="fecharModal()">&times;</button>
-    </div>
-
-    <div class="modal-body-custom" *ngIf="detalheMaterial">
-      <div class="info-header mb-4 d-flex justify-content-between align-items-end">
-        <div>
-          <h2 class="mb-1" style="color: var(--sidebar-bg)">Levantamento Técnico</h2>
-          <p class="mb-0"><strong>Cliente:</strong> {{ detalheMaterial.clienteNome }}</p>
-          <p class="text-muted small mb-0">Data: {{ formatarData(detalheMaterial.dataGeracao) }}</p>
-        </div>
-        <div class="text-end">
-          <span class="text-muted small">Valor Estimado</span>
-          <h3 class="text-success m-0">R$ {{ detalheMaterial.valorTotalEstimado }}</h3>
-        </div>
-      </div>
-      <hr>
-      <div *ngFor="let cat of getCategorias()" class="mb-4">
-        <div *ngIf="cat.value.length > 0">
-          <h5 class="category-header">
-            <span class="material-icons">label_important</span> {{ cat.key }}
-          </h5>
-          <table class="table-materials-mini">
-            <thead>
-              <tr>
-                <th>Item / Descrição</th>
-                <th class="text-center">Qtd</th>
-                <th class="text-center">Unid</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of cat.value">
-                <td style="width: 70%">{{ item.descricao }}</td>
-                <td class="text-center"><strong>{{ item.quantidade }}</strong></td>
-                <td class="text-center text-muted">{{ item.unidade }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="total-section mt-4 pt-3" style="border-top: 2px solid var(--mygo-green);">
-        <div class="aviso-box" *ngIf="detalheMaterial.avisoTecnico">
-          <p class="mb-1"><strong><span class="material-icons" style="font-size: 14px;">gavel</span> Notas Técnicas:</strong></p>
-          <small class="text-muted">{{ detalheMaterial.avisoTecnico }}</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-footer-custom no-print">
-      <button class="btn-print" (click)="imprimirDetalhe()">
-        <span class="material-icons">print</span> Imprimir PDF
-      </button>
-      <button class="btn-secondary" (click)="fecharModal()">Fechar</button>
-    </div>
-  </div>
-</div>
+<div class="app-card" style="width: 100%; max-width: 1200px; margin: 0 auto;">
+  <!-- Header da Página -->
+  <div class="app-card-header" style="flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span class="material-icons" style="color: var(--accent-primary); font-size: 24px;">{{ verLixeira ? 'delete_sweep' : 'history' }}</span>
+        <h2 class="app-title" style="font-size: 1.4rem;">
+          {{ verLixeira ? 'Lixeira de Orçamentos' : (userRole === 'ADMIN' ? 'Gestão de Orçamentos' : 'Meus Orçamentos') }}
+        </h2>
+      </div>
+      <p *ngIf="verLixeira" class="app-subtitle text-danger" style="margin-top: 0.25rem;">
+        Itens na lixeira são removidos permanentemente após 7 dias.
+      </p>
+      <p *ngIf="!verLixeira" class="app-subtitle" style="margin-top: 0.25rem;">
+        Histórico completo de propostas elétricas e relatórios técnicos.
+      </p>
+    </div>
+    
+    <div style="display: flex; gap: 0.75rem; align-items: center;">
+      <button class="app-btn" [class.app-btn-danger]="!verLixeira" [class.app-btn-secondary]="verLixeira" (click)="alternarVisualizacao()">
+        <span class="material-icons" style="font-size: 16px;">{{ verLixeira ? 'arrow_back' : 'delete' }}</span>
+        <span>{{ verLixeira ? 'Voltar ao Histórico' : 'Ver Lixeira' }}</span>
+      </button>
+
+      <button class="app-btn app-btn-ghost" (click)="voltar()">
+        <span class="material-icons" style="font-size: 16px;">arrow_back</span>
+        <span>Voltar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" style="padding: 3rem; text-align: center;">
+    <span class="material-icons" style="font-size: 32px; color: var(--accent-primary); animation: spin 1s linear infinite;">sync</span>
+    <p style="color: var(--text-muted); font-weight: 600; margin-top: 0.5rem;">Sincronizando orçamentos com o banco...</p>
+  </div>
+
+  <!-- Tabela de Orçamentos -->
+  <div class="app-table-container" *ngIf="!loading">
+    <table class="app-table">
+      <thead>
+        <tr>
+          <th>Cliente / Projeto</th>
+          <th style="text-align: center;">Data</th>
+          <th style="text-align: center;">Valor Estimado</th>
+          <th style="text-align: center;">Status</th>
+          <th style="text-align: right;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let orc of listaOrcamentos">
+          <td>
+            <strong style="color: var(--text-main);">{{ orc.clienteNome }}</strong>
+          </td>
+          <td style="text-align: center; color: var(--text-muted);">
+            {{ formatarData(orc.dataExibicao) }}
+          </td>
+          <td style="text-align: center; font-weight: 700; color: var(--accent-primary); font-family: 'JetBrains Mono', monospace;">
+            {{ formatarMoeda(orc.valorExibicao) }}
+          </td>
+          <td style="text-align: center;">
+            <span class="app-badge" [class.app-badge-success]="orc.status === 'ACEITO'" [class.app-badge-amber]="orc.status !== 'ACEITO'">
+              {{ orc.status }}
+            </span>
+          </td>
+          <td style="text-align: right;">
+            <div style="display: inline-flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
+              
+              <!-- Se NÃO estiver na lixeira, mostra ações normais -->
+              <ng-container *ngIf="!verLixeira">
+                <button class="app-btn app-btn-secondary app-btn-sm" (click)="verDetalhesMaoDeObra(orc.id)" title="Ver Detalhamento da Mão de Obra">
+                  <span class="material-icons" style="font-size: 15px; color: var(--accent-primary);">calculate</span>
+                  <span>Mão de Obra</span>
+                </button>
+                <button class="app-btn app-btn-secondary app-btn-sm" (click)="verDetalhes(orc.id)" title="Ver Detalhes dos Materiais">
+                  <span class="material-icons" style="font-size: 15px;">inventory_2</span>
+                  <span>Materiais</span>
+                </button>
+                
+                <ng-container *ngIf="userRole === 'ADMIN'">
+                  <button class="app-btn app-btn-primary app-btn-sm" (click)="capturarParaLevantamento(orc.id)">
+                    <span>Lista Técnica</span>
+                  </button>
+                  <button class="app-btn app-btn-secondary app-btn-sm text-success" (click)="alterarStatus(orc.id, 'ACEITO')" title="Aprovar">
+                    <span class="material-icons" style="font-size: 15px;">check</span>
+                  </button>
+                  <button class="app-btn app-btn-danger app-btn-sm" (click)="confirmarRecusar(orc.id)" title="Mover para lixeira">
+                    <span class="material-icons" style="font-size: 15px;">delete</span>
+                  </button>
+                </ng-container>
+              </ng-container>
+
+              <!-- Se ESTIVER na lixeira, mostra apenas o botão Restaurar -->
+              <ng-container *ngIf="verLixeira">
+                <button class="app-btn app-btn-secondary app-btn-sm text-success" (click)="restaurar(orc.id)">
+                  <span class="material-icons" style="font-size: 15px;">restore</span>
+                  <span>Restaurar</span>
+                </button>
+              </ng-container>
+
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div *ngIf="listaOrcamentos.length === 0" style="padding: 3rem; text-align: center; color: var(--text-muted);">
+      <span class="material-icons" style="font-size: 40px; color: var(--text-disabled); margin-bottom: 0.5rem;">inbox</span>
+      <p>{{ verLixeira ? 'A lixeira está vazia.' : 'Nenhum orçamento encontrado no histórico.' }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE DETALHES DOS MATERIAIS -->
+<div class="app-modal-overlay" *ngIf="mostrarModal" (click)="fecharModal()">
+  <div class="app-modal printable-content" style="max-width: 850px;" (click)="$event.stopPropagation()">
+    <div class="app-modal-header no-print">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span class="material-icons" style="color: var(--accent-primary);">description</span>
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">Relatório de Materiais (NBR 5410)</h3>
+      </div>
+      <button class="btn-close-custom" (click)="fecharModal()">&times;</button>
+    </div>
+
+    <div class="app-modal-body" *ngIf="detalheMaterial">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle);">
+        <div>
+          <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.25rem;">Levantamento Técnico</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 0.25rem;"><strong>Cliente:</strong> {{ detalheMaterial.clienteNome }}</p>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Data de Geração: {{ formatarData(detalheMaterial.dataGeracao) }}</p>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Valor Estimado</span>
+          <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--status-success); font-family: 'JetBrains Mono', monospace;">
+            R$ {{ detalheMaterial.valorTotalEstimado }}
+          </h3>
+        </div>
+      </div>
+
+      <div *ngFor="let cat of getCategorias()" style="margin-bottom: 1.5rem;">
+        <div *ngIf="cat.value.length > 0">
+          <h5 style="color: var(--accent-primary); font-size: 0.9rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem;">
+            <span class="material-icons" style="font-size: 16px;">label_important</span>
+            {{ cat.key }}
+          </h5>
+          <table class="app-table" style="font-size: 0.85rem;">
+            <thead>
+              <tr>
+                <th>Descrição do Item</th>
+                <th style="text-align: center; width: 100px;">Qtd</th>
+                <th style="text-align: center; width: 80px;">Unidade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of cat.value">
+                <td>{{ item.descricao }}</td>
+                <td style="text-align: center; font-weight: 700; color: var(--text-main);">{{ item.quantidade }}</td>
+                <td style="text-align: center; color: var(--text-muted);">{{ item.unidade }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="detalheMaterial.avisoTecnico" style="margin-top: 1.5rem; padding: 1rem; background: var(--accent-muted); border-left: 3px solid var(--accent-primary); border-radius: var(--radius-sm);">
+        <p style="font-weight: 700; color: var(--accent-primary); font-size: 0.85rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.35rem;">
+          <span class="material-icons" style="font-size: 16px;">gavel</span> Notas Técnicas NBR 5410:
+        </p>
+        <small style="color: var(--text-secondary); line-height: 1.4;">{{ detalheMaterial.avisoTecnico }}</small>
+      </div>
+    </div>
+
+    <div class="app-modal-footer no-print">
+      <button class="app-btn" style="background: #10b981; color: #020617; font-weight: 700; border: none; display: flex; align-items: center; gap: 0.4rem;" (click)="cotarCapitalEletrica()" title="Envia a lista NBR 5410 direto para cotar na Capital Elétrica de Palmas">
+        <span class="material-icons" style="font-size: 16px;">storefront</span>
+        <span>Cotar na Capital Elétrica</span>
+      </button>
+      <button class="app-btn app-btn-primary" (click)="imprimirDetalhe()">
+        <span class="material-icons" style="font-size: 16px;">print</span>
+        <span>Imprimir / Salvar PDF</span>
+      </button>
+      <button class="app-btn app-btn-secondary" (click)="fecharModal()">
+        <span>Fechar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE DETALHES DA MÃO DE OBRA (ETAPA 3) -->
+<div class="app-modal-overlay" *ngIf="mostrarModalMaoDeObra" (click)="fecharModalMaoDeObra()">
+  <div class="app-modal printable-content" style="max-width: 750px;" (click)="$event.stopPropagation()">
+    <div class="app-modal-header no-print">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span class="material-icons" style="color: var(--accent-primary);">calculate</span>
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">Detalhamento de Mão de Obra</h3>
+      </div>
+      <button class="btn-close-custom" (click)="fecharModalMaoDeObra()">&times;</button>
+    </div>
+
+    <div class="app-modal-body" *ngIf="detalheOrcamento">
+      <!-- Cabeçalho do Orçamento -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.25rem;">
+            {{ detalheOrcamento.clienteNome }}
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">
+            Data: {{ formatarData(detalheOrcamento.dataCriacao) }} | Status: <span class="app-badge app-badge-amber">{{ detalheOrcamento.status }}</span>
+          </p>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Valor Total</span>
+          <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--accent-primary); font-family: 'JetBrains Mono', monospace;">
+            {{ formatarMoeda(detalheOrcamento.valorTotal) }}
+          </h3>
+        </div>
+      </div>
+
+      <!-- Parâmetros da Obra -->
+      <div *ngIf="dadosSnapshot" style="margin-bottom: 1.5rem;">
+        <h5 style="color: var(--accent-primary); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.35rem;">
+          <span class="material-icons" style="font-size: 16px;">tune</span>
+          Especificações da Obra
+        </h5>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem;">
+          <div style="padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+            <small style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Área Total</small>
+            <strong style="color: var(--text-main); font-size: 0.95rem;">{{ dadosSnapshot.metragemM2 }} m²</strong>
+          </div>
+          <div style="padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+            <small style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Tipo / Complexidade</small>
+            <strong style="color: var(--text-main); font-size: 0.95rem;">{{ dadosSnapshot.complexidade || 'Padrão' }}</strong>
+          </div>
+          <div style="padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+            <small style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Infraestrutura</small>
+            <strong style="color: var(--text-main); font-size: 0.95rem;">{{ dadosSnapshot.comInfra ? 'Completa' : 'Apenas Fiação' }}</strong>
+          </div>
+          <div style="padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+            <small style="color: var(--text-muted); display: block; font-size: 0.7rem; text-transform: uppercase;">Pontos Elétricos</small>
+            <strong style="color: var(--text-main); font-size: 0.95rem;">{{ dadosSnapshot.qtdPontosEletrica || 0 }} pontos</strong>
+          </div>
+        </div>
+
+        <!-- Equipamentos Adicionais -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-top: 0.75rem;">
+          <div *ngIf="dadosSnapshot.qtdChuveiro" style="padding: 0.6rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary);">
+            🚿 {{ dadosSnapshot.qtdChuveiro }} Chuveiro(s)
+          </div>
+          <div *ngIf="dadosSnapshot.qtdArCondicionado" style="padding: 0.6rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary);">
+            ❄️ {{ dadosSnapshot.qtdArCondicionado }} Ar Cond.
+          </div>
+          <div *ngIf="dadosSnapshot.qtdCameras" style="padding: 0.6rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary);">
+            📷 {{ dadosSnapshot.qtdCameras }} Câmera(s)
+          </div>
+          <div *ngIf="dadosSnapshot.metrosCerca" style="padding: 0.6rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary);">
+            ⚡ {{ dadosSnapshot.metrosCerca }}m Cerca
+          </div>
+          <div *ngIf="dadosSnapshot.qtdMotoresPortao" style="padding: 0.6rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary);">
+            🚗 {{ dadosSnapshot.qtdMotoresPortao }} Motor Portão
+          </div>
+        </div>
+      </div>
+
+      <!-- Serviços Adicionais contratados -->
+      <div *ngIf="dadosSnapshot?.adicionais?.length > 0" style="margin-top: 1.5rem;">
+        <h5 style="color: var(--accent-primary); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem;">
+          <span class="material-icons" style="font-size: 16px;">playlist_add_check</span>
+          Serviços Extras Inclusos
+        </h5>
+        <table class="app-table" style="font-size: 0.85rem;">
+          <thead>
+            <tr>
+              <th>Serviço</th>
+              <th style="text-align: center; width: 80px;">Qtd</th>
+              <th style="text-align: right; width: 120px;">Valor Unit.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of dadosSnapshot.adicionais">
+              <td>{{ s.nomeServico }}</td>
+              <td style="text-align: center; font-weight: 700;">{{ s.quantidade }}</td>
+              <td style="text-align: right; font-family: 'JetBrains Mono', monospace; color: var(--accent-primary);">
+                {{ formatarMoeda(s.precoUnitario) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="app-modal-footer no-print">
+      <button class="app-btn app-btn-secondary" (click)="fecharModalMaoDeObra()">
+        <span>Fechar</span>
+      </button>
+    </div>
+  </div>
+</div>

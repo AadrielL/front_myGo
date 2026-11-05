@@ -27,6 +27,20 @@ export class AuthService {
     
     // Essencial para o TenantId das APIs 8081 e 8082
     if (res.email) localStorage.setItem('userEmail', res.email);
+    if (res.planType) localStorage.setItem('userPlanType', res.planType);
+  }
+
+  getMe(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/auth/me`).pipe(
+      tap((user: any) => {
+        if (user) {
+          if (user.nome) localStorage.setItem('userName', user.nome);
+          if (user.role) localStorage.setItem('userRole', user.role.toUpperCase());
+          if (user.email) localStorage.setItem('userEmail', user.email);
+          if (user.planType) localStorage.setItem('userPlanType', user.planType);
+        }
+      })
+    );
   }
 
   isAuthenticated(): boolean { return !!localStorage.getItem('token'); }
@@ -39,6 +53,8 @@ export class AuthService {
   }
 
   getPlanType(): string {
+    const savedPlan = localStorage.getItem('userPlanType');
+    if (savedPlan) return savedPlan;
     const token = localStorage.getItem('token');
     if (!token) return 'FREE';
     try {
