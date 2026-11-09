@@ -8,6 +8,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  verificarCodigo(email: string, codigo: string): Observable<any> {
+    return this.http.post(${this.API_URL}/auth/verificar-codigo, { email, codigo }).pipe(
+      tap((res: any) => this.saveSession(res))
+    );
+  }
+
+  reenviarCodigo(email: string): Observable<any> {
+    return this.http.post(${this.API_URL}/auth/reenviar-codigo, { email });
+  }
+
   register(userData: any): Observable<any> {
     return this.http.post(`${this.API_URL}/auth/register`, userData);
   }
