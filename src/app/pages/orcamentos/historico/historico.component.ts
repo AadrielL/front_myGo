@@ -255,7 +255,8 @@ export class HistoricoComponent implements OnInit {
     const itens = this.detalheMaterial.itens || [];
     const msg = this.apiService.gerarMensagemCapitalEletrica(nomeCliente, itens);
     // WhatsApp comercial Capital Eletrica Palmas (exemplo padrão comercial)
-    const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+    const numeroCapital = '556333222120';
+    const url = `https://wa.me/${numeroCapital}?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
   }
 

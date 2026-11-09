@@ -172,6 +172,23 @@ export class QuizComponent implements OnInit {
     this.numeroWhatsApp = event.target.value;
   }
 
+  cotarCapitalEletrica() {
+    if (!this.resultadoCalculo) return;
+    const nome = this.quizForm.get('nomeCliente')?.value || 'Cliente';
+    const total = ((this.resultadoCalculo.valorTotalMaoDeObra || 0) + (this.resultadoCalculo.custoLogistica || 0)).toFixed(2);
+    const msg = `⚡ *SOLICITAÇÃO DE COTAÇÃO — CAPITAL ELÉTRICA (PALMAS/TO)*\n` +
+      `Cliente / Projeto: *${nome}*\n` +
+      `Mão de Obra Estimada: *R$ ${total}*\n` +
+      `-------------------------------------------\n` +
+      `Olá Capital Elétrica! Gostaria de cotar a lista de materiais para este projeto elétrico dimensionado no AMORIS Tech (NBR 5410).`;
+    const url = `https://wa.me/556333222120?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+
+  imprimirProposta() {
+    window.print();
+  }
+
   enviarWhatsApp() {
     if (!this.numeroWhatsApp || !this.resultadoCalculo) return;
     
