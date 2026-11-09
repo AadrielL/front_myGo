@@ -253,6 +253,17 @@
       </div>
     </div>
 
+    <!-- Ações Rápidas: Capital Elétrica e PDF -->
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+      <button type="button" class="app-btn app-btn-secondary" (click)="cotarCapitalEletrica()" style="flex: 1; padding: 0.75rem 0.5rem; font-size: 0.82rem; border-color: rgba(16, 185, 129, 0.4); color: var(--status-success);" title="Enviar cotação para o WhatsApp da Capital Elétrica">
+        <span class="material-icons" style="font-size: 17px; color: var(--status-success);">storefront</span>
+        <span>Cotar na Capital Elétrica</span>
+      </button>
+
+      <button type="button" class="app-btn app-btn-secondary" (click)="imprimirProposta()" style="padding: 0.75rem 1rem;" title="Salvar ou Imprimir PDF da proposta">
+        <span class="material-icons" style="font-size: 17px;">print</span>
+      </button>
+    </div>
     <button class="app-btn app-btn-primary" (click)="fecharModal()" style="width: 100%; padding: 0.85rem;">
       <span class="material-icons" style="font-size: 18px;">inventory_2</span>
       <span>Ver Levantamento de Materiais</span>

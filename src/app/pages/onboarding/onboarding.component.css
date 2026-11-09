@@ -207,3 +207,48 @@
   background: var(--bg-surface);
   border-top: 1px solid var(--border-subtle);
 }
+
+
+/* ==========================================================
+   LANDING / ONBOARDING - MOBILE (<= 768px)
+   ========================================================== */
+@media (max-width: 768px) {
+  .landing-nav {
+    padding: 0.75rem 1rem !important;
+  }
+
+  .hero-title {
+    font-size: 1.75rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .hero-description {
+    font-size: 0.88rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .hero-actions {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  .hero-actions .app-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .trust-metrics {
+    gap: 0.75rem !important;
+    flex-wrap: wrap !important;
+  }
+
+  .cta-banner {
+    margin-top: 2.5rem !important;
+    padding: 1.5rem 1rem !important;
+    text-align: center !important;
+  }
+
+  .cta-banner .app-btn {
+    width: 100% !important;
+  }
+}

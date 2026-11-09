@@ -1,4 +1,4 @@
-﻿.dashboard-layout {
+.dashboard-layout {
   display: flex;
   min-height: 100vh;
   background-color: var(--bg-main);
@@ -11,12 +11,7 @@
   min-width: 0;
   margin-left: var(--sidebar-width);
   min-height: 100vh;
-}
-
-@media (max-width: 900px) {
-  .main-content {
-    margin-left: 0;
-  }
+  transition: margin-left var(--transition-normal);
 }
 
 .global-topbar {
@@ -84,4 +79,53 @@
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
+}
+
+/* ==========================================================
+   RESPONSIVIDADE MOBILE (<= 768px)
+   ========================================================== */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    padding-bottom: 75px; /* Espaço para o dock inferior não cobrir botões */
+  }
+
+  .global-topbar {
+    height: 50px;
+    padding: 0 0.85rem;
+  }
+
+  .topbar-left {
+    gap: 0.5rem;
+  }
+
+  .topbar-title-text {
+    font-size: 0.75rem;
+  }
+
+  .topbar-right {
+    gap: 0.5rem;
+  }
+
+  .credits-badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .theme-btn {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .user-chip {
+    padding: 0.25rem;
+    border-radius: 50%;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .page-container {
+    padding: 1rem 0.75rem;
+  }
 }

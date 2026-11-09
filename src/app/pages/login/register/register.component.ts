@@ -8,50 +8,109 @@ import { AuthService } from '../../../core/service/auth.service';
   standalone: false
 })
 export class RegisterComponent {
-  // Campos vinculados ao ngModel do formulário
   nome: string = '';
   email: string = '';
   password: string = '';
-  
-  // Mensagem de feedback para o usuário
+  tipoPerfil: string = 'ELETRICISTA'; // ELETRICISTA ou CLIENTE
+
+  // Controle da Etapa de Verificação de Código de E-mail
+  etapaVerificacao: boolean = false;
+  codigoVerificacao: string = '';
+  loading: boolean = false;
+
   errorMessage: string = '';
+  sucessoMensagem: string = '';
 
   constructor(
     private authService: AuthService, 
     private router: Router
   ) {}
 
-  /**
-   * Executa o registro do novo usuário no ecossistema MyGo.
-   * Por padrão, todo novo registro via frontend é atribuído à role VISITANTE.
-   */
   onRegister(): void {
-    this.errorMessage = ''; // Limpa erros anteriores
+    this.errorMessage = '';
+    this.sucessoMensagem = '';
 
-    // Objeto formatado para o DTO do seu Backend Java
+    if (!this.nome || !this.email || !this.password) {
+      this.errorMessage = 'Por favor, preencha todos os campos.';
+      return;
+    }
+
+    if (this.password.length < 8) {
+      this.errorMessage = 'A senha deve ter no mínimo 8 caracteres (com maiúscula, minúscula e número).';
+      return;
+    }
+
+    this.loading = true;
+
     const userData = { 
       nome: this.nome, 
       email: this.email, 
       password: this.password,
-      role: 'VISITANTE' // Hardcoded por segurança em um SaaS
+      tipoPerfil: this.tipoPerfil
     };
 
     this.authService.register(userData).subscribe({
-      next: (response) => {
-        console.log('Registro realizado:', response);
-        alert('⚡ Conta MyGo criada com sucesso! Você já pode fazer login.');
-        this.router.navigate(['/login']);
+      next: (response: any) => {
+        this.loading = false;
+        this.etapaVerificacao = true;
+        this.sucessoMensagem = 'Código de verificação enviado! Verifique sua caixa de entrada.';
       },
       error: (err) => {
+        this.loading = false;
         console.error('Erro no registro:', err);
         this.errorMessage = this.handleError(err);
       }
     });
   }
 
+  onVerificarCodigo(): void {
+    if (!this.codigoVerificacao || this.codigoVerificacao.trim().length !== 6) {
+      this.errorMessage = 'Por favor, digite o código de 6 dígitos.';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.authService.verificarCodigo(this.email, this.codigoVerificacao.trim()).subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        alert('⚡ Conta ativada com sucesso! Bem-vindo ao ecossistema AMORIS Tech.');
+        this.router.navigate(['/dashboard-main']);
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Erro na validação do código:', err);
+        if (err.error && typeof err.error === 'string') {
+          this.errorMessage = err.error;
+        } else {
+          this.errorMessage = 'Código incorreto ou expirado. Solicite um novo código.';
+        }
+      }
+    });
+  }
+
+  onReenviarCodigo(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.sucessoMensagem = '';
+
+    this.authService.reenviarCodigo(this.email).subscribe({
+      next: () => {
+        this.loading = false;
+        this.sucessoMensagem = 'Novo código enviado para o seu e-mail!';
+      },
+      error: (err) => {
+        this.loading = false;
+        this.errorMessage = 'Não foi possível reenviar o código agora. Tente em instantes.';
+      }
+    });
+  }
+
   private handleError(err: any): string {
-    if (err.status === 400) return 'Este e-mail já está cadastrado ou dados inválidos.';
-    if (err.status === 0) return 'Não foi possível conectar ao servidor de autenticação.';
+    if (err.error && typeof err.error === 'string') return err.error;
+    if (err.status === 400) return 'Dados inválidos ou e-mail já cadastrado.';
+    if (err.status === 0) return 'Não foi possível conectar ao servidor.';
     return 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
   }
 }

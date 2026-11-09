@@ -1,0 +1,70 @@
+/* ==========================================================
+   MAIN-VIEW (PAINEL DE ENGENHARIA) - RESPONSIVO
+   ========================================================== */
+
+.dashboard-container {
+  width: 100%;
+}
+
+.metrics-strip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 0;
+  }
+
+  /* Cabeçalho mobile */
+  .app-title {
+    font-size: 1.15rem !important;
+  }
+
+  .app-subtitle {
+    font-size: 0.78rem !important;
+  }
+
+  /* Grid de métricas 2x2 no celular */
+  .metrics-strip-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .metric-item {
+    padding: 0.75rem 1rem !important;
+  }
+
+  .metric-item:nth-child(2) {
+    border-right: none !important;
+  }
+
+  .metric-item:nth-child(1),
+  .metric-item:nth-child(2) {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .metric-value {
+    font-size: 1.25rem !important;
+  }
+
+  /* Ferramentas em coluna única e touch-friendly */
+  .tools-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .tools-grid .app-card {
+    padding: 1rem !important;
+  }
+
+  .tools-grid .app-card:active {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+  }
+}

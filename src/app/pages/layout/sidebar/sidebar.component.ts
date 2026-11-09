@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { AuthService } from '../../../core/service/auth.service';
 
 @Component({
@@ -11,15 +11,33 @@ export class SidebarComponent implements OnInit {
   userRole: string = '';
   planType: string = 'FREE';
   isCollapsed: boolean = false;
-  
+  isMobile: boolean = false;
+  showMobileMenu: boolean = false;
+
   @Output() collapseChanged = new EventEmitter<boolean>();
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Pega o cargo do usuário para exibir menus específicos (ADMIN/USER)
     this.userRole = this.authService.getUserRole()?.toUpperCase() || 'USER';
     this.planType = this.authService.getPlanType();
+    this.checkMobile();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.checkMobile();
+  }
+
+  private checkMobile() {
+    this.isMobile = window.innerWidth <= 768;
+    if (!this.isMobile) {
+      this.showMobileMenu = false;
+    }
+  }
+
+  toggleMobileMenu() {
+    this.showMobileMenu = !this.showMobileMenu;
   }
 
   toggleSidebar() {

@@ -662,3 +662,111 @@ button, input, select, textarea {
 .app-mockup-body {
   padding: 1.25rem;
 }
+
+
+/* ==========================================================
+   GLOBAL MOBILE-FIRST RESPONSIVE DESIGN SYSTEM (<= 768px)
+   ========================================================== */
+@media (max-width: 768px) {
+  /* Tipografia Compacta e Legível */
+  html, body {
+    font-size: 13.5px;
+  }
+
+  .app-title {
+    font-size: 1.15rem;
+  }
+
+  .app-subtitle {
+    font-size: 0.8rem;
+  }
+
+  /* Containers e Grids */
+  .app-container {
+    padding: 0 0.75rem;
+  }
+
+  .app-grid-2,
+  .app-grid-3,
+  .app-grid-4 {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  /* Cards Adaptados para Celular */
+  .app-card {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+  }
+
+  .app-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Formulários Touch-Friendly */
+  .app-form-row {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  .app-input,
+  .app-select,
+  .app-textarea {
+    font-size: 16px !important; /* Evita zoom automático no iOS Safari */
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-md);
+  }
+
+  /* Botões Fáceis de Tocar com o Polegar */
+  .app-btn {
+    min-height: 40px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .app-btn-sm {
+    min-height: 34px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  /* Tabelas com Scroll Suave no Celular */
+  .app-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md);
+  }
+
+  .app-table th,
+  .app-table td {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  /* Modais tipo Bottom-Sheet no Celular */
+  .app-modal-overlay {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+
+  .app-modal-content {
+    max-height: 90vh !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    border-radius: 18px 18px 0 0 !important;
+    padding: 1.25rem 1rem !important;
+  }
+
+  /* Classes utilitárias */
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  .show-on-mobile {
+    display: block !important;
+  }
+}

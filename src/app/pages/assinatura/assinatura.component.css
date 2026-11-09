@@ -1,0 +1,17 @@
+/* ==========================================================
+   ASSINATURA PRO - RESPONSIVO (<= 768px)
+   ========================================================== */
+@media (max-width: 768px) {
+  .app-card {
+    padding: 1.25rem 1rem !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .app-title {
+    font-size: 1.5rem !important;
+  }
+
+  .app-subtitle {
+    font-size: 0.85rem !important;
+  }
+}

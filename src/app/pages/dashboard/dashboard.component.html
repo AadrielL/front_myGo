@@ -11,43 +11,43 @@
       <div class="topbar-left">
         <span class="app-badge app-badge-muted">
           <span class="material-icons" style="font-size: 14px; color: var(--accent-primary);">flash_on</span>
-          Painel de Engenharia
+          <span class="topbar-title-text">Painel de Engenharia</span>
         </span>
       </div>
 
       <!-- Lado Direito: Informações e Ações Agrupadas -->
       <div class="topbar-right">
         <!-- Badge de Créditos Diários -->
-        <div *ngIf="stats" class="app-badge app-badge-amber" title="Limite de orçamentos diários do seu plano">
+        <div *ngIf="stats" class="app-badge app-badge-amber credits-badge" title="Limite de orçamentos diários do seu plano">
           <span class="material-icons" style="font-size: 14px;">bolt</span>
-          <span>Créditos: {{ stats.budgetsToday || 0 }}/{{ stats.dailyLimit || 3 }} ({{ stats.planType || 'FREE' }})</span>
+          <span>{{ stats.budgetsToday || 0 }}/{{ stats.dailyLimit || 3 }} <span class="hide-mobile">({{ stats.planType || 'FREE' }})</span></span>
         </div>
 
-        <!-- Botão Upgrade PRO (Se for Free) -->
-        <button *ngIf="stats?.planType === 'FREE' || !stats?.planType" class="app-btn app-btn-primary app-btn-sm" (click)="irParaAssinatura()">
+        <!-- Botão Upgrade PRO (Se for Free) - Oculto no mobile pois já está no menu Mais -->
+        <button *ngIf="stats?.planType === 'FREE' || !stats?.planType" class="app-btn app-btn-primary app-btn-sm hide-mobile" (click)="irParaAssinatura()">
           <span class="material-icons" style="font-size: 15px;">stars</span>
           <span>Assinatura PRO</span>
         </button>
 
         <!-- Alternador de Tema Claro / Escuro -->
-        <button class="app-btn app-btn-secondary app-btn-sm" (click)="toggleTheme()" [title]="isDarkMode ? 'Mudar para tema claro' : 'Mudar para tema escuro'">
+        <button class="app-btn app-btn-secondary app-btn-sm theme-btn" (click)="toggleTheme()" [title]="isDarkMode ? 'Mudar para tema claro' : 'Mudar para tema escuro'">
           <span class="material-icons" style="font-size: 15px; color: var(--accent-primary);">{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</span>
-          <span>{{ isDarkMode ? 'Claro' : 'Escuro' }}</span>
+          <span class="hide-mobile">{{ isDarkMode ? 'Claro' : 'Escuro' }}</span>
         </button>
 
         <!-- Divisor vertical discreto -->
-        <div class="topbar-divider"></div>
+        <div class="topbar-divider hide-mobile"></div>
 
         <!-- Identificação do Usuário -->
         <div class="user-chip" title="Usuário conectado">
           <div class="user-avatar">
             <span class="material-icons" style="font-size: 18px;">person</span>
           </div>
-          <span class="user-name">{{ userName }}</span>
+          <span class="user-name hide-mobile">{{ userName }}</span>
         </div>
 
-        <!-- Botão de Sair Compacto e Elegante -->
-        <button class="app-btn app-btn-danger app-btn-sm" (click)="logout()" title="Encerrar sessão">
+        <!-- Botão de Sair Compacto (Oculto no mobile pois está no menu Mais) -->
+        <button class="app-btn app-btn-danger app-btn-sm hide-mobile" (click)="logout()" title="Encerrar sessão">
           <span class="material-icons" style="font-size: 16px;">logout</span>
           <span>Sair</span>
         </button>

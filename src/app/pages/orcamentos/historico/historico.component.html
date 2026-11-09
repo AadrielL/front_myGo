@@ -36,7 +36,7 @@
   </div>
 
   <!-- Tabela de Orçamentos -->
-  <div class="app-table-container" *ngIf="!loading">
+  <div class="app-table-container desktop-only-table" *ngIf="!loading">
     <table class="app-table">
       <thead>
         <tr>
@@ -104,10 +104,67 @@
       </tbody>
     </table>
     
-    <div *ngIf="listaOrcamentos.length === 0" style="padding: 3rem; text-align: center; color: var(--text-muted);">
-      <span class="material-icons" style="font-size: 40px; color: var(--text-disabled); margin-bottom: 0.5rem;">inbox</span>
-      <p>{{ verLixeira ? 'A lixeira está vazia.' : 'Nenhum orçamento encontrado no histórico.' }}</p>
-    </div>
+        <div *ngIf="listaOrcamentos.length === 0" style="padding: 3rem; text-align: center; color: var(--text-muted);">
+      <span class="material-icons" style="font-size: 40px; color: var(--text-disabled); margin-bottom: 0.5rem;">inbox</span>
+      <p>{{ verLixeira ? 'A lixeira está vazia.' : 'Nenhum orçamento encontrado no histórico.' }}</p>
+    </div>
+  </div>
+
+  <!-- Visualização Mobile: Cards Empilhados Touch-Friendly -->
+  <div class="mobile-only-cards" *ngIf="!loading">
+    <div class="mobile-orc-card" *ngFor="let orc of listaOrcamentos">
+      <div class="mobile-orc-header">
+        <div class="mobile-orc-title">
+          <strong>{{ orc.clienteNome }}</strong>
+          <span class="mobile-orc-date">{{ formatarData(orc.dataExibicao) }}</span>
+        </div>
+        <span class="app-badge" [class.app-badge-success]="orc.status === 'ACEITO'" [class.app-badge-amber]="orc.status !== 'ACEITO'">
+          {{ orc.status }}
+        </span>
+      </div>
+
+      <div class="mobile-orc-value">
+        <span class="mobile-orc-label">Valor Estimado</span>
+        <span class="mobile-orc-price">{{ formatarMoeda(orc.valorExibicao) }}</span>
+      </div>
+
+      <div class="mobile-orc-actions">
+        <ng-container *ngIf="!verLixeira">
+          <button class="app-btn app-btn-secondary app-btn-sm" (click)="verDetalhesMaoDeObra(orc.id)">
+            <span class="material-icons" style="font-size: 15px; color: var(--accent-primary);">calculate</span>
+            <span>Mão de Obra</span>
+          </button>
+          <button class="app-btn app-btn-secondary app-btn-sm" (click)="verDetalhes(orc.id)">
+            <span class="material-icons" style="font-size: 15px;">inventory_2</span>
+            <span>Materiais</span>
+          </button>
+          
+          <ng-container *ngIf="userRole === 'ADMIN'">
+            <button class="app-btn app-btn-primary app-btn-sm" (click)="capturarParaLevantamento(orc.id)">
+              <span>Lista Técnica</span>
+            </button>
+            <button class="app-btn app-btn-secondary app-btn-sm text-success" (click)="alterarStatus(orc.id, 'ACEITO')" title="Aprovar">
+              <span class="material-icons" style="font-size: 15px;">check</span>
+            </button>
+            <button class="app-btn app-btn-danger app-btn-sm" (click)="confirmarRecusar(orc.id)" title="Mover para lixeira">
+              <span class="material-icons" style="font-size: 15px;">delete</span>
+            </button>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="verLixeira">
+          <button class="app-btn app-btn-secondary app-btn-sm text-success" (click)="restaurar(orc.id)">
+            <span class="material-icons" style="font-size: 15px;">restore</span>
+            <span>Restaurar</span>
+          </button>
+        </ng-container>
+      </div>
+    </div>
+
+    <div *ngIf="listaOrcamentos.length === 0" style="padding: 2.5rem 1rem; text-align: center; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+      <span class="material-icons" style="font-size: 36px; color: var(--text-disabled); margin-bottom: 0.5rem;">inbox</span>
+      <p>{{ verLixeira ? 'A lixeira está vazia.' : 'Nenhum orçamento encontrado.' }}</p>
+    </div>
   </div>
 </div>
 
