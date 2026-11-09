@@ -9,6 +9,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.isAuthenticated()) {
     const userRole = authService.getUserRole(); 
     const requiredRole = route.data['role'];
+    const planType = authService.getPlanType();
 
     // Lógica de proteção por Role
     if (requiredRole && userRole !== requiredRole) {

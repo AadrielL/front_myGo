@@ -1,27 +1,61 @@
 <div class="dashboard-layout">
-  <!-- Sidebar flutuante no canto esquerdo -->
+  <!-- Sidebar Fixa Lateral -->
   <app-sidebar></app-sidebar>
 
-  <!-- O 'collapsed' aqui controla o recuo da margem esquerda -->
+  <!-- Conteúdo Principal -->
   <main class="main-content">
     
-    <!-- TOPBAR GLOBAL -->
-    <div class="global-topbar" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; width: 100%; box-sizing: border-box; z-index: 100; background: var(--bg-main);">
-      <!-- Lado Esquerdo: Botão Sair -->
-      <button class="btn-topbar btn-sair" (click)="logout()" style="display: flex; align-items: center; gap: 8px; background: transparent; border: 2px solid var(--wire-pink-dark); color: var(--wire-pink-dark); font-weight: bold; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: all 0.2s;">
-        <span class="material-icons" style="font-size: 1.2rem;">logout</span>
-        Sair
-      </button>
+    <!-- Topbar Superior Unificada e Profissional -->
+    <header class="global-topbar">
+      <!-- Lado Esquerdo: Identificação / Contexto -->
+      <div class="topbar-left">
+        <span class="app-badge app-badge-muted">
+          <span class="material-icons" style="font-size: 14px; color: var(--accent-primary);">flash_on</span>
+          Painel de Engenharia
+        </span>
+      </div>
 
-      <!-- Lado Direito: Botão Assinatura -->
-      <button class="btn-topbar btn-pro" (click)="irParaAssinatura()" style="display: flex; align-items: center; gap: 8px; background: var(--wire-green-dark); color: white; font-weight: bold; padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0, 168, 107, 0.3);">
-        <span class="material-icons" style="font-size: 1.2rem;">stars</span>
-        Assinatura PRO
-      </button>
-    </div>
+      <!-- Lado Direito: Informações e Ações Agrupadas -->
+      <div class="topbar-right">
+        <!-- Badge de Créditos Diários -->
+        <div *ngIf="stats" class="app-badge app-badge-amber" title="Limite de orçamentos diários do seu plano">
+          <span class="material-icons" style="font-size: 14px;">bolt</span>
+          <span>Créditos: {{ stats.budgetsToday || 0 }}/{{ stats.dailyLimit || 3 }} ({{ stats.planType || 'FREE' }})</span>
+        </div>
 
-    <!-- ÁREA DE CONTEÚDO (flex: 1 para ocupar o resto do espaço, padding para espaçar) -->
-    <div class="page-container" style="flex: 1; width: 100%; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
+        <!-- Botão Upgrade PRO (Se for Free) -->
+        <button *ngIf="stats?.planType === 'FREE' || !stats?.planType" class="app-btn app-btn-primary app-btn-sm" (click)="irParaAssinatura()">
+          <span class="material-icons" style="font-size: 15px;">stars</span>
+          <span>Assinatura PRO</span>
+        </button>
+
+        <!-- Alternador de Tema Claro / Escuro -->
+        <button class="app-btn app-btn-secondary app-btn-sm" (click)="toggleTheme()" [title]="isDarkMode ? 'Mudar para tema claro' : 'Mudar para tema escuro'">
+          <span class="material-icons" style="font-size: 15px; color: var(--accent-primary);">{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</span>
+          <span>{{ isDarkMode ? 'Claro' : 'Escuro' }}</span>
+        </button>
+
+        <!-- Divisor vertical discreto -->
+        <div class="topbar-divider"></div>
+
+        <!-- Identificação do Usuário -->
+        <div class="user-chip" title="Usuário conectado">
+          <div class="user-avatar">
+            <span class="material-icons" style="font-size: 18px;">person</span>
+          </div>
+          <span class="user-name">{{ userName }}</span>
+        </div>
+
+        <!-- Botão de Sair Compacto e Elegante -->
+        <button class="app-btn app-btn-danger app-btn-sm" (click)="logout()" title="Encerrar sessão">
+          <span class="material-icons" style="font-size: 16px;">logout</span>
+          <span>Sair</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Área de Conteúdo Dinâmico -->
+    <div class="page-container">
       <router-outlet></router-outlet>
     </div>
   </main>

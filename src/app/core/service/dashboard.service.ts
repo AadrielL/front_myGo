@@ -10,18 +10,26 @@ export class DashboardService {
   private cacheStats: any = null;
   private cacheHistorico: any[] | null = null;
 
-  // Não precisa mais injetar AuthService para pegar headers!
   constructor(private http: HttpClient) {}
 
+  /**
+   * Obtém as estatísticas gerais para os cards do Dashboard com cache em memória.
+   */
   getStats(forceRefresh = false): Observable<any> {
     if (this.cacheStats && !forceRefresh) return of(this.cacheStats);
     
-    // O Interceptor injeta os headers automaticamente
     return this.http.get<any>(`${this.URL_DASHBOARD}/stats`).pipe(
       tap(res => this.cacheStats = res)
     );
   }
 
+  obterEstatisticas(forceRefresh = false): Observable<any> {
+    return this.getStats(forceRefresh);
+  }
+
+  /**
+   * Obtém a lista de orçamentos ativos no histórico.
+   */
   getHistorico(forceRefresh = false): Observable<any[]> {
     if (this.cacheHistorico && !forceRefresh) return of(this.cacheHistorico);
     
@@ -30,6 +38,13 @@ export class DashboardService {
     );
   }
 
+  obterHistorico(forceRefresh = false): Observable<any[]> {
+    return this.getHistorico(forceRefresh);
+  }
+
+  /**
+   * Altera o status operacional de um orçamento (PENDENTE, EM_EXECUCAO, FINALIZADO, etc).
+   */
   alterarStatus(id: string, status: string): Observable<any> {
     const cleanId = id.trim(); 
     return this.http.patch(`${this.URL_HISTORICO}/${cleanId}/status?novoStatus=${status}`, {}).pipe(
@@ -37,30 +52,49 @@ export class DashboardService {
     );
   }
 
+  /**
+   * Exclui permanentemente um orçamento pelo ID.
+   */
   excluirOrcamento(id: string): Observable<any> {
     return this.http.delete(`${this.URL_HISTORICO}/${id.trim()}`).pipe(
       tap(() => this.limparCache())
     );
   }
 
-  limparCache() {
-    this.cacheStats = null;
-    this.cacheHistorico = null;
-  }
-
-  getLixeira(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.URL_HISTORICO}/lixeira`);
-  }
-
+  /**
+   * Envia um orçamento para a lixeira temporária.
+   */
   recusarOrcamento(id: string): Observable<any> {
     return this.http.delete(`${this.URL_HISTORICO}/${id.trim()}`).pipe(
       tap(() => this.limparCache())
     );
   }
 
+  /**
+   * Restaura um orçamento que estava na lixeira de volta para os ativos.
+   */
   restaurarOrcamento(id: string): Observable<any> {
     return this.http.post(`${this.URL_HISTORICO}/${id.trim()}/restaurar`, {}).pipe(
       tap(() => this.limparCache())
     );
+  }
+
+  /**
+   * Obtém a lista de orçamentos descartados na lixeira.
+   */
+  getLixeira(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URL_HISTORICO}/lixeira`);
+  }
+
+  obterLixeira(): Observable<any[]> {
+    return this.getLixeira();
+  }
+
+  /**
+   * Invalida os dados em cache para forçar nova requisição nas próximas chamadas.
+   */
+  limparCache(): void {
+    this.cacheStats = null;
+    this.cacheHistorico = null;
   }
 }

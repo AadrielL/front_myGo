@@ -1,28 +1,31 @@
 <!-- TELA DE ENTRADA: Aparece antes do quiz começar -->
 <div class="quiz-landing" *ngIf="!quizAberto && !exibirModal">
-  <div class="landing-card">
-    <div class="landing-icon">⚡</div>
-    <h1 class="landing-title">Gerar Orçamento</h1>
-    <p class="landing-sub">Responda algumas perguntas rápidas e receba um orçamento elétrico completo, calculado pela NBR 5410.</p>
-
-    <div class="landing-features">
-      <div class="feature-item">
-        <span class="material-icons">timer</span>
-        <span>2-3 minutos</span>
-      </div>
-      <div class="feature-item">
-        <span class="material-icons">check_circle</span>
-        <span>Resultado imediato</span>
-      </div>
-      <div class="feature-item">
-        <span class="material-icons">bolt</span>
-        <span>NBR 5410</span>
-      </div>
+  <div class="landing-card app-card" style="max-width: 480px; padding: 2rem;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+      <span class="material-icons" style="font-size: 22px; color: var(--accent-primary);">calculate</span>
+      <span class="app-badge app-badge-amber">Módulo de Engenharia</span>
     </div>
 
-    <button class="btn-iniciar" (click)="abrirQuiz()">
-      <span class="material-icons">play_arrow</span>
-      Iniciar Orçamento
+    <h1 class="app-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Cálculo de Orçamento NBR 5410</h1>
+    <p class="app-subtitle" style="font-size: 0.85rem; line-height: 1.5; margin-bottom: 1.5rem;">
+      Dimensionamento automatizado de mão de obra, complexidade da instalação e custos operacionais.
+    </p>
+
+    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+      <span class="app-badge app-badge-muted">
+        <span class="material-icons" style="font-size: 13px;">schedule</span> ~3 min
+      </span>
+      <span class="app-badge app-badge-muted">
+        <span class="material-icons" style="font-size: 13px;">check_circle</span> NBR 5410
+      </span>
+      <span class="app-badge app-badge-muted">
+        <span class="material-icons" style="font-size: 13px;">picture_as_pdf</span> PDF Pronto
+      </span>
+    </div>
+
+    <button class="app-btn app-btn-primary" (click)="abrirQuiz()" style="width: 100%; padding: 0.75rem; font-size: 0.9rem;">
+      <span class="material-icons" style="font-size: 18px;">play_arrow</span>
+      Iniciar Dimensionamento
     </button>
   </div>
 </div>
@@ -220,18 +223,39 @@
 
 <!-- MODAL DE RESULTADO -->
 <div class="modal-overlay" *ngIf="exibirModal">
-  <div class="modal-card resultado-card">
-    <div class="success-icon">💰</div>
-    <h2>Orçamento Gerado!</h2>
-    <p>O valor estimado para <strong>{{ quizForm.get('nomeCliente')?.value }}</strong> é:</p>
+  <div class="resultado-card">
+    <div style="width: 56px; height: 56px; border-radius: var(--radius-md); background: var(--status-success-bg); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--status-success); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+      <span class="material-icons" style="font-size: 32px;">check_circle</span>
+    </div>
+    <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.25rem;">Orçamento Gerado!</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+      Valor estimado para o projeto de <strong style="color: var(--text-main);">{{ quizForm.get('nomeCliente')?.value }}</strong>:
+    </p>
+
     <div class="price-box">
       <span class="value">
         R$ {{ ((resultadoCalculo?.valorTotalMaoDeObra || 0) + (resultadoCalculo?.custoLogistica || 0)) | number:'1.2-2' }}
       </span>
     </div>
-    <button class="btn-finish" (click)="fecharModal()">
-      <span class="material-icons">inventory</span>
-      Ver Levantamento Técnico
+
+    <!-- Seção do WhatsApp -->
+    <div style="margin: 1.5rem 0; text-align: left; background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+      <label style="display: block; margin-bottom: 0.4rem; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">
+        Enviar Proposta via WhatsApp
+      </label>
+      <div style="display: flex; gap: 0.5rem;">
+        <input type="text" [value]="numeroWhatsApp" (input)="atualizarNumeroWhatsApp($event)" placeholder="(XX) 9XXXX-XXXX" 
+               class="app-input" style="flex: 1;">
+        <button class="app-btn app-btn-primary" (click)="enviarWhatsApp()" [disabled]="!numeroWhatsApp" 
+                title="Abrir no WhatsApp" style="padding: 0 1rem;">
+          <span class="material-icons" style="font-size: 18px;">chat</span>
+        </button>
+      </div>
+    </div>
+
+    <button class="app-btn app-btn-primary" (click)="fecharModal()" style="width: 100%; padding: 0.85rem;">
+      <span class="material-icons" style="font-size: 18px;">inventory_2</span>
+      <span>Ver Levantamento de Materiais</span>
     </button>
   </div>
 </div>

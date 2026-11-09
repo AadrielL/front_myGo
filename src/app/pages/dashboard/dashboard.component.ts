@@ -6,6 +6,7 @@ import { DashboardService } from '../../core/service/dashboard.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
   standalone: false
 })
 export class DashboardComponent implements OnInit {
@@ -15,6 +16,8 @@ export class DashboardComponent implements OnInit {
   loading: boolean = false;
   stats: any = null;
 
+  isDarkMode: boolean = true;
+
   constructor(
     private authService: AuthService, 
     private dashboardService: DashboardService,
@@ -22,10 +25,36 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.carregarTema();
     this.userRole = this.authService.getUserRole()?.toUpperCase() || 'USER';
     this.userName = this.authService.getUserName() || 'Eletricista Mygo';
-      this.carregarDadosDashboard();
-    }
+    
+    // Sincroniza perfil atualizado do backend (Etapa 1)
+    this.authService.getMe().subscribe({
+      next: (user) => {
+        if (user) {
+          this.userName = user.nome || this.userName;
+          this.userRole = (user.role || this.userRole).toUpperCase();
+        }
+      },
+      error: () => {} // fallback silencioso para dados em cache
+    });
+
+    this.carregarDadosDashboard();
+  }
+
+  carregarTema(): void {
+    const savedTheme = localStorage.getItem('mygo-theme') || 'dark';
+    this.isDarkMode = savedTheme === 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+
+  toggleTheme(): void {
+    this.isDarkMode = !this.isDarkMode;
+    const theme = this.isDarkMode ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('mygo-theme', theme);
+  }
 
   onToggleSidebar(collapsed: boolean): void {
     this.sidebarCollapsed = collapsed;
@@ -44,25 +73,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-  // Adicione este método dentro da classe DashboardComponent
-solicitarUpgradePro(): void {
-  const email = localStorage.getItem('userEmail');
-  if (!email) {
-    alert('Erro: E-mail não encontrado na sessão.');
-    return;
-  }
 
-  this.authService.simularUpgradePago(email).subscribe({
-    next: () => {
-      alert('⚡ PAGAMENTO APROVADO! \n\nSeu plano foi atualizado para PRO. Você será deslogado para aplicar as novas permissões.');
-      this.logout(); // Chama seu método de logout já existente
-    },
-    error: (err) => {
-      console.error('Falha no upgrade:', err);
-      alert('Erro ao processar pagamento simulado. Verifique se a API 8083 está online.');
-    }
-  });
-}
 
   navegar(rota: string): void {
     this.router.navigate([rota]);

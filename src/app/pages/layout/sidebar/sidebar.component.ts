@@ -9,6 +9,7 @@ import { AuthService } from '../../../core/service/auth.service';
 })
 export class SidebarComponent implements OnInit {
   userRole: string = '';
+  planType: string = 'FREE';
   isCollapsed: boolean = false;
   
   @Output() collapseChanged = new EventEmitter<boolean>();
@@ -18,6 +19,7 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     // Pega o cargo do usuário para exibir menus específicos (ADMIN/USER)
     this.userRole = this.authService.getUserRole()?.toUpperCase() || 'USER';
+    this.planType = this.authService.getPlanType();
   }
 
   toggleSidebar() {

@@ -1,0 +1,97 @@
+<div class="parceiros-container">
+  <!-- Cabeçalho -->
+  <header class="parceiros-header">
+    <div class="header-top">
+      <button class="btn-voltar" (click)="voltarHome()">
+        <span class="material-icons">arrow_back</span> Voltar
+      </button>
+      <div class="badge-app">⚡ MYGO • REDE DE PROFISSIONAIS PARCEIROS</div>
+    </div>
+    
+    <h1 class="titulo-principal">Escolha o Eletricista Ideal para sua Obra</h1>
+    <p class="subtitulo">
+      Selecione um profissional certificado para dimensionar seu projeto pela <strong>Norma ABNT NBR 5410</strong>.
+      Rotacionamos novos parceiros qualificados de Palmas/TO para garantir atendimento rápido e sem filas.
+    </p>
+
+    <!-- Barra de Filtro por Região de Palmas -->
+    <div class="filtro-container">
+      <span class="filtro-label"><span class="material-icons">location_on</span> Região em Palmas:</span>
+      <div class="filtro-botoes">
+        <button
+          *ngFor="let regiao of regioesDisponiveis"
+          [class.ativo]="filtroRegiao === regiao"
+          (click)="filtroRegiao = regiao"
+          class="btn-filtro"
+        >
+          {{ regiao }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Grade de Cards dos Eletricistas -->
+  <main class="parceiros-grid">
+    <div *ngFor="let prof of parceirosFiltrados" class="card-parceiro">
+      <!-- Badge de Destaque / Novo Parceiro -->
+      <div class="card-badges">
+        <span *ngIf="prof.inicianteDestaque" class="badge-novo">
+          ✨ NOVO PARCEIRO DESTAQUE
+        </span>
+        <span *ngIf="prof.seloNbr" class="badge-nbr">
+          ✓ SELO NBR 5410
+        </span>
+      </div>
+
+      <!-- Avatar e Nome -->
+      <div class="perfil-topo">
+        <div class="avatar-box">
+          <span class="material-icons avatar-icon">engineering</span>
+        </div>
+        <div class="info-nome">
+          <h3 class="nome-prof">{{ prof.nome }}</h3>
+          <span class="regiao-prof">
+            <span class="material-icons pin-icon">place</span> {{ prof.regiao }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Métricas de Avaliação e Tempo de Resposta -->
+      <div class="metricas-box">
+        <div class="metrica-item">
+          <span class="nota-estrelas">⭐ {{ prof.avaliacao.toFixed(1) }}</span>
+          <span class="metrica-desc">({{ prof.totalAvaliacoes }} avaliações)</span>
+        </div>
+        <div class="metrica-divider"></div>
+        <div class="metrica-item">
+          <span class="tempo-resp">{{ prof.tempoResposta }}</span>
+          <span class="metrica-desc">tempo de resposta</span>
+        </div>
+      </div>
+
+      <!-- Tags de Especialidades -->
+      <div class="especialidades-box">
+        <span *ngFor="let esp of prof.especialidades" class="tag-esp">
+          {{ esp }}
+        </span>
+      </div>
+
+      <!-- Botão de Ação -->
+      <button class="btn-selecionar" (click)="selecionarEletricista(prof)">
+        <span>Solicitar Orçamento com {{ prof.nome.split(' ')[0] }}</span>
+        <span class="material-icons">arrow_forward</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- Rodapé com Aviso de Parceria com a Capital Elétrica -->
+  <footer class="parceiros-footer">
+    <div class="footer-card">
+      <span class="material-icons footer-icon">storefront</span>
+      <div>
+        <h4>Parceria de Fornecimento com a Capital Elétrica de Palmas</h4>
+        <p>Todos os materiais orçados pelos nossos parceiros contam com condições especiais e cotação direta no balcão da Capital Elétrica.</p>
+      </div>
+    </div>
+  </footer>
+</div>

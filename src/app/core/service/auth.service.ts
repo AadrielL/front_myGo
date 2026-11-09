@@ -27,6 +27,20 @@ export class AuthService {
     
     // Essencial para o TenantId das APIs 8081 e 8082
     if (res.email) localStorage.setItem('userEmail', res.email);
+    if (res.planType) localStorage.setItem('userPlanType', res.planType);
+  }
+
+  getMe(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/auth/me`).pipe(
+      tap((user: any) => {
+        if (user) {
+          if (user.nome) localStorage.setItem('userName', user.nome);
+          if (user.role) localStorage.setItem('userRole', user.role.toUpperCase());
+          if (user.email) localStorage.setItem('userEmail', user.email);
+          if (user.planType) localStorage.setItem('userPlanType', user.planType);
+        }
+      })
+    );
   }
 
   isAuthenticated(): boolean { return !!localStorage.getItem('token'); }
@@ -38,16 +52,35 @@ export class AuthService {
     return email && email !== 'undefined' ? email : 'admin@teste.com';
   }
 
+  getPlanType(): string {
+    const savedPlan = localStorage.getItem('userPlanType');
+    if (savedPlan) return savedPlan;
+    const token = localStorage.getItem('token');
+    if (!token) return 'FREE';
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.planType || 'FREE';
+    } catch (e) {
+      return 'FREE';
+    }
+  }
+
   logout(): void { 
     localStorage.clear(); 
     window.location.href = '/login';
   }
-  simularUpgradePago(email: string): Observable<any> {
-  // Simulando o payload que o Mercado Pago enviaria
-  const payload = {
-    payer_email: email,
-    status: 'approved'
-  };
-  return this.http.post(`${this.API_URL}/api/payments/confirm`, payload);
+
+  getVagasVitalicias(): Observable<number> {
+    return this.http.get<number>(`${this.API_URL}/auth/vagas-vitalicias`);
+  }
+
+  processarPagamento(dados: any): Observable<any> {
+    return this.http.post(`${this.API_URL}/api/payments/process`, dados);
+  }
+
+  refreshSession(): Observable<any> {
+    return this.http.get(`${this.API_URL}/auth/refresh`).pipe(
+      tap((res: any) => this.saveSession(res))
+    );
   }
 }

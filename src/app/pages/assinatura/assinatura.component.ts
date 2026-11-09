@@ -1,13 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/service/auth.service';
 import { environment } from '../../../environments/environment';
 
 declare var MercadoPago: any;
 
 @Component({
   selector: 'app-assinatura',
-  templateUrl: './assinatura.html',
-  styleUrls: ['./assinatura.css'],
+  templateUrl: './assinatura.component.html',
+  styleUrls: ['./assinatura.component.css'],
   standalone: false
 })
 export class AssinaturaComponent implements OnInit {
@@ -16,12 +17,29 @@ export class AssinaturaComponent implements OnInit {
   checkoutActive = false;
   mp: any;
   erroMP: string = '';
+  vagasVitalicias: number = 0;
   private valorPendente: number = 0;
 
-  constructor(private http: HttpClient, private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private cdRef: ChangeDetectorRef
+  ) {}
+
+  voltarAoQuiz() {
+    this.router.navigate(['/quiz']);
+  }
 
   ngOnInit(): void {
     this.inicializarMP();
+    this.carregarVagasVitalicias();
+  }
+
+  carregarVagasVitalicias() {
+    this.authService.getVagasVitalicias().subscribe({
+      next: (vagas) => this.vagasVitalicias = vagas,
+      error: (err) => console.error("Erro ao buscar vagas vitalícias", err)
+    });
   }
 
   inicializarMP() {
@@ -105,7 +123,7 @@ export class AssinaturaComponent implements OnInit {
           onSubmit: ({ selectedPaymentMethod, formData }: any) => {
             console.log("Dados a enviar para API:", formData);
             return new Promise<void>((resolve, reject) => {
-              this.http.post(environment.apiUrl + '/api/payments/process', formData).subscribe({
+              this.authService.processarPagamento(formData).subscribe({
                 next: (res: any) => {
                   console.log("Pagamento processado:", res);
                   resolve();
@@ -179,5 +197,21 @@ export class AssinaturaComponent implements OnInit {
   fecharCheckout() {
     this.checkoutActive = false;
     this.erroMP = '';
+    
+    this.loading = true;
+    this.authService.refreshSession().subscribe({
+      next: () => {
+        this.loading = false;
+        const plan = this.authService.getPlanType();
+        if (plan !== 'FREE') {
+          alert('⚡ Assinatura confirmada com sucesso! Bem-vindo ao MyGo PRO.');
+          this.router.navigate(['/dashboard-main']);
+        }
+      },
+      error: (err: any) => {
+        console.error("Erro ao atualizar sessão após fechar checkout:", err);
+        this.loading = false;
+      }
+    });
   }
 }
