@@ -6,6 +6,7 @@ import { DashboardService } from '../../../core/service/dashboard.service';
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
+  styleUrls: ['./main-view.component.css'],
   standalone: false
 })
 export class MainViewComponent implements OnInit {

@@ -1,4 +1,5 @@
-<nav class="sidebar">
+<!-- DESKTOP: Sidebar lateral (escondida no mobile) -->
+<nav class="sidebar" *ngIf="!isMobile">
   <div class="logo-area">
     <div class="logo-icon">
       <span class="material-icons">bolt</span>
@@ -81,5 +82,73 @@
 
   <div class="sidebar-footer">
     <span class="footer-badge">NBR 5410 Compliant</span>
+  </div>
+</nav>
+
+<!-- MOBILE: Bottom Navigation Bar (Dock inferior) -->
+<nav class="bottom-nav" *ngIf="isMobile">
+  <a routerLink="/dashboard-main" routerLinkActive="active" class="bottom-nav-item">
+    <span class="material-icons">space_dashboard</span>
+    <span class="bottom-nav-label">Início</span>
+  </a>
+  <a routerLink="/quiz" routerLinkActive="active" class="bottom-nav-item">
+    <span class="material-icons">calculate</span>
+    <span class="bottom-nav-label">Orçar</span>
+  </a>
+  <a routerLink="/historico" routerLinkActive="active" class="bottom-nav-item">
+    <span class="material-icons">history</span>
+    <span class="bottom-nav-label">Histórico</span>
+  </a>
+  <a routerLink="/parceiros" routerLinkActive="active" class="bottom-nav-item">
+    <span class="material-icons">handshake</span>
+    <span class="bottom-nav-label">Parceiros</span>
+  </a>
+  <button type="button" class="bottom-nav-item bottom-nav-more" (click)="toggleMobileMenu()" [class.active]="showMobileMenu">
+    <span class="material-icons">{{ showMobileMenu ? 'close' : 'menu' }}</span>
+    <span class="bottom-nav-label">Mais</span>
+  </button>
+
+  <!-- Menu Drawer Expandido Mobile -->
+  <div class="mobile-menu-overlay" *ngIf="showMobileMenu" (click)="toggleMobileMenu()"></div>
+  <div class="mobile-menu-panel" *ngIf="showMobileMenu">
+    <div class="mobile-menu-header">
+      <div class="mobile-menu-brand">
+        <span class="material-icons">bolt</span>
+        <strong>MYGO ELÉTRICA</strong>
+      </div>
+      <button type="button" class="mobile-menu-close" (click)="toggleMobileMenu()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="mobile-menu-links">
+      <a routerLink="/levantamento" routerLinkActive="active" class="mobile-menu-item" (click)="toggleMobileMenu()">
+        <span class="material-icons">inventory_2</span>
+        <span>Levantamento de Materiais</span>
+      </a>
+      <a routerLink="/config-precos" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-menu-item" (click)="toggleMobileMenu()">
+        <span class="material-icons">tune</span>
+        <span>Tabela de Preços</span>
+      </a>
+      <a routerLink="/config-precos" routerLinkActive="active" [queryParams]="{tab: 'servicos'}" class="mobile-menu-item" (click)="toggleMobileMenu()">
+        <span class="material-icons">list_alt</span>
+        <span>Serviços do Quiz</span>
+      </a>
+      <a *ngIf="planType === 'FREE'" routerLink="/assinatura" routerLinkActive="active" class="mobile-menu-item mobile-menu-pro" (click)="toggleMobileMenu()">
+        <span class="material-icons">stars</span>
+        <span>Upgrade para PRO ⚡</span>
+      </a>
+      <a *ngIf="userRole === 'ADMIN'" routerLink="/reports" routerLinkActive="active" class="mobile-menu-item" (click)="toggleMobileMenu()">
+        <span class="material-icons">analytics</span>
+        <span>Relatórios de Gestão</span>
+      </a>
+      
+      <div class="mobile-menu-divider"></div>
+      
+      <button type="button" class="mobile-menu-item mobile-menu-logout" (click)="logout()">
+        <span class="material-icons">logout</span>
+        <span>Sair da Conta</span>
+      </button>
+    </div>
   </div>
 </nav>

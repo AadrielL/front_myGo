@@ -8,6 +8,7 @@ import { ApiService } from '../../../core/service/api.service';
 @Component({
   selector: 'app-historico',
   templateUrl: './historico.component.html',
+  styleUrls: ['./historico.component.css'],
   standalone: false
 })
 export class HistoricoComponent implements OnInit {

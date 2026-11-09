@@ -335,3 +335,57 @@
   margin: 0;
   line-height: 1.4;
 }
+
+
+/* ==========================================================
+   PARCEIROS - MOBILE RESPONSIVO (<= 768px)
+   ========================================================== */
+@media (max-width: 768px) {
+  .parceiros-container {
+    padding: 1.25rem 0.85rem !important;
+  }
+
+  .parceiros-header {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .parceiros-header h1 {
+    font-size: 1.45rem !important;
+  }
+
+  .parceiros-header p {
+    font-size: 0.82rem !important;
+  }
+
+  .filtros-regiao {
+    gap: 0.4rem !important;
+    overflow-x: auto !important;
+    padding-bottom: 0.5rem !important;
+    justify-content: flex-start !important;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap !important;
+  }
+
+  .btn-filtro {
+    white-space: nowrap !important;
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.78rem !important;
+    flex-shrink: 0;
+  }
+
+  .parceiros-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .card-parceiro {
+    padding: 1.15rem 1rem !important;
+  }
+
+  .footer-card {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 1.25rem 1rem !important;
+    gap: 0.75rem !important;
+  }
+}
