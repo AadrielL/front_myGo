@@ -13,6 +13,9 @@ export class SidebarComponent implements OnInit {
   isCollapsed: boolean = false;
   isMobile: boolean = false;
   showMobileMenu: boolean = false;
+  isNavHidden: boolean = false;
+
+  private lastScrollY: number = 0;
 
   @Output() collapseChanged = new EventEmitter<boolean>();
 
@@ -29,10 +32,24 @@ export class SidebarComponent implements OnInit {
     this.checkMobile();
   }
 
+  @HostListener('window:scroll')
+  onScroll() {
+    if (!this.isMobile) return;
+    const currentY = window.scrollY;
+    // Esconde ao rolar para baixo (conteúdo sobe), mostra ao rolar para cima
+    if (currentY > this.lastScrollY + 8) {
+      this.isNavHidden = true;
+    } else if (currentY < this.lastScrollY - 8) {
+      this.isNavHidden = false;
+    }
+    this.lastScrollY = currentY;
+  }
+
   private checkMobile() {
     this.isMobile = window.innerWidth <= 768;
     if (!this.isMobile) {
       this.showMobileMenu = false;
+      this.isNavHidden = false;
     }
   }
 

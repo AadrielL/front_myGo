@@ -509,3 +509,34 @@
     grid-column: span 1;
   }
 }
+
+@media (max-width: 768px) {
+  /* Modal como bottom-sheet, nao sobrepoe o dock */
+  .quiz-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .quiz-modal {
+    border-radius: 18px 18px 0 0;
+    max-height: calc(100vh - 60px);
+    max-width: 100%;
+  }
+
+  /* Footer com padding para o bottom nav dock (60px) */
+  .quiz-footer {
+    padding-bottom: calc(1rem + 60px);
+  }
+
+  /* Modal resultado tambem com clearance */
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .resultado-card {
+    border-radius: 18px 18px 0 0;
+    max-width: 100%;
+    padding-bottom: calc(2rem + 60px);
+  }
+}
