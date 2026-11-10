@@ -389,3 +389,43 @@
     gap: 0.75rem !important;
   }
 }
+
+/* Estado vazio / loading */
+.estado-vazio {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.estado-icon {
+  font-size: 3rem;
+  color: var(--text-disabled);
+}
+
+.estado-vazio h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.estado-vazio p {
+  font-size: 0.875rem;
+  margin: 0;
+  max-width: 320px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1.2s linear infinite;
+}
