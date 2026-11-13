@@ -9,13 +9,13 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   verificarCodigo(email: string, codigo: string): Observable<any> {
-    return this.http.post(${this.API_URL}/auth/verificar-codigo, { email, codigo }).pipe(
+    return this.http.post(`${this.API_URL}/auth/verificar-codigo`, { email, codigo }).pipe(
       tap((res: any) => this.saveSession(res))
     );
   }
 
   reenviarCodigo(email: string): Observable<any> {
-    return this.http.post(${this.API_URL}/auth/reenviar-codigo, { email });
+    return this.http.post(`${this.API_URL}/auth/reenviar-codigo`, { email });
   }
 
   register(userData: any): Observable<any> {
@@ -31,13 +31,17 @@ export class AuthService {
   private saveSession(res: any): void {
     if (res.token) localStorage.setItem('token', res.token);
     if (res.role) localStorage.setItem('userRole', res.role.toUpperCase());
-    
+
     const nomeUsuario = res.nome || res.name || 'Usuário';
     localStorage.setItem('userName', nomeUsuario);
-    
+
     // Essencial para o TenantId das APIs 8081 e 8082
     if (res.email) localStorage.setItem('userEmail', res.email);
     if (res.planType) localStorage.setItem('userPlanType', res.planType);
+
+    // Perfil multitenant
+    if (res.tipoPerfil) localStorage.setItem('userTipoPerfil', res.tipoPerfil);
+    if (res.tenantId) localStorage.setItem('userTenantId', res.tenantId);
   }
 
   getMe(): Observable<any> {
@@ -70,27 +74,35 @@ export class AuthService {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return payload.planType || 'FREE';
-    } catch (e) {
+    } catch {
       return 'FREE';
     }
   }
 
-  logout(): void { 
-    localStorage.clear(); 
-    window.location.href = '/login';
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userPlanType');
+    localStorage.removeItem('userTipoPerfil');
+    localStorage.removeItem('userTenantId');
   }
 
+  // ── Assinatura / Pagamento ─────────────────────────────────────────────────
+
+  /** Retorna o número de vagas vitalícias disponíveis */
   getVagasVitalicias(): Observable<number> {
     return this.http.get<number>(`${this.API_URL}/auth/vagas-vitalicias`);
   }
 
-  processarPagamento(dados: any): Observable<any> {
-    return this.http.post(`${this.API_URL}/api/payments/process`, dados);
+  /** Envia os dados do formulário MP Brick para o backend processar */
+  processarPagamento(formData: any): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/auth/pagamento`, formData);
   }
 
+  /** Recarrega os dados da sessão do usuário após uma assinatura ser concluída */
   refreshSession(): Observable<any> {
-    return this.http.get(`${this.API_URL}/auth/refresh`).pipe(
-      tap((res: any) => this.saveSession(res))
-    );
+    return this.getMe();
   }
 }

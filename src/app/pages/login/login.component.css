@@ -1,0 +1,87 @@
+/* LOGIN LAYOUT - DESKTOP: dois painéis lado a lado */
+.login-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-main);
+}
+
+.login-info-panel {
+  flex: 1;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  min-width: 0;
+}
+
+.login-info-inner {
+  max-width: 380px;
+  width: 100%;
+}
+
+.login-form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-width: 0;
+}
+
+.login-form-inner {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* MOBILE: empilha info em cima, form embaixo */
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .login-info-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 1.75rem 1.25rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .login-info-inner {
+    max-width: 100%;
+  }
+
+  /* No mobile, esconde os 3 cards de feature para economizar espaço */
+  .login-info-inner > div:last-child {
+    display: none;
+  }
+
+  /* Título e descrição menores no mobile */
+  .login-info-inner h2 {
+    font-size: 1.35rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .login-info-inner p {
+    font-size: 0.85rem !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Logo mais compacto */
+  .login-info-inner > div:first-child {
+    margin-bottom: 1rem !important;
+  }
+
+  .login-form-panel {
+    padding: 1.5rem 1.25rem;
+    align-items: flex-start;
+  }
+
+  .login-form-inner {
+    max-width: 100%;
+  }
+}

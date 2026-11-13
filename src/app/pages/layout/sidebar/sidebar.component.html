@@ -86,7 +86,7 @@
 </nav>
 
 <!-- MOBILE: Bottom Navigation Bar (Dock inferior) -->
-<nav class="bottom-nav" *ngIf="isMobile">
+<nav class="bottom-nav" *ngIf="isMobile" [class.nav-hidden]="isNavHidden">
   <a routerLink="/dashboard-main" routerLinkActive="active" class="bottom-nav-item">
     <span class="material-icons">space_dashboard</span>
     <span class="bottom-nav-label">Início</span>

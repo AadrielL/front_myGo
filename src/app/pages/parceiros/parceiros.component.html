@@ -32,6 +32,21 @@
 
   <!-- Grade de Cards dos Eletricistas -->
   <main class="parceiros-grid">
+
+    <!-- Loading -->
+    <div *ngIf="carregando" class="estado-vazio">
+      <span class="material-icons estado-icon spin">sync</span>
+      <p>Buscando eletricistas cadastrados...</p>
+    </div>
+
+    <!-- Lista vazia -->
+    <div *ngIf="!carregando && parceirosFiltrados.length === 0" class="estado-vazio">
+      <span class="material-icons estado-icon">engineering</span>
+      <h3>Nenhum eletricista cadastrado ainda</h3>
+      <p>Assim que profissionais se cadastrarem na plataforma, eles aparecer&#227;o aqui.</p>
+    </div>
+
+    <!-- Cards reais do banco -->
     <div *ngFor="let prof of parceirosFiltrados" class="card-parceiro">
       <!-- Badge de Destaque / Novo Parceiro -->
       <div class="card-badges">
