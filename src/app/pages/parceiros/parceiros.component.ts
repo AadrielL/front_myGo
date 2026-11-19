@@ -82,6 +82,7 @@ export class ParceirosComponent implements OnInit {
   }
 
   voltarHome(): void {
-    this.router.navigate(['/onboarding']);
+    const token = localStorage.getItem('token');
+    this.router.navigate([token ? '/dashboard-main' : '/login']);
   }
 }
