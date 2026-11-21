@@ -10,11 +10,16 @@ import { Observable } from 'rxjs';
 
 export class ApiService {
 
-  private readonly URL_ORCAMENTOS = 'http://localhost:8081/v1/orcamentos';
+  private readonly BASE_CALC =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:8081'
+      : 'https://www.comandosamoris.tech/svc/calc';
+  private readonly URL_ORCAMENTOS = `${this.BASE_CALC}/v1/orcamentos`;
 
-  private readonly URL_ADMIN = 'http://localhost:8081/v1/admin';
+  private readonly URL_ADMIN = `${this.BASE_CALC}/v1/admin`;
 
-  private readonly URL_DASHBOARD = 'http://localhost:8081/api/v1/dashboard';
+  private readonly URL_DASHBOARD = `${this.BASE_CALC}/api/v1/dashboard`;
 
 
 
