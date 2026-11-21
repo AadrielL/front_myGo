@@ -4,7 +4,11 @@ import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8083';
+  private readonly API_URL =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:8083'
+      : 'https://www.comandosamoris.tech/svc/auth';
 
   constructor(private http: HttpClient) {}
 
