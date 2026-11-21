@@ -48,7 +48,11 @@ export class ParceirosComponent implements OnInit {
 
   carregarParceirosApi(): void {
     this.carregando = true;
-    const apiUrl = 'https://api.comandosamoris.tech/auth/parceiros-destaque';
+    const isLocal =
+      typeof window !== 'undefined' &&
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const baseAuth = isLocal ? 'http://localhost:8083' : 'https://www.comandosamoris.tech/svc/auth';
+    const apiUrl = `${baseAuth}/auth/parceiros-destaque`;
     this.http.get<ParceiroEletricista[]>(apiUrl).subscribe({
       next: (dados) => {
         this.listaParceiros = dados && dados.length > 0 ? dados : [];
