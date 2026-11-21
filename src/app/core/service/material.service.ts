@@ -4,8 +4,15 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MaterialService {
-  private readonly URL_MATERIAIS = 'http://localhost:8082/api/materiais';
-  private readonly URL_ORCAMENTOS_BASE = 'http://localhost:8081/v1/orcamentos';
+  private readonly IS_LOCAL =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  private readonly URL_MATERIAIS = this.IS_LOCAL
+    ? 'http://localhost:8082/api/materiais'
+    : 'https://www.comandosamoris.tech/svc/materiais/api/materiais';
+  private readonly URL_ORCAMENTOS_BASE = this.IS_LOCAL
+    ? 'http://localhost:8081/v1/orcamentos'
+    : 'https://www.comandosamoris.tech/svc/calc/v1/orcamentos';
 
   constructor(private http: HttpClient) {}
 
