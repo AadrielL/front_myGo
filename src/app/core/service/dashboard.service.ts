@@ -4,8 +4,13 @@ import { Observable, of, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  private readonly URL_DASHBOARD = 'http://localhost:8081/api/v1/dashboard';
-  private readonly URL_HISTORICO = 'http://localhost:8081/v1/historico';
+  private readonly BASE_CALC =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:8081'
+      : 'https://www.comandosamoris.tech/svc/calc';
+  private readonly URL_DASHBOARD = `${this.BASE_CALC}/api/v1/dashboard`;
+  private readonly URL_HISTORICO = `${this.BASE_CALC}/v1/historico`;
 
   private cacheStats: any = null;
   private cacheHistorico: any[] | null = null;
